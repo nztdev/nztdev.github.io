@@ -385,6 +385,10 @@ canvas#field {
     }
   }
 
+  const CX = () => W / 2;
+  const CY = () => H / 2;
+  const OR = () => Math.min(W, H) * 0.26;
+
   function resize() {
     W = canvas.width  = window.innerWidth;
     H = canvas.height = window.innerHeight;
@@ -393,10 +397,6 @@ canvas#field {
   }
   resize();
   window.addEventListener('resize', resize);
-
-  const CX = () => W / 2;
-  const CY = () => H / 2;
-  const OR = () => Math.min(W, H) * 0.26;
 
   function resetOrbits(snap) {
     nodes.forEach(n => {
