@@ -333,7 +333,7 @@ canvas#field {
       tags: ['music intelligence', 'electronic', 'live feed', '2026'],
       gh:  'https://github.com/nztdev/resonance-signal',
       io:  'https://nztdev.github.io/resonance-signal/',
-      rgb: '29,158,117',
+      rgb: '0,200,255',
     },
     {
       id: 2,
@@ -353,7 +353,17 @@ canvas#field {
       tags: ['AI editorial', 'GitHub trends', 'Gemini', 'weekly briefing', 'intelligence'],
       gh:  'https://github.com/nztdev/GitWire',
       io:  'https://nztdev.github.io/GitWire/',
-      rgb: '0,255,136',
+      rgb: '29,158,117',
+    },
+    {
+      id: 4,
+      name: 'The nᵗʰ Life',
+      eye: 'brutalist AI life simulator · HTML / JS',
+      desc: 'A brutalist, AI-driven life simulator built for 2026 tactical realism. Every action has consequences — Gemini generates non-sugarcoated outcomes in real-time. Permadeath roguelike mode with live stat tracking, cloud saves via Supabase, and a global leaderboard. Your timeline ends. It is scored. It is archived.',
+      tags: ['life simulator', 'permadeath', 'Gemini 2.5', 'Supabase', 'roguelike', 'PWA'],
+      gh:  'https://github.com/thenthlife/thenthlife.github.io',
+      io:  'https://thenthlife.github.io',
+      rgb: '220,38,38',
     },
   ];
   /* ═══════════════════════════════════════════════════════ */
@@ -627,7 +637,9 @@ canvas#field {
           : (ctx.fillText(w.slice(0, 2).join(' '), n.x, n.y - 9),
              ctx.fillText(w.slice(2).join(' '),     n.x, n.y + 9));
       } else {
-        ctx.fillText(r.name.split(' ').pop(), n.x, n.y);
+        const parts = r.name.split(' ');
+        const shortLabel = parts.length > 2 ? parts.slice(-2).join(' ') : parts[parts.length - 1];
+        ctx.fillText(shortLabel, n.x, n.y);
       }
     });
 
