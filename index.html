@@ -509,9 +509,12 @@ body.light #toggle-thumb {
   const toggleBtn  = document.getElementById('theme-toggle');
   const toggleIcon = document.getElementById('toggle-icon');
 
-  function getCSS(prop) {
-    return getComputedStyle(document.documentElement).getPropertyValue(prop).trim();
-  }
+  const THEME = {
+    dark:  { bg: '9,8,14',       pt: '127,119,221', blobA: 0.011 },
+    light: { bg: '244,243,251',  pt: '100,90,200',  blobA: 0.018 },
+  };
+
+  function currentTheme() { return isLight ? THEME.light : THEME.dark; }
 
   toggleBtn.addEventListener('click', () => {
     isLight = !isLight;
@@ -653,9 +656,7 @@ body.light #toggle-thumb {
     const cx = CX(), cy = CY();
 
     /* canvas background fill — matches body theme */
-    const bgRgb     = getCSS('--canvas-bg')     || '9,8,14';
-    const ptRgb     = getCSS('--particle-rgb')  || '127,119,221';
-    const blobAlpha = parseFloat(getCSS('--blob-alpha') || '0.011');
+    const { bg: bgRgb, pt: ptRgb, blobA: blobAlpha } = currentTheme();
 
     ctx.fillStyle = `rgb(${bgRgb})`;
     ctx.fillRect(0, 0, W, H);
