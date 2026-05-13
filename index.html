@@ -14,12 +14,86 @@
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+/* ── Theme variables ───────────────────────────────────── */
+:root {
+  --bg:              #09080e;
+  --card-bg:         rgba(12,10,22,0.97);
+  --card-border:     rgba(127,119,221,0.28);
+  --text-primary:    #e8e6f8;
+  --text-secondary:  rgba(232,230,248,0.5);
+  --text-muted:      rgba(232,230,248,0.4);
+  --hdr-name:        rgba(127,119,221,0.45);
+  --hdr-sub:         rgba(127,119,221,0.2);
+  --live-color:      rgba(29,158,117,0.45);
+  --hint-color:      rgba(127,119,221,0.35);
+  --count-color:     rgba(127,119,221,0.18);
+  --close-border:    rgba(127,119,221,0.2);
+  --close-color:     rgba(232,230,248,0.4);
+  --close-hover-bg:  rgba(127,119,221,0.12);
+  --close-hover-bdr: rgba(127,119,221,0.45);
+  --close-hover-col: #e8e6f8;
+  --tag-border:      rgba(127,119,221,0.22);
+  --tag-color:       rgba(127,119,221,0.55);
+  --divider-bg:      rgba(127,119,221,0.1);
+  --btn-border:      rgba(127,119,221,0.25);
+  --btn-color:       rgba(232,230,248,0.5);
+  --btn-hover-bg:    rgba(127,119,221,0.1);
+  --btn-hover-bdr:   rgba(127,119,221,0.55);
+  --btn-hover-col:   #e8e6f8;
+  --btn-pri-bg:      rgba(127,119,221,0.1);
+  --btn-pri-bdr:     rgba(127,119,221,0.4);
+  --btn-pri-col:     #e8e6f8;
+  --btn-pri-hbg:     rgba(127,119,221,0.2);
+  --btn-pri-hbdr:    rgba(127,119,221,0.7);
+  /* canvas draw colours (read by JS) */
+  --canvas-bg:       9,8,14;
+  --particle-rgb:    127,119,221;
+  --blob-alpha:      0.011;
+}
+
+/* ── Light theme overrides ─────────────────────────────── */
+body.light {
+  --bg:              #f4f3fb;
+  --card-bg:         rgba(255,255,255,0.97);
+  --card-border:     rgba(100,90,200,0.22);
+  --text-primary:    #1a1830;
+  --text-secondary:  rgba(26,24,48,0.55);
+  --text-muted:      rgba(26,24,48,0.38);
+  --hdr-name:        rgba(83,74,183,0.6);
+  --hdr-sub:         rgba(83,74,183,0.3);
+  --live-color:      rgba(15,110,86,0.65);
+  --hint-color:      rgba(83,74,183,0.4);
+  --count-color:     rgba(83,74,183,0.25);
+  --close-border:    rgba(83,74,183,0.18);
+  --close-color:     rgba(26,24,48,0.4);
+  --close-hover-bg:  rgba(83,74,183,0.08);
+  --close-hover-bdr: rgba(83,74,183,0.45);
+  --close-hover-col: #1a1830;
+  --tag-border:      rgba(83,74,183,0.2);
+  --tag-color:       rgba(83,74,183,0.65);
+  --divider-bg:      rgba(83,74,183,0.1);
+  --btn-border:      rgba(83,74,183,0.22);
+  --btn-color:       rgba(26,24,48,0.5);
+  --btn-hover-bg:    rgba(83,74,183,0.07);
+  --btn-hover-bdr:   rgba(83,74,183,0.5);
+  --btn-hover-col:   #1a1830;
+  --btn-pri-bg:      rgba(83,74,183,0.08);
+  --btn-pri-bdr:     rgba(83,74,183,0.35);
+  --btn-pri-col:     #1a1830;
+  --btn-pri-hbg:     rgba(83,74,183,0.15);
+  --btn-pri-hbdr:    rgba(83,74,183,0.6);
+  --canvas-bg:       244,243,251;
+  --particle-rgb:    100,90,200;
+  --blob-alpha:      0.018;
+}
+
 html, body {
   width: 100%; height: 100%;
-  background: #09080e;
+  background: var(--bg);
   overflow: hidden;
   font-family: 'DM Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
+  transition: background 0.4s;
 }
 
 canvas#field {
@@ -43,16 +117,18 @@ canvas#field {
   font-weight: 400;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(127,119,221,0.45);
+  color: var(--hdr-name);
+  transition: color 0.4s;
 }
 #hdr-sub {
   font-family: 'DM Mono', monospace;
   font-size: 10px;
   font-weight: 300;
   font-style: italic;
-  color: rgba(127,119,221,0.2);
+  color: var(--hdr-sub);
   margin-top: 3px;
   letter-spacing: 0.07em;
+  transition: color 0.4s;
 }
 
 #live-badge {
@@ -66,8 +142,9 @@ canvas#field {
   font-family: 'DM Mono', monospace;
   font-size: 10px;
   font-weight: 300;
-  color: rgba(29,158,117,0.45);
+  color: var(--live-color);
   letter-spacing: 0.1em;
+  transition: color 0.4s;
 }
 #live-dot {
   width: 5px; height: 5px;
@@ -91,9 +168,9 @@ canvas#field {
   font-weight: 300;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(127,119,221,0.35);
+  color: var(--hint-color);
   white-space: nowrap;
-  transition: opacity 0.5s;
+  transition: opacity 0.5s, color 0.4s;
 }
 
 #works-count {
@@ -104,8 +181,50 @@ canvas#field {
   font-family: 'DM Mono', monospace;
   font-size: 10px;
   font-weight: 300;
-  color: rgba(127,119,221,0.18);
+  color: var(--count-color);
   letter-spacing: 0.1em;
+  transition: color 0.4s;
+}
+
+/* ── Theme toggle ──────────────────────────────────────── */
+#theme-toggle {
+  position: fixed;
+  bottom: 22px; left: 32px;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+#toggle-track {
+  width: 36px; height: 20px;
+  border-radius: 99px;
+  border: 0.5px solid var(--hint-color);
+  background: transparent;
+  position: relative;
+  transition: border-color 0.3s, background 0.3s;
+  flex-shrink: 0;
+}
+#toggle-thumb {
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--hint-color);
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), background 0.3s;
+}
+body.light #toggle-thumb {
+  transform: translateX(16px);
+}
+#toggle-icon {
+  font-size: 11px;
+  color: var(--hint-color);
+  transition: color 0.4s;
+  user-select: none;
+  line-height: 1;
 }
 
 /* Card overlay — centred, floating, pointer-events only on #card itself */
@@ -121,8 +240,8 @@ canvas#field {
 
 #card {
   width: 360px;
-  background: rgba(12,10,22,0.97);
-  border: 0.5px solid rgba(127,119,221,0.28);
+  background: var(--card-bg);
+  border: 0.5px solid var(--card-border);
   border-radius: 20px;
   padding: 30px 30px 26px;
   position: relative;
@@ -130,13 +249,13 @@ canvas#field {
   opacity: 0;
   transform: scale(0.84) translateY(12px);
   transition: opacity 0.38s cubic-bezier(0.22,1,0.36,1),
-              transform 0.38s cubic-bezier(0.22,1,0.36,1);
+              transform 0.38s cubic-bezier(0.22,1,0.36,1),
+              background 0.4s, border-color 0.4s;
 }
 #card.show {
   opacity: 1;
   transform: scale(1) translateY(0);
 }
-/* when card is hidden, pass clicks through */
 #card:not(.show) {
   pointer-events: none;
 }
@@ -153,10 +272,10 @@ canvas#field {
   top: 14px; right: 16px;
   width: 27px; height: 27px;
   border-radius: 50%;
-  border: 0.5px solid rgba(127,119,221,0.2);
+  border: 0.5px solid var(--close-border);
   background: transparent;
   cursor: pointer;
-  color: rgba(232,230,248,0.4);
+  color: var(--close-color);
   font-size: 17px;
   font-family: 'DM Sans', sans-serif;
   display: flex;
@@ -166,9 +285,9 @@ canvas#field {
   transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
 #close:hover {
-  background: rgba(127,119,221,0.12);
-  border-color: rgba(127,119,221,0.45);
-  color: #e8e6f8;
+  background: var(--close-hover-bg);
+  border-color: var(--close-hover-bdr);
+  color: var(--close-hover-col);
 }
 
 #c-eye {
@@ -183,17 +302,19 @@ canvas#field {
 #c-title {
   font-size: 22px;
   font-weight: 300;
-  color: #e8e6f8;
+  color: var(--text-primary);
   letter-spacing: -0.4px;
   line-height: 1.15;
   margin-bottom: 10px;
+  transition: color 0.4s;
 }
 #c-desc {
   font-size: 13px;
   font-weight: 300;
-  color: rgba(232,230,248,0.5);
+  color: var(--text-secondary);
   line-height: 1.65;
   margin-bottom: 16px;
+  transition: color 0.4s;
 }
 #c-tags {
   display: flex;
@@ -207,15 +328,17 @@ canvas#field {
   font-weight: 300;
   padding: 3px 9px;
   border-radius: 99px;
-  border: 0.5px solid rgba(127,119,221,0.22);
-  color: rgba(127,119,221,0.55);
+  border: 0.5px solid var(--tag-border);
+  color: var(--tag-color);
   letter-spacing: 0.04em;
+  transition: border-color 0.4s, color 0.4s;
 }
 
 .divider {
   height: 0.5px;
-  background: rgba(127,119,221,0.1);
+  background: var(--divider-bg);
   margin-bottom: 20px;
+  transition: background 0.4s;
 }
 
 #c-actions {
@@ -235,26 +358,26 @@ canvas#field {
   text-transform: uppercase;
   padding: 11px 6px;
   border-radius: 10px;
-  border: 0.5px solid rgba(127,119,221,0.25);
-  color: rgba(232,230,248,0.5);
+  border: 0.5px solid var(--btn-border);
+  color: var(--btn-color);
   background: transparent;
   text-decoration: none;
   cursor: pointer;
   transition: background 0.16s, border-color 0.16s, color 0.16s;
 }
 .cbtn:hover {
-  background: rgba(127,119,221,0.1);
-  border-color: rgba(127,119,221,0.55);
-  color: #e8e6f8;
+  background: var(--btn-hover-bg);
+  border-color: var(--btn-hover-bdr);
+  color: var(--btn-hover-col);
 }
 .cbtn.primary {
-  background: rgba(127,119,221,0.1);
-  border-color: rgba(127,119,221,0.4);
-  color: #e8e6f8;
+  background: var(--btn-pri-bg);
+  border-color: var(--btn-pri-bdr);
+  color: var(--btn-pri-col);
 }
 .cbtn.primary:hover {
-  background: rgba(127,119,221,0.2);
-  border-color: rgba(127,119,221,0.7);
+  background: var(--btn-pri-hbg);
+  border-color: var(--btn-pri-hbdr);
 }
 .cbtn svg {
   width: 13px; height: 13px;
@@ -283,6 +406,11 @@ canvas#field {
 
 <div id="hint">select a node</div>
 <div id="works-count"></div>
+
+<button id="theme-toggle" aria-label="toggle light/dark theme">
+  <div id="toggle-track"><div id="toggle-thumb"></div></div>
+  <span id="toggle-icon">☀︎</span>
+</button>
 
 <div id="overlay">
   <div id="card">
@@ -323,7 +451,7 @@ canvas#field {
       tags: ['resonance physics', 'metabolic decay', 'sovereign AI', 'PWA', 'arbiter'],
       gh:  'https://github.com/nztdev/boss-kernel',
       io:  'https://nztdev.github.io/boss-kernel/core/',
-      rgb: '220,38,38',
+      rgb: '127,119,221',
     },
     {
       id: 1,
@@ -333,7 +461,7 @@ canvas#field {
       tags: ['music intelligence', 'electronic', 'live feed', '2026'],
       gh:  'https://github.com/nztdev/resonance-signal',
       io:  'https://nztdev.github.io/resonance-signal/',
-      rgb: '125,125,255',
+      rgb: '29,158,117',
     },
     {
       id: 2,
@@ -343,7 +471,7 @@ canvas#field {
       tags: ['intentional UI', 'somatic design', 'B.O.S.S.', 'paced action'],
       gh:  'https://github.com/nztdev/boss-deliberate',
       io:  'https://nztdev.github.io/boss-deliberate/',
-      rgb: '74,158,255',
+      rgb: '239,159,39',
     },
     {
       id: 3,
@@ -353,7 +481,7 @@ canvas#field {
       tags: ['AI editorial', 'GitHub trends', 'Gemini', 'weekly briefing', 'intelligence'],
       gh:  'https://github.com/nztdev/GitWire',
       io:  'https://nztdev.github.io/GitWire/',
-      rgb: '29,158,117',
+      rgb: '0,200,255',
     },
     {
       id: 4,
@@ -363,7 +491,7 @@ canvas#field {
       tags: ['life simulator', 'permadeath', 'Gemini 2.5', 'Supabase', 'roguelike', 'PWA'],
       gh:  'https://github.com/thenthlife/thenthlife.github.io',
       io:  'https://thenthlife.github.io',
-      rgb: '52,211,153',
+      rgb: '220,38,38',
     },
   ];
   /* ═══════════════════════════════════════════════════════ */
@@ -375,6 +503,21 @@ canvas#field {
   const closBtn = document.getElementById('close');
 
   document.getElementById('works-count').textContent = REPOS.length + ' works';
+
+  /* ── Theme toggle ─────────────────────────────────────── */
+  let isLight = false;
+  const toggleBtn  = document.getElementById('theme-toggle');
+  const toggleIcon = document.getElementById('toggle-icon');
+
+  function getCSS(prop) {
+    return getComputedStyle(document.documentElement).getPropertyValue(prop).trim();
+  }
+
+  toggleBtn.addEventListener('click', () => {
+    isLight = !isLight;
+    document.body.classList.toggle('light', isLight);
+    toggleIcon.textContent = isLight ? '☽' : '☀︎';
+  });
 
   let W, H, t = 0, activeId = -1, locked = false;
 
@@ -509,6 +652,14 @@ canvas#field {
     t += 0.012;
     const cx = CX(), cy = CY();
 
+    /* canvas background fill — matches body theme */
+    const bgRgb     = getCSS('--canvas-bg')     || '9,8,14';
+    const ptRgb     = getCSS('--particle-rgb')  || '127,119,221';
+    const blobAlpha = parseFloat(getCSS('--blob-alpha') || '0.011');
+
+    ctx.fillStyle = `rgb(${bgRgb})`;
+    ctx.fillRect(0, 0, W, H);
+
     /* slow ambient atmosphere blobs */
     for (let i = 0; i < 3; i++) {
       ctx.beginPath();
@@ -517,7 +668,7 @@ canvas#field {
         cy + Math.cos(t * 0.045 + i * 1.8) * H * 0.22,
         Math.min(W, H) * (0.32 + i * 0.1), 0, Math.PI * 2
       );
-      ctx.fillStyle = `rgba(${i === 1 ? '29,158,117' : '127,119,221'},${0.011 + i * 0.004})`;
+      ctx.fillStyle = `rgba(${i === 1 ? '29,158,117' : ptRgb},${blobAlpha + i * 0.004})`;
       ctx.fill();
     }
 
@@ -528,7 +679,7 @@ canvas#field {
       if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(127,119,221,${p.a * (0.5 + 0.5 * Math.sin(t * 0.8 + p.ph))})`;
+      ctx.fillStyle = `rgba(${ptRgb},${p.a * (0.5 + 0.5 * Math.sin(t * 0.8 + p.ph))})`;
       ctx.fill();
     });
 
@@ -541,7 +692,7 @@ canvas#field {
         if (d < 115) {
           ctx.beginPath();
           ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
-          ctx.strokeStyle = `rgba(127,119,221,${(1 - d / 115) * 0.028})`;
+          ctx.strokeStyle = `rgba(${ptRgb},${(1 - d / 115) * 0.028})`;
           ctx.lineWidth = 0.5;
           ctx.stroke();
         }
@@ -574,7 +725,7 @@ canvas#field {
         if (d < md) {
           ctx.beginPath();
           ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
-          ctx.strokeStyle = `rgba(127,119,221,${(1 - d / md) * 0.13 * (0.6 + 0.4 * Math.sin(t + i))})`;
+          ctx.strokeStyle = `rgba(${ptRgb},${(1 - d / md) * 0.13 * (0.6 + 0.4 * Math.sin(t + i))})`;
           ctx.lineWidth = 0.5;
           ctx.stroke();
         }
@@ -646,7 +797,7 @@ canvas#field {
     /* origin pulse */
     ctx.beginPath();
     ctx.arc(cx, cy, 2.5, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(127,119,221,${0.14 + 0.1 * Math.sin(t)})`;
+    ctx.fillStyle = `rgba(${ptRgb},${0.14 + 0.1 * Math.sin(t)})`;
     ctx.fill();
 
     requestAnimationFrame(draw);
