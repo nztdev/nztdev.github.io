@@ -5,807 +5,979 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>nztdev · field of works</title>
 <meta name="description" content="nztdev — experimental systems at the edge of computation, biology, and signal.">
-<meta property="og:title" content="nztdev · field of works">
-<meta property="og:description" content="Experimental systems at the edge of computation, biology, and signal.">
-<meta property="og:url" content="https://nztdev.github.io">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ── Theme variables ───────────────────────────────────── */
 :root {
-  --bg:              #09080e;
-  --card-bg:         rgba(12,10,22,0.97);
-  --card-border:     rgba(127,119,221,0.28);
-  --text-primary:    #e8e6f8;
-  --text-secondary:  rgba(232,230,248,0.5);
-  --text-muted:      rgba(232,230,248,0.4);
-  --hdr-name:        rgba(127,119,221,0.45);
-  --hdr-sub:         rgba(127,119,221,0.2);
-  --live-color:      rgba(29,158,117,0.45);
-  --hint-color:      rgba(127,119,221,0.35);
-  --count-color:     rgba(127,119,221,0.18);
-  --close-border:    rgba(127,119,221,0.2);
-  --close-color:     rgba(232,230,248,0.4);
-  --close-hover-bg:  rgba(127,119,221,0.12);
-  --close-hover-bdr: rgba(127,119,221,0.45);
-  --close-hover-col: #e8e6f8;
-  --tag-border:      rgba(127,119,221,0.22);
-  --tag-color:       rgba(127,119,221,0.55);
-  --divider-bg:      rgba(127,119,221,0.1);
-  --btn-border:      rgba(127,119,221,0.25);
-  --btn-color:       rgba(232,230,248,0.5);
-  --btn-hover-bg:    rgba(127,119,221,0.1);
-  --btn-hover-bdr:   rgba(127,119,221,0.55);
-  --btn-hover-col:   #e8e6f8;
-  --btn-pri-bg:      rgba(127,119,221,0.1);
-  --btn-pri-bdr:     rgba(127,119,221,0.4);
-  --btn-pri-col:     #e8e6f8;
-  --btn-pri-hbg:     rgba(127,119,221,0.2);
-  --btn-pri-hbdr:    rgba(127,119,221,0.7);
-  /* canvas draw colours (read by JS) */
-  --canvas-bg:       9,8,14;
-  --particle-rgb:    127,119,221;
-  --blob-alpha:      0.011;
+  --bg:          #09080e;
+  --card-bg:     rgba(12,10,22,0.97);
+  --card-border: rgba(127,119,221,0.28);
+  --text:        #e8e6f8;
+  --text2:       rgba(232,230,248,0.5);
+  --hint:        rgba(127,119,221,0.35);
+  --mono:        'DM Mono', 'Courier New', monospace;
+  --sans:        'DM Sans', system-ui, sans-serif;
 }
-
-/* ── Light theme overrides ─────────────────────────────── */
 body.light {
-  --bg:              #f4f3fb;
-  --card-bg:         rgba(255,255,255,0.97);
-  --card-border:     rgba(100,90,200,0.22);
-  --text-primary:    #1a1830;
-  --text-secondary:  rgba(26,24,48,0.55);
-  --text-muted:      rgba(26,24,48,0.38);
-  --hdr-name:        rgba(83,74,183,0.6);
-  --hdr-sub:         rgba(83,74,183,0.3);
-  --live-color:      rgba(15,110,86,0.65);
-  --hint-color:      rgba(83,74,183,0.4);
-  --count-color:     rgba(83,74,183,0.25);
-  --close-border:    rgba(83,74,183,0.18);
-  --close-color:     rgba(26,24,48,0.4);
-  --close-hover-bg:  rgba(83,74,183,0.08);
-  --close-hover-bdr: rgba(83,74,183,0.45);
-  --close-hover-col: #1a1830;
-  --tag-border:      rgba(83,74,183,0.2);
-  --tag-color:       rgba(83,74,183,0.65);
-  --divider-bg:      rgba(83,74,183,0.1);
-  --btn-border:      rgba(83,74,183,0.22);
-  --btn-color:       rgba(26,24,48,0.5);
-  --btn-hover-bg:    rgba(83,74,183,0.07);
-  --btn-hover-bdr:   rgba(83,74,183,0.5);
-  --btn-hover-col:   #1a1830;
-  --btn-pri-bg:      rgba(83,74,183,0.08);
-  --btn-pri-bdr:     rgba(83,74,183,0.35);
-  --btn-pri-col:     #1a1830;
-  --btn-pri-hbg:     rgba(83,74,183,0.15);
-  --btn-pri-hbdr:    rgba(83,74,183,0.6);
-  --canvas-bg:       244,243,251;
-  --particle-rgb:    100,90,200;
-  --blob-alpha:      0.018;
+  --bg:          #f4f3fb;
+  --card-bg:     rgba(255,255,255,0.97);
+  --card-border: rgba(100,90,200,0.22);
+  --text:        #1a1830;
+  --text2:       rgba(26,24,48,0.55);
+  --hint:        rgba(83,74,183,0.4);
 }
 
 html, body {
   width: 100%; height: 100%;
   background: var(--bg);
   overflow: hidden;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--sans);
   -webkit-font-smoothing: antialiased;
   transition: background 0.4s;
 }
 
-canvas#field {
+#wrap {
   position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-  cursor: default;
+  top: 0; left: 0; right: 0; bottom: 0;
 }
 
-#hdr {
-  position: fixed;
-  top: 26px; left: 32px;
-  z-index: 20;
-  pointer-events: none;
-}
-#hdr-name {
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  font-weight: 400;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--hdr-name);
-  transition: color 0.4s;
-}
-#hdr-sub {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  font-weight: 300;
-  font-style: italic;
-  color: var(--hdr-sub);
-  margin-top: 3px;
-  letter-spacing: 0.07em;
-  transition: color 0.4s;
-}
-
-#live-badge {
-  position: fixed;
-  top: 30px; right: 32px;
-  z-index: 20;
-  pointer-events: none;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  font-weight: 300;
-  color: var(--live-color);
-  letter-spacing: 0.1em;
-  transition: color 0.4s;
-}
-#live-dot {
-  width: 5px; height: 5px;
-  border-radius: 50%;
-  background: #1D9E75;
-  animation: blink 2.4s ease-in-out infinite;
-}
-@keyframes blink {
-  0%,100%{opacity:1} 50%{opacity:0.3}
-}
-
-#hint {
-  position: fixed;
-  bottom: 28px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 20;
-  pointer-events: none;
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  font-weight: 300;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--hint-color);
-  white-space: nowrap;
-  transition: opacity 0.5s, color 0.4s;
-}
-
-#works-count {
-  position: fixed;
-  bottom: 28px; right: 32px;
-  z-index: 20;
-  pointer-events: none;
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  font-weight: 300;
-  color: var(--count-color);
-  letter-spacing: 0.1em;
-  transition: color 0.4s;
-}
-
-/* ── Theme toggle ──────────────────────────────────────── */
-#theme-toggle {
-  position: fixed;
-  bottom: 22px; left: 32px;
-  z-index: 40;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  cursor: pointer;
-  background: transparent;
-  border: none;
-  padding: 0;
-}
-#toggle-track {
-  width: 36px; height: 20px;
-  border-radius: 99px;
-  border: 0.5px solid var(--hint-color);
-  background: transparent;
-  position: relative;
-  transition: border-color 0.3s, background 0.3s;
-  flex-shrink: 0;
-}
-#toggle-thumb {
+canvas {
   position: absolute;
-  top: 3px; left: 3px;
-  width: 12px; height: 12px;
-  border-radius: 50%;
-  background: var(--hint-color);
-  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), background 0.3s;
-}
-body.light #toggle-thumb {
-  transform: translateX(16px);
-}
-#toggle-icon {
-  font-size: 11px;
-  color: var(--hint-color);
-  transition: color 0.4s;
-  user-select: none;
-  line-height: 1;
+  top: 0; left: 0;
+  display: block;
 }
 
-/* Card overlay — centred, floating, pointer-events only on #card itself */
+/* ── Chrome labels ──────────────────────────────── */
+.chrome {
+  position: absolute;
+  font-family: var(--mono);
+  pointer-events: none;
+  z-index: 20;
+  transition: color 0.4s, opacity 0.5s;
+}
+#lbl-name {
+  top: 26px; left: 32px;
+  font-size: 11px; font-weight: 400;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: rgba(127,119,221,0.45);
+}
+body.light #lbl-name { color: rgba(83,74,183,0.6); }
+#lbl-sub {
+  top: 42px; left: 32px;
+  font-size: 10px; font-weight: 300; font-style: italic;
+  color: rgba(127,119,221,0.2); letter-spacing: 0.07em;
+}
+body.light #lbl-sub { color: rgba(83,74,183,0.3); }
+#lbl-live {
+  top: 30px; right: 32px;
+  display: flex; align-items: center; gap: 7px;
+  font-size: 10px; font-weight: 300; letter-spacing: 0.1em;
+  color: rgba(29,158,117,0.45); pointer-events: none;
+}
+body.light #lbl-live { color: rgba(15,110,86,0.65); }
+#live-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: #1D9E75; animation: blink 2.4s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+#lbl-hint {
+  bottom: 56px; left: 50%; transform: translateX(-50%);
+  font-size: 10px; font-weight: 300;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--hint); white-space: nowrap;
+}
+#lbl-count {
+  bottom: 30px; right: 32px;
+  font-size: 10px; font-weight: 300;
+  letter-spacing: 0.1em; color: rgba(127,119,221,0.18);
+}
+body.light #lbl-count { color: rgba(83,74,183,0.25); }
+
+/* ── Bottom controls ────────────────────────────── */
+#controls {
+  position: absolute; bottom: 22px; left: 32px;
+  z-index: 30; display: flex; align-items: center; gap: 10px;
+}
+
+/* Theme pill */
+#theme-btn {
+  display: flex; align-items: center; gap: 7px;
+  background: transparent; border: none; padding: 0; cursor: pointer;
+}
+#tog-track {
+  width: 36px; height: 20px; border-radius: 99px;
+  border: 0.5px solid var(--hint); position: relative; flex-shrink: 0;
+  transition: border-color 0.3s;
+}
+#tog-thumb {
+  position: absolute; top: 3px; left: 3px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: var(--hint);
+  transition: transform 0.28s cubic-bezier(0.34,1.56,0.64,1), background 0.3s;
+}
+body.light #tog-thumb { transform: translateX(16px); }
+#tog-icon {
+  font-size: 12px; color: var(--hint);
+  transition: color 0.4s; user-select: none; line-height: 1;
+}
+
+/* Separator */
+.sep {
+  width: 0.5px; height: 16px;
+  background: var(--hint); opacity: 0.3; flex-shrink: 0;
+}
+
+/* Resonate pill */
+#res-btn {
+  display: flex; align-items: center; gap: 7px;
+  background: transparent;
+  border: 0.5px solid var(--hint);
+  border-radius: 99px; padding: 5px 13px 5px 9px;
+  cursor: pointer; font-family: var(--mono);
+  transition: border-color 0.25s, background 0.25s;
+}
+#res-btn:hover { background: rgba(127,119,221,0.07); }
+#res-btn.on { border-color: rgba(127,119,221,0.7); background: rgba(127,119,221,0.1); }
+#res-orb {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--hint); flex-shrink: 0; transition: background 0.3s, box-shadow 0.3s;
+}
+#res-btn.on #res-orb {
+  background: rgba(127,119,221,0.9);
+  animation: orbGlow 1.8s ease-in-out infinite;
+}
+@keyframes orbGlow {
+  0%,100%{ box-shadow: 0 0 4px rgba(127,119,221,0.4); }
+  50%     { box-shadow: 0 0 12px rgba(127,119,221,0.9); }
+}
+#res-lbl {
+  font-size: 10px; font-weight: 300; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--hint);
+  transition: color 0.3s; white-space: nowrap;
+}
+#res-btn.on #res-lbl { color: rgba(127,119,221,0.9); }
+
+/* ── Resonance menu ─────────────────────────────── */
+#res-menu {
+  position: absolute;
+  bottom: 56px; left: 32px;
+  z-index: 50;
+  background: var(--card-bg);
+  border: 0.5px solid rgba(127,119,221,0.3);
+  border-radius: 14px;
+  padding: 16px 18px 14px;
+  width: 210px;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  transition: background 0.4s;
+}
+#res-menu.open { display: flex; }
+#res-menu-title {
+  font-family: var(--mono);
+  font-size: 9px; font-weight: 400;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: rgba(127,119,221,0.5); margin-bottom: 2px;
+}
+.res-opt {
+  display: flex; align-items: center; gap: 9px;
+  cursor: pointer; padding: 5px 4px; border-radius: 8px;
+  transition: background 0.15s;
+}
+.res-opt:hover { background: rgba(127,119,221,0.07); }
+.res-radio {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 1px solid rgba(127,119,221,0.35);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: border-color 0.2s;
+}
+.res-radio-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(127,119,221,0.8); display: none;
+}
+.res-opt.sel .res-radio { border-color: rgba(127,119,221,0.8); }
+.res-opt.sel .res-radio-dot { display: block; }
+.res-opt-lbl {
+  font-family: var(--mono);
+  font-size: 11px; font-weight: 300;
+  letter-spacing: 0.06em; color: var(--text);
+  transition: color 0.4s;
+}
+#res-menu-ok {
+  margin-top: 4px;
+  background: rgba(127,119,221,0.12);
+  border: 0.5px solid rgba(127,119,221,0.4);
+  border-radius: 8px; padding: 8px;
+  font-family: var(--mono); font-size: 10px;
+  font-weight: 400; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text);
+  cursor: pointer; transition: background 0.15s;
+}
+#res-menu-ok:hover { background: rgba(127,119,221,0.22); }
+#res-status {
+  font-family: var(--mono); font-size: 9px;
+  letter-spacing: 0.1em; color: rgba(127,119,221,0.5);
+  text-align: center; display: none;
+}
+
+/* ── Card overlay ───────────────────────────────── */
 #overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 30;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 40; display: flex;
+  align-items: center; justify-content: center;
   pointer-events: none;
 }
-
 #card {
-  width: 360px;
+  width: 340px; max-width: calc(100% - 40px);
   background: var(--card-bg);
   border: 0.5px solid var(--card-border);
-  border-radius: 20px;
-  padding: 30px 30px 26px;
-  position: relative;
-  pointer-events: all;
-  opacity: 0;
-  transform: scale(0.84) translateY(12px);
-  transition: opacity 0.38s cubic-bezier(0.22,1,0.36,1),
-              transform 0.38s cubic-bezier(0.22,1,0.36,1),
+  border-radius: 20px; padding: 28px 28px 24px;
+  position: relative; pointer-events: all;
+  opacity: 0; transform: scale(0.84) translateY(12px);
+  transition: opacity 0.36s cubic-bezier(0.22,1,0.36,1),
+              transform 0.36s cubic-bezier(0.22,1,0.36,1),
               background 0.4s, border-color 0.4s;
 }
-#card.show {
-  opacity: 1;
-  transform: scale(1) translateY(0);
+#card.show { opacity: 1; transform: scale(1) translateY(0); }
+#card:not(.show) { pointer-events: none; }
+#card-line { position: absolute; top: 0; left: 28px; right: 28px; height: 1px; border-radius: 99px; }
+#card-close {
+  position: absolute; top: 12px; right: 14px;
+  width: 26px; height: 26px; border-radius: 50%;
+  border: 0.5px solid rgba(127,119,221,0.2);
+  background: transparent; cursor: pointer;
+  color: rgba(232,230,248,0.4); font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s, border-color 0.15s;
 }
-#card:not(.show) {
-  pointer-events: none;
-}
-
-#card-glow {
-  position: absolute;
-  top: 0; left: 30px; right: 30px;
-  height: 1px;
-  border-radius: 99px;
-}
-
-#close {
-  position: absolute;
-  top: 14px; right: 16px;
-  width: 27px; height: 27px;
-  border-radius: 50%;
-  border: 0.5px solid var(--close-border);
-  background: transparent;
-  cursor: pointer;
-  color: var(--close-color);
-  font-size: 17px;
-  font-family: 'DM Sans', sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-  transition: background 0.15s, border-color 0.15s, color 0.15s;
-}
-#close:hover {
-  background: var(--close-hover-bg);
-  border-color: var(--close-hover-bdr);
-  color: var(--close-hover-col);
-}
-
+body.light #card-close { color: rgba(26,24,48,0.4); border-color: rgba(83,74,183,0.2); }
+#card-close:hover { background: rgba(127,119,221,0.1); border-color: rgba(127,119,221,0.45); }
 #c-eye {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  font-weight: 400;
-  letter-spacing: 0.17em;
-  text-transform: uppercase;
-  margin-bottom: 10px;
-  transition: color 0.3s;
+  font-family: var(--mono); font-size: 9px; font-weight: 400;
+  letter-spacing: 0.17em; text-transform: uppercase;
+  margin-bottom: 10px; transition: color 0.3s;
 }
-#c-title {
-  font-size: 22px;
-  font-weight: 300;
-  color: var(--text-primary);
-  letter-spacing: -0.4px;
-  line-height: 1.15;
-  margin-bottom: 10px;
+#c-name {
+  font-size: 21px; font-weight: 300; color: var(--text);
+  letter-spacing: -0.3px; line-height: 1.15; margin-bottom: 9px;
   transition: color 0.4s;
 }
 #c-desc {
-  font-size: 13px;
-  font-weight: 300;
-  color: var(--text-secondary);
-  line-height: 1.65;
-  margin-bottom: 16px;
-  transition: color 0.4s;
+  font-size: 12px; font-weight: 300; color: var(--text2);
+  line-height: 1.65; margin-bottom: 14px; transition: color 0.4s;
 }
-#c-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-  margin-bottom: 20px;
-}
+#c-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 18px; }
 .ctag {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  font-weight: 300;
-  padding: 3px 9px;
-  border-radius: 99px;
-  border: 0.5px solid var(--tag-border);
-  color: var(--tag-color);
-  letter-spacing: 0.04em;
-  transition: border-color 0.4s, color 0.4s;
+  font-family: var(--mono); font-size: 9px; font-weight: 300;
+  padding: 3px 9px; border-radius: 99px;
+  border: 0.5px solid rgba(127,119,221,0.22);
+  color: rgba(127,119,221,0.55); letter-spacing: 0.04em;
 }
-
-.divider {
-  height: 0.5px;
-  background: var(--divider-bg);
-  margin-bottom: 20px;
-  transition: background 0.4s;
-}
-
-#c-actions {
-  display: flex;
-  gap: 10px;
-}
+body.light .ctag { border-color: rgba(83,74,183,0.2); color: rgba(83,74,183,0.65); }
+.divider { height: 0.5px; background: rgba(127,119,221,0.1); margin-bottom: 18px; }
+#c-btns { display: flex; gap: 9px; }
 .cbtn {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  font-weight: 400;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 11px 6px;
-  border-radius: 10px;
-  border: 0.5px solid var(--btn-border);
-  color: var(--btn-color);
-  background: transparent;
-  text-decoration: none;
-  cursor: pointer;
-  transition: background 0.16s, border-color 0.16s, color 0.16s;
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;
+  font-family: var(--mono); font-size: 10px; font-weight: 400;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 10px 4px; border-radius: 10px;
+  border: 0.5px solid rgba(127,119,221,0.25);
+  color: rgba(232,230,248,0.5); background: transparent;
+  text-decoration: none; cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
-.cbtn:hover {
-  background: var(--btn-hover-bg);
-  border-color: var(--btn-hover-bdr);
-  color: var(--btn-hover-col);
-}
-.cbtn.primary {
-  background: var(--btn-pri-bg);
-  border-color: var(--btn-pri-bdr);
-  color: var(--btn-pri-col);
-}
-.cbtn.primary:hover {
-  background: var(--btn-pri-hbg);
-  border-color: var(--btn-pri-hbdr);
-}
+.cbtn:hover { background: rgba(127,119,221,0.1); border-color: rgba(127,119,221,0.55); color: var(--text); }
+.cbtn.pri { background: rgba(127,119,221,0.1); border-color: rgba(127,119,221,0.4); color: var(--text); }
+.cbtn.pri:hover { background: rgba(127,119,221,0.2); border-color: rgba(127,119,221,0.7); }
+body.light .cbtn { border-color: rgba(83,74,183,0.22); color: rgba(26,24,48,0.5); }
+body.light .cbtn.pri { background: rgba(83,74,183,0.08); border-color: rgba(83,74,183,0.35); color: var(--text); }
 .cbtn svg {
-  width: 13px; height: 13px;
-  flex-shrink: 0;
-  stroke: currentColor;
-  fill: none;
-  stroke-width: 1.5;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  width: 13px; height: 13px; flex-shrink: 0; stroke: currentColor; fill: none;
+  stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
 }
 </style>
 </head>
 <body>
+<div id="wrap">
+  <canvas id="c"></canvas>
 
-<canvas id="field"></canvas>
+  <div class="chrome" id="lbl-name">nztdev</div>
+  <div class="chrome" id="lbl-sub">field of works</div>
+  <div class="chrome" id="lbl-live" style="position:absolute">
+    <div id="live-dot"></div><span>github.com/nztdev</span>
+  </div>
+  <div class="chrome" id="lbl-hint">select a node</div>
+  <div class="chrome" id="lbl-count"></div>
 
-<div id="hdr">
-  <div id="hdr-name">nztdev</div>
-  <div id="hdr-sub">field of works</div>
-</div>
+  <div id="controls">
+    <button id="theme-btn" aria-label="toggle theme">
+      <div id="tog-track"><div id="tog-thumb"></div></div>
+      <span id="tog-icon">&#9788;</span>
+    </button>
+    <div class="sep"></div>
+    <button id="res-btn" aria-label="toggle resonance">
+      <div id="res-orb"></div>
+      <span id="res-lbl">Resonate</span>
+    </button>
+  </div>
 
-<div id="live-badge">
-  <div id="live-dot"></div>
-  <span>github.com/nztdev</span>
-</div>
+  <div id="res-menu">
+    <div id="res-menu-title">Resonance metric</div>
+    <div class="res-opt sel" data-m="commits">
+      <div class="res-radio"><div class="res-radio-dot"></div></div>
+      <span class="res-opt-lbl">Commits</span>
+    </div>
+    <div class="res-opt" data-m="stars">
+      <div class="res-radio"><div class="res-radio-dot"></div></div>
+      <span class="res-opt-lbl">Stars</span>
+    </div>
+    <div class="res-opt" data-m="forks">
+      <div class="res-radio"><div class="res-radio-dot"></div></div>
+      <span class="res-opt-lbl">Forks</span>
+    </div>
+    <div class="res-opt" data-m="watchers">
+      <div class="res-radio"><div class="res-radio-dot"></div></div>
+      <span class="res-opt-lbl">Watchers</span>
+    </div>
+    <div id="res-status">fetching&#8230;</div>
+    <button id="res-menu-ok">OK &#8594;</button>
+  </div>
 
-<div id="hint">select a node</div>
-<div id="works-count"></div>
-
-<button id="theme-toggle" aria-label="toggle light/dark theme">
-  <div id="toggle-track"><div id="toggle-thumb"></div></div>
-  <span id="toggle-icon">☀︎</span>
-</button>
-
-<div id="overlay">
-  <div id="card">
-    <div id="card-glow"></div>
-    <button id="close" aria-label="close">×</button>
-    <div id="c-eye"></div>
-    <div id="c-title"></div>
-    <div id="c-desc"></div>
-    <div id="c-tags"></div>
-    <div class="divider"></div>
-    <div id="c-actions">
-      <a class="cbtn primary" id="btn-gh" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-        GitHub repo
-      </a>
-      <a class="cbtn" id="btn-io" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-        live page
-      </a>
+  <div id="overlay">
+    <div id="card">
+      <div id="card-line"></div>
+      <button id="card-close" aria-label="close">&#215;</button>
+      <div id="c-eye"></div>
+      <div id="c-name"></div>
+      <div id="c-desc"></div>
+      <div id="c-tags"></div>
+      <div class="divider"></div>
+      <div id="c-btns">
+        <a class="cbtn pri" id="btn-gh" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          GitHub repo
+        </a>
+        <a class="cbtn" id="btn-io" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          live page
+        </a>
+      </div>
     </div>
   </div>
-</div>
-
-<script>
+</div><script>
 (function () {
+'use strict';
 
-  /* ═══════════════════════════════════════════════════════
-     DATA — to add a repo, append an object with the same
-     shape. To remove, delete its object. To edit, change
-     any field. The field recalculates everything at runtime.
-     ═══════════════════════════════════════════════════════ */
-  const REPOS = [
-    {
-      id: 0,
-      name: 'B.O.S.S. Kernel',
-      eye: 'biological kernel · JS / Python / HTML',
-      desc: 'A resonant routing kernel treating AI intent as a biological pulse. Nodes warm to fire and decay before re-activation. The Soma gates the Cortex through thermal readiness and semantic alignment to prevent ungrounded actions.',
-      tags: ['resonance physics', 'metabolic decay', 'sovereign AI', 'PWA', 'arbiter'],
-      gh:  'https://github.com/nztdev/boss-kernel',
-      io:  'https://nztdev.github.io/boss-kernel/core/',
-      rgb: '127,119,221',
-    },
-    {
-      id: 1,
-      name: 'Resonance Signal',
-      eye: 'electronic music intelligence · HTML',
-      desc: 'Electronic music intelligence, alive and curated. A living feed that moves at the frequency of now — where the signal finds you before you find it.',
-      tags: ['music intelligence', 'electronic', 'live feed', '2026'],
-      gh:  'https://github.com/nztdev/resonance-signal',
-      io:  'https://nztdev.github.io/resonance-signal/',
-      rgb: '29,158,117',
-    },
-    {
-      id: 2,
-      name: 'B.O.S.S. Deliberate',
-      eye: 'intentional interface · HTML',
-      desc: 'The deliberate layer of the B.O.S.S. architecture. Intention is set before action is permitted. Slow thought made visible — the counterweight to impulse in the resonant system.',
-      tags: ['intentional UI', 'somatic design', 'B.O.S.S.', 'paced action'],
-      gh:  'https://github.com/nztdev/boss-deliberate',
-      io:  'https://nztdev.github.io/boss-deliberate/',
-      rgb: '239,159,39',
-    },
-    {
-      id: 3,
-      name: 'GitWire',
-      eye: 'github intelligence briefing · HTML',
-      desc: 'A weekly AI-powered GitHub intelligence publication. GitWire scans trending repositories, selects editorial picks, and writes Signal, Under the Hood, The Idea, Fresh Drops, and Resurrection sections — live, via Gemini. GitHub as a newspaper.',
-      tags: ['AI editorial', 'GitHub trends', 'Gemini', 'weekly briefing', 'intelligence'],
-      gh:  'https://github.com/nztdev/GitWire',
-      io:  'https://nztdev.github.io/GitWire/',
-      rgb: '0,200,255',
-    },
-    {
-      id: 4,
-      name: 'The nᵗʰ Life',
-      eye: 'brutalist AI life simulator · HTML / JS',
-      desc: 'A brutalist, AI-driven life simulator built for 2026 tactical realism. Every action has consequences — Gemini generates non-sugarcoated outcomes in real-time. Permadeath roguelike mode with live stat tracking, cloud saves via Supabase, and a global leaderboard. Your timeline ends. It is scored. It is archived.',
-      tags: ['life simulator', 'permadeath', 'Gemini 2.5', 'Supabase', 'roguelike', 'PWA'],
-      gh:  'https://github.com/thenthlife/thenthlife.github.io',
-      io:  'https://thenthlife.github.io',
-      rgb: '220,38,38',
-    },
-  ];
-  /* ═══════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════
+   DATA — edit only this array to add/remove/change repos
+═══════════════════════════════════════════════════ */
+var REPOS = [
+  { id:0, name:'B.O.S.S. Kernel',    rgb:'127,119,221',
+    eye:'biological kernel \u00b7 JS / Python / HTML',
+    desc:'A resonant routing kernel treating AI intent as a biological pulse. Nodes warm to fire and decay before re-activation. The Soma gates the Cortex through thermal readiness and semantic alignment.',
+    tags:['resonance physics','metabolic decay','sovereign AI','PWA','arbiter'],
+    gh:'https://github.com/nztdev/boss-kernel',
+    io:'https://nztdev.github.io/boss-kernel/core/',
+    ghOwner:'nztdev', ghRepo:'boss-kernel' },
 
-  const canvas  = document.getElementById('field');
-  const ctx     = canvas.getContext('2d');
-  const card    = document.getElementById('card');
-  const hint    = document.getElementById('hint');
-  const closBtn = document.getElementById('close');
+  { id:1, name:'Resonance Signal',   rgb:'29,158,117',
+    eye:'electronic music intelligence \u00b7 HTML',
+    desc:'Electronic music intelligence, alive and curated. A living feed that moves at the frequency of now \u2014 where the signal finds you before you find it.',
+    tags:['music intelligence','electronic','live feed','2026'],
+    gh:'https://github.com/nztdev/resonance-signal',
+    io:'https://nztdev.github.io/resonance-signal/',
+    ghOwner:'nztdev', ghRepo:'resonance-signal' },
 
-  document.getElementById('works-count').textContent = REPOS.length + ' works';
+  { id:2, name:'B.O.S.S. Deliberate',rgb:'239,159,39',
+    eye:'intentional interface \u00b7 HTML',
+    desc:'The deliberate layer of the B.O.S.S. architecture. Intention is set before action is permitted. Slow thought made visible \u2014 the counterweight to impulse.',
+    tags:['intentional UI','somatic design','B.O.S.S.','paced action'],
+    gh:'https://github.com/nztdev/boss-deliberate',
+    io:'https://nztdev.github.io/boss-deliberate/',
+    ghOwner:'nztdev', ghRepo:'boss-deliberate' },
 
-  /* ── Theme toggle ─────────────────────────────────────── */
-  let isLight = false;
-  const toggleBtn  = document.getElementById('theme-toggle');
-  const toggleIcon = document.getElementById('toggle-icon');
+  { id:3, name:'GitWire',            rgb:'0,200,255',
+    eye:'github intelligence briefing \u00b7 HTML',
+    desc:'A weekly AI-powered GitHub intelligence publication. Scans trending repositories and writes Signal, Under the Hood, The Idea, Fresh Drops, and Resurrection sections \u2014 live, via Gemini.',
+    tags:['AI editorial','GitHub trends','Gemini','weekly briefing'],
+    gh:'https://github.com/nztdev/GitWire',
+    io:'https://nztdev.github.io/GitWire/',
+    ghOwner:'nztdev', ghRepo:'GitWire' },
 
-  const THEME = {
-    dark:  { bg: '9,8,14',       pt: '127,119,221', blobA: 0.011 },
-    light: { bg: '244,243,251',  pt: '100,90,200',  blobA: 0.018 },
-  };
+  { id:4, name:'The n\u1d57\u02b0 Life', rgb:'220,38,38',
+    eye:'brutalist AI life simulator \u00b7 HTML / JS',
+    desc:'A brutalist, AI-driven life simulator for 2026 tactical realism. Permadeath roguelike, Gemini-generated outcomes, Supabase cloud saves, global leaderboard. Your timeline ends. It is scored.',
+    tags:['life simulator','permadeath','Gemini 2.5','Supabase','roguelike'],
+    gh:'https://github.com/thenthlife/thenthlife.github.io',
+    io:'https://thenthlife.github.io',
+    ghOwner:'thenthlife', ghRepo:'thenthlife.github.io' },
 
-  function currentTheme() { return isLight ? THEME.light : THEME.dark; }
+  { id:5, name:'CardForge',          rgb:'124,92,252',
+    eye:'AI card game engine \u00b7 HTML / JS',
+    desc:'Describe any card game in a sentence \u2014 CardForge builds it and lets you play it instantly. Claude and Gemini, 13 real-world deck presets from Hanafuda to Tarot. Every game is unique.',
+    tags:['Claude','Gemini','card game','AI engine','Tarot','Hanafuda'],
+    gh:'https://github.com/nztdev/card-forge',
+    io:'https://nztdev.github.io/card-forge/',
+    ghOwner:'nztdev', ghRepo:'card-forge' },
 
-  toggleBtn.addEventListener('click', () => {
-    isLight = !isLight;
-    document.body.classList.toggle('light', isLight);
-    toggleIcon.textContent = isLight ? '☽' : '☀︎';
+  { id:6, name:'radioPumpo',          rgb:'255,80,120',
+    eye:'community radio \u00b7 HTML / JS',
+    desc:'A joke that got out of hand. Became a radio, then a TV, then a toolkit, then a community. 24/7, no investors, no ads, no agenda \u2014 just people on the same frequency.',
+    tags:['community','radio','no agenda','24/7','open'],
+    gh:'https://github.com/radiopumpo/radiopumpo.github.io',
+    io:'https://radiopumpo.github.io',
+    ghOwner:'radiopumpo', ghRepo:'radiopumpo.github.io' },
+];
+/* ════════════════════════════════════════════════ */
+
+/* ── State & Nodes Definition ───────────────────── */
+var t = 0, activeId = -1, locked = false;
+var menuOpen = false;
+
+var nodes = (function () {
+  return REPOS.map(function (r, i) {
+    return {
+      repo: r,
+      x: 0, y: 0, tx: 0, ty: 0,
+      radius: 24, targetR: 24,
+      orbitAngle: (i / REPOS.length) * Math.PI * 2 - Math.PI / 2,
+      orbitSpeed: (0.00022 + Math.random() * 0.00014) * (i % 2 === 0 ? 1 : -1),
+      pulse: Math.random() * Math.PI * 2
+    };
   });
+}());
 
-  let W, H, t = 0, activeId = -1, locked = false;
+/* Refs */
+var wrap      = document.getElementById('wrap');
+var canvas    = document.getElementById('c');
+var ctx       = canvas.getContext('2d');
+var card      = document.getElementById('card');
+var hintEl    = document.getElementById('lbl-hint');
+var closeBtn  = document.getElementById('card-close');
+var resBtn    = document.getElementById('res-btn');
+var resMenu   = document.getElementById('res-menu');
+var resOK     = document.getElementById('res-menu-ok');
+var resStatus = document.getElementById('res-status');
 
-  /* nodes — built from REPOS at startup */
-  const nodes = REPOS.map((r, i) => ({
-    repo: r,
-    x: 0, y: 0, tx: 0, ty: 0,
-    radius: 24, targetR: 24,
-    orbitAngle: (i / REPOS.length) * Math.PI * 2 - Math.PI / 2,
-    orbitSpeed: (0.00022 + Math.random() * 0.00014) * (i % 2 === 0 ? 1 : -1),
-    pulse: Math.random() * Math.PI * 2,
-  }));
+document.getElementById('lbl-count').textContent = REPOS.length + ' works';
 
-  /* ambient particles */
-  const PCOUNT = 65;
-  const pts = [];
-  function spawnPts() {
-    pts.length = 0;
-    for (let i = 0; i < PCOUNT; i++) {
-      pts.push({
-        x: Math.random() * W, y: Math.random() * H,
-        vx: (Math.random() - 0.5) * 0.19,
-        vy: (Math.random() - 0.5) * 0.19,
-        r:  Math.random() * 1.3 + 0.2,
-        a:  Math.random() * 0.18 + 0.03,
-        ph: Math.random() * Math.PI * 2,
-      });
-    }
-  }
+/* ── Theme ──────────────────────────────────────── */
+var isLight = false;
+var DARK  = { bg:'9,8,14',      pt:'127,119,221', bA:0.011 };
+var LIGHT = { bg:'244,243,251', pt:'100,90,200',  bA:0.018 };
+function th() { return isLight ? LIGHT : DARK; }
 
-  const CX = () => W / 2;
-  const CY = () => H / 2;
-  const OR = () => Math.min(W, H) * 0.26;
+document.getElementById('theme-btn').addEventListener('click', function () {
+  isLight = !isLight;
+  document.body.classList.toggle('light', isLight);
+  document.getElementById('tog-icon').textContent = isLight ? '\u263d' : '\u2600';
+});
 
-  function resize() {
-    W = canvas.width  = window.innerWidth;
-    H = canvas.height = window.innerHeight;
+/* ── Canvas size ────────────────────────────────── */
+var W = 300, H = 500, sizeReady = false;
+
+function measure() {
+  var w = wrap.offsetWidth;
+  var h = wrap.offsetHeight;
+  if (w < 10) { w = window.innerWidth || 375; }
+  if (h < 10) { h = window.innerHeight || 667; }
+  return { w: w, h: h };
+}
+
+function resetOrbits(snap) {
+  var cx = CX(), cy = CY(), or = OR();
+  nodes.forEach(function (n) {
+    n.tx = cx + Math.cos(n.orbitAngle) * or;
+    n.ty = cy + Math.sin(n.orbitAngle) * or;
+    n.targetR = 24;
+    if (snap) { n.x = n.tx; n.y = n.ty; n.radius = 24; }
+  });
+}
+
+function resize() {
+  var s = measure();
+  W = s.w; H = s.h;
+  canvas.width  = W;
+  canvas.height = H;
+  spawnPts();
+  if (!Res.active && activeId < 0) resetOrbits(true);
+}
+
+/* Defer first resize until DOM is fully painted */
+function initSize() {
+  var s = measure();
+  if (s.w > 10 && s.h > 10) {
+    W = s.w; H = s.h;
+    canvas.width  = W;
+    canvas.height = H;
+    sizeReady = true;
     spawnPts();
-    if (activeId < 0) resetOrbits(true);
+    resetOrbits(true);
+  } else {
+    setTimeout(initSize, 50);
   }
-  resize();
-  window.addEventListener('resize', resize);
+}
 
-  function resetOrbits(snap) {
-    nodes.forEach(n => {
-      n.tx = CX() + Math.cos(n.orbitAngle) * OR();
-      n.ty = CY() + Math.sin(n.orbitAngle) * OR();
-      n.targetR = 24;
-      if (snap) { n.x = n.tx; n.y = n.ty; n.radius = 24; }
+window.addEventListener('resize', resize);
+/* Try immediately, then defer */
+initSize();
+
+/* ── Particles ──────────────────────────────────── */
+var pts = [];
+function spawnPts() {
+  pts = [];
+  for (var i = 0; i < 60; i++) {
+    pts.push({
+      x: Math.random() * W, y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.19,
+      vy: (Math.random() - 0.5) * 0.19,
+      r: Math.random() * 1.3 + 0.2,
+      a: Math.random() * 0.18 + 0.03,
+      ph: Math.random() * Math.PI * 2
     });
   }
-  resetOrbits(true);
+}
+spawnPts();
 
-  /* ── Activate ─────────────────────────────────────────── */
-  function activate(id) {
-    if (locked) return;
-    locked = true;
-    activeId = id;
-    hint.style.opacity = '0';
-    nodes.forEach(n => {
-      if (n.repo.id === id) {
-        n.tx = CX(); n.ty = CY(); n.targetR = 94;
-      } else {
-        const push = OR() * 1.8;
-        n.tx = CX() + Math.cos(n.orbitAngle) * push;
-        n.ty = CY() + Math.sin(n.orbitAngle) * push;
-        n.targetR = 13;
-      }
-    });
-    setTimeout(() => {
-      showCard(REPOS.find(r => r.id === id));
-      locked = false;
-    }, 480);
-  }
+function CX() { return W / 2; }
+function CY() { return H / 2; }
+function OR() { return Math.min(W, H) * 0.26; }
 
-  /* ── Deactivate ───────────────────────────────────────── */
-  function deactivate() {
-    if (locked) return;
-    locked = true;
-    card.classList.remove('show');
-    activeId = -1;
-    nodes.forEach(n => { n.targetR = 24; });
-    hint.style.opacity = '1';
-    setTimeout(() => { locked = false; }, 400);
-  }
-
-  /* ── Populate card ────────────────────────────────────── */
-  function showCard(repo) {
-    document.getElementById('c-eye').textContent   = repo.eye;
-    document.getElementById('c-eye').style.color   = `rgba(${repo.rgb},0.65)`;
-    document.getElementById('c-title').textContent = repo.name;
-    document.getElementById('c-desc').textContent  = repo.desc;
-    document.getElementById('c-tags').innerHTML    = repo.tags
-      .map(t => `<span class="ctag">${t}</span>`).join('');
-    document.getElementById('btn-gh').href = repo.gh;
-    document.getElementById('btn-io').href = repo.io;
-    document.getElementById('card-glow').style.background =
-      `linear-gradient(90deg,transparent,rgba(${repo.rgb},0.5),transparent)`;
-    card.style.borderColor = `rgba(${repo.rgb},0.32)`;
-    requestAnimationFrame(() => card.classList.add('show'));
-  }
-
-  /* ── Events ───────────────────────────────────────────── */
-  closBtn.addEventListener('click', deactivate);
-
-  canvas.addEventListener('click', e => {
-    if (locked || activeId >= 0) return;
-    for (const n of nodes) {
-      const dx = e.clientX - n.x, dy = e.clientY - n.y;
-      if (Math.sqrt(dx * dx + dy * dy) < n.radius + 14) {
-        activate(n.repo.id); return;
-      }
-    }
+/* ═══════════════════════════════════════════════════
+   RESONANCE MODULE
+   To add a metric: one entry in METRICS with
+   { label, fetch(repo)→Promise<number> }. Done.
+═══════════════════════════════════════════════════ */
+var _cache = {};
+function apiRepo(repo) {
+  var slug = repo.ghOwner + '/' + repo.ghRepo;
+  if (_cache[slug]) { return Promise.resolve(_cache[slug]); }
+  return new Promise(function (resolve) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://api.github.com/repos/' + slug);
+    xhr.setRequestHeader('Accept', 'application/vnd.github+json');
+    xhr.onload = function () {
+      try {
+        var d = JSON.parse(xhr.responseText);
+        _cache[slug] = d;
+        resolve(d);
+      } catch (e) { resolve(null); }
+    };
+    xhr.onerror = function () { resolve(null); };
+    xhr.send();
   });
+}
 
-  canvas.addEventListener('mousemove', e => {
-    if (activeId >= 0 || locked) { canvas.style.cursor = 'default'; return; }
-    let hit = false;
-    for (const n of nodes) {
-      const dx = e.clientX - n.x, dy = e.clientY - n.y;
-      if (Math.sqrt(dx * dx + dy * dy) < n.radius + 14) { hit = true; break; }
-    }
-    canvas.style.cursor = hit ? 'pointer' : 'default';
+function apiCommits(repo) {
+  var slug = repo.ghOwner + '/' + repo.ghRepo;
+  return new Promise(function (resolve) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'https://api.github.com/repos/' + slug + '/commits?per_page=1');
+    xhr.setRequestHeader('Accept', 'application/vnd.github+json');
+    xhr.onload = function () {
+      var link = xhr.getResponseHeader('Link') || '';
+      var m = link.match(/[?&]page=(\d+)>; rel="last"/);
+      if (m) { resolve(parseInt(m[1], 10)); return; }
+      try { var d = JSON.parse(xhr.responseText); resolve(Array.isArray(d) ? d.length : 1); }
+      catch (e) { resolve(1); }
+    };
+    xhr.onerror = function () { resolve(1); };
+    xhr.send();
   });
+}
 
-  /* ── Draw loop ────────────────────────────────────────── */
-  const EASE = 0.066;
-  const lerp  = (a, b, k) => a + (b - a) * k;
+var METRICS = {
+  commits:  { label:'Commits',  fetch: apiCommits },
+  stars:    { label:'Stars',    fetch: function (r) { return apiRepo(r).then(function (d) { return (d && d.stargazers_count) || 0; }); } },
+  forks:    { label:'Forks',    fetch: function (r) { return apiRepo(r).then(function (d) { return (d && d.forks_count) || 0; }); } },
+  watchers: { label:'Watchers', fetch: function (r) { return apiRepo(r).then(function (d) { return (d && d.watchers_count) || 0; }); } }
+};
 
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-    t += 0.012;
-    const cx = CX(), cy = CY();
+var Res = {
+  active: false, loading: false, metric: 'commits',
+  scores: {}, norms: {},
+  SMIN: 16, SMAX: 52,
+  rMin: function () { return Math.min(W, H) * 0.10; },
+  rMax: function () { return Math.min(W, H) * 0.40; },
 
-    /* canvas background fill — matches body theme */
-    const { bg: bgRgb, pt: ptRgb, blobA: blobAlpha } = currentTheme();
+  start: function (metric) {
+    var self = this;
+    if (self.loading) return;
+    self.metric = metric;
+    self.loading = true;
+    self.active = false;
+    resStatus.style.display = 'block';
+    resStatus.textContent = 'fetching\u2026';
+    resOK.disabled = true;
 
-    ctx.fillStyle = `rgb(${bgRgb})`;
-    ctx.fillRect(0, 0, W, H);
+    var def = METRICS[self.metric];
+    if (!def) { self.loading = false; return; }
 
-    /* slow ambient atmosphere blobs */
-    for (let i = 0; i < 3; i++) {
-      ctx.beginPath();
-      ctx.arc(
-        cx + Math.sin(t * 0.06 + i * 2.1) * W * 0.28,
-        cy + Math.cos(t * 0.045 + i * 1.8) * H * 0.22,
-        Math.min(W, H) * (0.32 + i * 0.1), 0, Math.PI * 2
-      );
-      ctx.fillStyle = `rgba(${i === 1 ? '29,158,117' : ptRgb},${blobAlpha + i * 0.004})`;
-      ctx.fill();
+    var pending = REPOS.length, results = [];
+    function done(id, val) {
+      results.push({ id: id, val: val || 0 });
+      pending--;
+      if (pending === 0) { self._finish(results); }
     }
 
-    /* particles */
-    pts.forEach(p => {
-      p.x += p.vx; p.y += p.vy;
-      if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
-      if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${ptRgb},${p.a * (0.5 + 0.5 * Math.sin(t * 0.8 + p.ph))})`;
-      ctx.fill();
+    REPOS.forEach(function (r) {
+      def.fetch(r)
+        .then(function (v) { done(r.id, v); })
+        ['catch'](function () { done(r.id, 0); });
     });
+  },
 
-    /* particle web */
-    for (let i = 0; i < pts.length; i += 2) {
-      for (let j = i + 2; j < pts.length; j += 2) {
-        const a = pts[i], b = pts[j];
-        const dx = a.x - b.x, dy = a.y - b.y;
-        const d  = Math.sqrt(dx * dx + dy * dy);
-        if (d < 115) {
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
-          ctx.strokeStyle = `rgba(${ptRgb},${(1 - d / 115) * 0.028})`;
-          ctx.lineWidth = 0.5;
-          ctx.stroke();
-        }
+  _finish: function (results) {
+    var self = this;
+    results.forEach(function (item) { self.scores[item.id] = item.val; });
+    var vals = results.map(function (r) { return r.val; });
+    var mn = Math.min.apply(null, vals);
+    var mx = Math.max.apply(null, vals);
+    var sp = mx - mn || 1;
+    results.forEach(function (item) { self.norms[item.id] = (item.val - mn) / sp; });
+
+    self.loading = false;
+    self.active = true;
+    resStatus.style.display = 'none';
+    resOK.disabled = false;
+    resBtn.classList.add('on');
+    document.getElementById('res-lbl').textContent = 'resonating';
+    closeMenu();
+    self._apply();
+  },
+
+  stop: function () {
+    this.active = false;
+    this.loading = false;
+    resBtn.classList.remove('on');
+    document.getElementById('res-lbl').textContent = 'Resonate';
+    resStatus.style.display = 'none';
+    resOK.disabled = false;
+    nodes.forEach(function (n) { n.targetR = 24; });
+  },
+
+  _apply: function () {
+    if (!this.active || activeId >= 0) return;
+    var self = this, cx = CX(), cy = CY();
+    nodes.forEach(function (n) {
+      var norm = (self.norms[n.repo.id] !== undefined) ? self.norms[n.repo.id] : 0.5;
+      n.targetR = self.SMIN + norm * (self.SMAX - self.SMIN);
+      var dist = self.rMax() - norm * (self.rMax() - self.rMin());
+      n.tx = cx + Math.cos(n.orbitAngle) * dist;
+      n.ty = cy + Math.sin(n.orbitAngle) * dist;
+    });
+  },
+
+  tick: function () {
+    if (!this.active || activeId >= 0) return;
+    this._apply();
+  },
+
+  badges: function () {
+    if (!this.active) return;
+    var self = this, m = this.metric;
+    nodes.forEach(function (n) {
+      var raw = self.scores[n.repo.id];
+      if (raw === undefined) return;
+      var lbl = (raw >= 1000) ? (raw / 1000).toFixed(1) + 'k' : String(raw);
+      ctx.font = '300 9px \'DM Mono\',monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillStyle = 'rgba(' + n.repo.rgb + ',0.6)';
+      ctx.fillText(lbl, n.x, n.y + n.radius + 14);
+    });
+  }
+};
+
+/* ── Resonance menu UI ──────────────────────────── */
+var selectedMetric = 'commits';
+
+function openMenu() {
+  menuOpen = true;
+  resMenu.classList.add('open');
+}
+function closeMenu() {
+  menuOpen = false;
+  resMenu.classList.remove('open');
+}
+
+resBtn.addEventListener('click', function () {
+  if (Res.loading) return;
+  if (Res.active) {
+    Res.stop();
+    closeMenu();
+    return;
+  }
+  if (menuOpen) { closeMenu(); } else { openMenu(); }
+});
+
+/* Radio options */
+var opts = resMenu.querySelectorAll('.res-opt');
+for (var oi = 0; oi < opts.length; oi++) {
+  (function (opt) {
+    opt.addEventListener('click', function () {
+      for (var j = 0; j < opts.length; j++) { opts[j].classList.remove('sel'); }
+      opt.classList.add('sel');
+      selectedMetric = opt.getAttribute('data-m');
+    });
+  }(opts[oi]));
+}
+
+resOK.addEventListener('click', function () {
+  if (Res.loading) return;
+  Res.start(selectedMetric);
+});
+
+/* Close menu on outside click */
+document.addEventListener('click', function (e) {
+  if (!menuOpen) return;
+  if (!resMenu.contains(e.target) && e.target !== resBtn && !resBtn.contains(e.target)) {
+    closeMenu();
+  }
+});
+
+/* ── Activate / Deactivate nodes ────────────────── */
+function activate(id) {
+  if (locked) return;
+  locked = true; activeId = id;
+  hintEl.style.opacity = '0';
+  closeMenu();
+  var cx = CX(), cy = CY(), push = OR() * 1.8;
+  nodes.forEach(function (n) {
+    if (n.repo.id === id) { n.tx = cx; n.ty = cy; n.targetR = 94; }
+    else { n.tx = cx + Math.cos(n.orbitAngle) * push; n.ty = cy + Math.sin(n.orbitAngle) * push; n.targetR = 13; }
+  });
+  setTimeout(function () {
+    for (var i = 0; i < REPOS.length; i++) {
+      if (REPOS[i].id === id) { showCard(REPOS[i]); break; }
+    }
+    locked = false;
+  }, 480);
+}
+
+function deactivate() {
+  if (locked) return;
+  locked = true;
+  card.classList.remove('show');
+  activeId = -1;
+  if (!Res.active) { nodes.forEach(function (n) { n.targetR = 24; }); }
+  hintEl.style.opacity = '1';
+  setTimeout(function () { locked = false; }, 400);
+}
+
+function showCard(repo) {
+  document.getElementById('c-eye').textContent = repo.eye;
+  document.getElementById('c-eye').style.color = 'rgba(' + repo.rgb + ',0.65)';
+  document.getElementById('c-name').textContent = repo.name;
+  document.getElementById('c-desc').textContent = repo.desc;
+  var h = '';
+  for (var i = 0; i < repo.tags.length; i++) { h += '<span class="ctag">' + repo.tags[i] + '</span>'; }
+  document.getElementById('c-tags').innerHTML = h;
+  document.getElementById('btn-gh').href = repo.gh;
+  document.getElementById('btn-io').href = repo.io;
+  document.getElementById('card-line').style.background =
+    'linear-gradient(90deg,transparent,rgba(' + repo.rgb + ',0.5),transparent)';
+  card.style.borderColor = 'rgba(' + repo.rgb + ',0.32)';
+  requestAnimationFrame(function () { card.classList.add('show'); });
+}
+
+closeBtn.addEventListener('click', deactivate);
+
+/* ── Hit test ───────────────────────────────────── */
+function hit(mx, my) {
+  for (var i = 0; i < nodes.length; i++) {
+    var n = nodes[i];
+    var dx = mx - n.x, dy = my - n.y;
+    if (Math.sqrt(dx * dx + dy * dy) < n.radius + 16) return n;
+  }
+  return null;
+}
+
+canvas.addEventListener('click', function (e) {
+  if (locked || activeId >= 0) return;
+  var r = canvas.getBoundingClientRect();
+  var n = hit(e.clientX - r.left, e.clientY - r.top);
+  if (n) activate(n.repo.id);
+});
+
+canvas.addEventListener('mousemove', function (e) {
+  if (activeId >= 0 || locked) { canvas.style.cursor = 'default'; return; }
+  var r = canvas.getBoundingClientRect();
+  canvas.style.cursor = hit(e.clientX - r.left, e.clientY - r.top) ? 'pointer' : 'default';
+});
+
+canvas.addEventListener('touchend', function (e) {
+  if (locked || activeId >= 0) return;
+  var touch = e.changedTouches[0];
+  var r = canvas.getBoundingClientRect();
+  var n = hit(touch.clientX - r.left, touch.clientY - r.top);
+  if (n) { e.preventDefault(); activate(n.repo.id); }
+}, { passive: false });
+
+/* ── Draw loop ──────────────────────────────────── */
+var EASE = 0.066;
+function lerp(a, b, k) { return a + (b - a) * k; }
+
+function draw() {
+  requestAnimationFrame(draw);
+
+  /* Skip rendering until canvas is properly sized */
+  if (!sizeReady || W < 10 || H < 10) {
+    /* Try to initialise if we haven't yet */
+    var s = measure();
+    if (s.w > 10 && s.h > 10) {
+      W = s.w; H = s.h;
+      canvas.width = W; canvas.height = H;
+      sizeReady = true;
+      spawnPts();
+      resetOrbits(true);
+    }
+    return;
+  }
+
+  ctx.clearRect(0, 0, W, H);
+  t += 0.012;
+  var cx = CX(), cy = CY();
+  var T = th(), bg = T.bg, pt = T.pt, bA = T.bA;
+
+  /* Background */
+  ctx.fillStyle = 'rgb(' + bg + ')';
+  ctx.fillRect(0, 0, W, H);
+
+  /* Ambient blobs */
+  for (var bi = 0; bi < 3; bi++) {
+    ctx.beginPath();
+    ctx.arc(
+      cx + Math.sin(t * 0.06 + bi * 2.1) * W * 0.28,
+      cy + Math.cos(t * 0.045 + bi * 1.8) * H * 0.22,
+      Math.min(W, H) * (0.32 + bi * 0.1), 0, Math.PI * 2
+    );
+    ctx.fillStyle = 'rgba(' + (bi === 1 ? '29,158,117' : pt) + ',' + (bA + bi * 0.004) + ')';
+    ctx.fill();
+  }
+
+  /* Particles */
+  for (var pi = 0; pi < pts.length; pi++) {
+    var p = pts[pi];
+    p.x += p.vx; p.y += p.vy;
+    if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
+    if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(' + pt + ',' + (p.a * (0.5 + 0.5 * Math.sin(t * 0.8 + p.ph))) + ')';
+    ctx.fill();
+  }
+
+  /* Particle web */
+  for (var wi = 0; wi < pts.length; wi += 2) {
+    for (var wj = wi + 2; wj < pts.length; wj += 2) {
+      var pa = pts[wi], pb = pts[wj];
+      var wdx = pa.x - pb.x, wdy = pa.y - pb.y;
+      var wd = Math.sqrt(wdx * wdx + wdy * wdy);
+      if (wd < 115) {
+        ctx.beginPath(); ctx.moveTo(pa.x, pa.y); ctx.lineTo(pb.x, pb.y);
+        ctx.strokeStyle = 'rgba(' + pt + ',' + ((1 - wd / 115) * 0.028) + ')';
+        ctx.lineWidth = 0.5; ctx.stroke();
       }
     }
+  }
 
-    /* idle orbit tick */
-    if (activeId < 0) {
-      nodes.forEach(n => {
+  /* Orbit / resonance tick */
+  if (activeId < 0) {
+    if (Res.active) {
+      nodes.forEach(function (n) { n.orbitAngle += n.orbitSpeed * 0.4; });
+      Res.tick();
+    } else {
+      var or = OR();
+      nodes.forEach(function (n) {
         n.orbitAngle += n.orbitSpeed;
-        n.tx = cx + Math.cos(n.orbitAngle) * OR();
-        n.ty = cy + Math.sin(n.orbitAngle) * OR();
+        n.tx = cx + Math.cos(n.orbitAngle) * or;
+        n.ty = cy + Math.sin(n.orbitAngle) * or;
       });
     }
-
-    /* lerp all nodes */
-    nodes.forEach(n => {
-      n.x      = lerp(n.x,      n.tx,      EASE);
-      n.y      = lerp(n.y,      n.ty,      EASE);
-      n.radius = lerp(n.radius, n.targetR, EASE);
-    });
-
-    /* node–node edges */
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const a = nodes[i], b = nodes[j];
-        const dx = a.x - b.x, dy = a.y - b.y;
-        const d  = Math.sqrt(dx * dx + dy * dy);
-        const md = Math.min(W, H);
-        if (d < md) {
-          ctx.beginPath();
-          ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
-          ctx.strokeStyle = `rgba(${ptRgb},${(1 - d / md) * 0.13 * (0.6 + 0.4 * Math.sin(t + i))})`;
-          ctx.lineWidth = 0.5;
-          ctx.stroke();
-        }
-      }
-    }
-
-    /* active: pulse line + travelling dot to origin */
-    nodes.forEach(n => {
-      if (n.repo.id !== activeId) return;
-      ctx.beginPath();
-      ctx.moveTo(cx, cy); ctx.lineTo(n.x, n.y);
-      ctx.strokeStyle = `rgba(${n.repo.rgb},0.07)`;
-      ctx.lineWidth = 0.5;
-      ctx.stroke();
-      const prog = (t * 0.5) % 1;
-      ctx.beginPath();
-      ctx.arc(cx + (n.x - cx) * prog, cy + (n.y - cy) * prog, 2.5, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${n.repo.rgb},0.7)`;
-      ctx.fill();
-    });
-
-    /* nodes */
-    nodes.forEach(n => {
-      const r  = n.repo;
-      const ia = r.id === activeId;
-      const pv = 0.65 + 0.35 * Math.sin(t * 1.1 + n.pulse);
-
-      /* outer breathing ring */
-      ctx.beginPath();
-      ctx.arc(n.x, n.y, n.radius + 7 + 5 * Math.sin(t * 1.3 + n.pulse), 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(${r.rgb},${ia ? 0.2 * pv : 0.06 * pv})`;
-      ctx.lineWidth   = ia ? 1.5 : 0.5;
-      ctx.stroke();
-
-      /* inner ring */
-      ctx.beginPath();
-      ctx.arc(n.x, n.y, n.radius + 2, 0, Math.PI * 2);
-      ctx.strokeStyle = `rgba(${r.rgb},${ia ? 0.35 : 0.11 * pv})`;
-      ctx.lineWidth   = 0.5;
-      ctx.stroke();
-
-      /* core */
-      ctx.beginPath();
-      ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
-      ctx.fillStyle   = `rgba(${r.rgb},${ia ? 0.14 : 0.06})`;
-      ctx.fill();
-      ctx.strokeStyle = `rgba(${r.rgb},${ia ? 0.8 : 0.3 * pv})`;
-      ctx.lineWidth   = ia ? 1 : 0.5;
-      ctx.stroke();
-
-      /* label */
-      ctx.font         = `400 ${ia ? 13 : 11}px 'DM Mono', monospace`;
-      ctx.textAlign    = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillStyle    = `rgba(${r.rgb},${ia ? 0.9 : 0.55})`;
-      if (ia) {
-        const w = r.name.split(' ');
-        w.length <= 2
-          ? ctx.fillText(r.name, n.x, n.y)
-          : (ctx.fillText(w.slice(0, 2).join(' '), n.x, n.y - 9),
-             ctx.fillText(w.slice(2).join(' '),     n.x, n.y + 9));
-      } else {
-        const parts = r.name.split(' ');
-        const shortLabel = parts.length > 2 ? parts.slice(-2).join(' ') : parts[parts.length - 1];
-        ctx.fillText(shortLabel, n.x, n.y);
-      }
-    });
-
-    /* origin pulse */
-    ctx.beginPath();
-    ctx.arc(cx, cy, 2.5, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(${ptRgb},${0.14 + 0.1 * Math.sin(t)})`;
-    ctx.fill();
-
-    requestAnimationFrame(draw);
   }
 
-  draw();
-})();
+  /* Lerp */
+  nodes.forEach(function (n) {
+    n.x      = lerp(n.x,      n.tx,      EASE);
+    n.y      = lerp(n.y,      n.ty,      EASE);
+    n.radius = lerp(n.radius, n.targetR, EASE);
+  });
+
+  /* Node–node edges */
+  var md = Math.min(W, H);
+  for (var ei = 0; ei < nodes.length; ei++) {
+    for (var ej = ei + 1; ej < nodes.length; ej++) {
+      var na = nodes[ei], nb = nodes[ej];
+      var ex = na.x - nb.x, ey = na.y - nb.y;
+      var ed = Math.sqrt(ex * ex + ey * ey);
+      if (ed < md) {
+        ctx.beginPath(); ctx.moveTo(na.x, na.y); ctx.lineTo(nb.x, nb.y);
+        ctx.strokeStyle = 'rgba(' + pt + ',' + ((1 - ed / md) * 0.13 * (0.6 + 0.4 * Math.sin(t + ei))) + ')';
+        ctx.lineWidth = 0.5; ctx.stroke();
+      }
+    }
+  }
+
+  /* Active pulse line + dot */
+  nodes.forEach(function (n) {
+    if (n.repo.id !== activeId) return;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(n.x, n.y);
+    ctx.strokeStyle = 'rgba(' + n.repo.rgb + ',0.07)';
+    ctx.lineWidth = 0.5; ctx.stroke();
+    var pr = (t * 0.5) % 1;
+    ctx.beginPath();
+    ctx.arc(cx + (n.x - cx) * pr, cy + (n.y - cy) * pr, 2.5, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(' + n.repo.rgb + ',0.7)'; ctx.fill();
+  });
+
+  /* Nodes */
+  nodes.forEach(function (n) {
+    var r = n.repo, ia = (r.id === activeId);
+    var pv = 0.65 + 0.35 * Math.sin(t * 1.1 + n.pulse);
+
+    ctx.beginPath();
+    ctx.arc(n.x, n.y, n.radius + 7 + 5 * Math.sin(t * 1.3 + n.pulse), 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(' + r.rgb + ',' + (ia ? 0.2 * pv : 0.06 * pv) + ')';
+    ctx.lineWidth = ia ? 1.5 : 0.5; ctx.stroke();
+
+    ctx.beginPath(); ctx.arc(n.x, n.y, n.radius + 2, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(' + r.rgb + ',' + (ia ? 0.35 : 0.11 * pv) + ')';
+    ctx.lineWidth = 0.5; ctx.stroke();
+
+    ctx.beginPath(); ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2);
+    ctx.fillStyle   = 'rgba(' + r.rgb + ',' + (ia ? 0.14 : 0.06) + ')'; ctx.fill();
+    ctx.strokeStyle = 'rgba(' + r.rgb + ',' + (ia ? 0.8 : 0.3 * pv) + ')';
+    ctx.lineWidth = ia ? 1 : 0.5; ctx.stroke();
+
+    ctx.font = '400 ' + (ia ? 13 : 11) + 'px \'DM Mono\',monospace';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'rgba(' + r.rgb + ',' + (ia ? 0.9 : 0.55) + ')';
+    if (ia) {
+      var ws = r.name.split(' ');
+      if (ws.length <= 2) { ctx.fillText(r.name, n.x, n.y); }
+      else { ctx.fillText(ws.slice(0,2).join(' '), n.x, n.y - 9); ctx.fillText(ws.slice(2).join(' '), n.x, n.y + 9); }
+    } else {
+      var ps = r.name.split(' ');
+      ctx.fillText(ps.length > 2 ? ps.slice(-2).join(' ') : ps[ps.length - 1], n.x, n.y);
+    }
+  });
+
+  /* Origin pulse */
+  ctx.beginPath(); ctx.arc(cx, cy, 2.5, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(' + pt + ',' + (0.14 + 0.1 * Math.sin(t)) + ')'; ctx.fill();
+
+  /* Resonance badges */
+  Res.badges();
+}
+
+draw();
+
+}());
 </script>
 </body>
 </html>
