@@ -560,17 +560,17 @@ var METRICS = {
 
 var Res = {
   active:false, loading:false, metric:'commits', scores:{}, norms:{},
+  groupScores:{}, groupNorms:{},
   SMIN:14, SMAX:46,
   rMin: function () { return Math.min(W,H)*0.09; },
   rMax: function () { return Math.min(W,H)*0.38; },
 
-  /* Determine which repos to score — current visible pool */
+  /* Always fetch ALL repos so every node has a score */
   _pool: function () {
     if (scene === SCENE_GROUP && activeGroup) {
       return REPOS.filter(function (r) { return r.groupId === activeGroup.id; });
     }
-    /* At root score standalones; groups aggregate */
-    return REPOS.filter(function (r) { return r.groupId === null; });
+    return REPOS; /* flat mode and grouped root both score every repo */
   },
 
   start: function (metric) {
@@ -597,10 +597,34 @@ var Res = {
 
   _finish: function (results) {
     var self = this;
+    /* Store repo scores */
     results.forEach(function (item) { self.scores[item.id] = item.val; });
+
+    /* Normalise repo scores */
     var vals = results.map(function (r) { return r.val; });
     var mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals), sp = mx-mn||1;
     results.forEach(function (item) { self.norms[item.id] = (item.val-mn)/sp; });
+
+    /* Compute group aggregate scores (sum of member repo scores) */
+    self.groupScores = {};
+    var i;
+    for (i = 0; i < GROUPS.length; i++) {
+      var g = GROUPS[i], total = 0, count = 0;
+      for (var j = 0; j < REPOS.length; j++) {
+        if (REPOS[j].groupId === g.id && self.scores[REPOS[j].id] !== undefined) {
+          total += self.scores[REPOS[j].id]; count++;
+        }
+      }
+      self.groupScores[g.id] = count > 0 ? total : 0;
+    }
+    /* Normalise group scores */
+    var gvals = GROUPS.map(function (g) { return self.groupScores[g.id] || 0; });
+    var gmn = Math.min.apply(null, gvals), gmx = Math.max.apply(null, gvals), gsp = gmx-gmn||1;
+    self.groupNorms = {};
+    for (i = 0; i < GROUPS.length; i++) {
+      self.groupNorms[GROUPS[i].id] = ((self.groupScores[GROUPS[i].id]||0) - gmn) / gsp;
+    }
+
     self.loading = false; self.active = true;
     resStatus.style.display = 'none'; resOK.disabled = false;
     resBtn.classList.add('on');
@@ -622,14 +646,19 @@ var Res = {
     var self = this;
     var cx = CX(), cy = CY();
     var pool = scene === SCENE_GROUP ? childNodes : rootNodes;
-    var orbitR = scene === SCENE_GROUP ? CR() : OR();
+
     pool.forEach(function (n) {
-      var id = n.isGroup ? null : (n.entity.id !== undefined ? n.entity.id : null);
-      if (id === null) return;
-      var norm = (self.norms[id] !== undefined) ? self.norms[id] : 0.5;
+      var norm;
+      if (n.isGroup) {
+        /* Group node — use aggregated group norm */
+        norm = (self.groupNorms[n.entity.id] !== undefined) ? self.groupNorms[n.entity.id] : 0.5;
+      } else {
+        /* Repo node (flat mode, child view, or standalone) */
+        norm = (self.norms[n.entity.id] !== undefined) ? self.norms[n.entity.id] : 0.5;
+      }
       n.targetR = self.SMIN + norm * (self.SMAX - self.SMIN);
       var dist = self.rMax() - norm * (self.rMax() - self.rMin());
-      if (scene === SCENE_GROUP) { dist = Math.min(dist, orbitR * 1.6); }
+      if (scene === SCENE_GROUP) { dist = Math.min(dist, CR() * 1.6); }
       n.tx = cx + Math.cos(n.orbitAngle) * dist;
       n.ty = cy + Math.sin(n.orbitAngle) * dist;
     });
@@ -642,8 +671,12 @@ var Res = {
     var self = this;
     var pool = scene === SCENE_GROUP ? childNodes : rootNodes;
     pool.forEach(function (n) {
-      if (n.isGroup) return;
-      var raw = self.scores[n.entity.id];
+      var raw;
+      if (n.isGroup) {
+        raw = self.groupScores[n.entity.id];
+      } else {
+        raw = self.scores[n.entity.id];
+      }
       if (raw === undefined) return;
       var lbl = raw >= 1000 ? (raw/1000).toFixed(1)+'k' : String(raw);
       ctx.font = '300 9px \'DM Mono\',monospace';
