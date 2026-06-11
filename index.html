@@ -251,7 +251,8 @@ var offCtx = offscreen.getContext('2d');
 var FALLBACK_PRINT = null;
 
 function getFaviconUrl(domain) {
-  return 'https://www.google.com/s2/favicons?domain=' + domain + '&sz=64';
+  // DuckDuckGo's favicon service allows cross-origin canvas reading
+  return 'https://icons.duckduckgo.com/ip3/' + domain + '.ico';
 }
 
 function domainFromUrl(url) {
