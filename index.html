@@ -38,24 +38,10 @@ body.light #lbl-live { color:rgba(15,110,86,0.65); }
 body.light #lbl-count { color:rgba(83,74,183,0.25); }
 
 /* Back button */
-#back-btn {
-  position:absolute; top:26px; left:50%; transform:translateX(-50%);
-  z-index:30; display:none; align-items:center; gap:7px;
-  background:transparent; border:0.5px solid var(--hint);
-  border-radius:99px; padding:5px 14px 5px 10px; cursor:pointer;
-  font-family:var(--mono); font-size:10px; font-weight:300;
-  letter-spacing:0.14em; text-transform:uppercase; color:var(--hint);
-  transition:background 0.2s, border-color 0.2s;
-}
+#back-btn { position:absolute; top:26px; left:50%; transform:translateX(-50%); z-index:30; display:none; align-items:center; gap:7px; background:transparent; border:0.5px solid var(--hint); border-radius:99px; padding:5px 14px 5px 10px; cursor:pointer; font-family:var(--mono); font-size:10px; font-weight:300; letter-spacing:0.14em; text-transform:uppercase; color:var(--hint); transition:background 0.2s, border-color 0.2s; }
 #back-btn.show { display:flex; }
 #back-btn:hover { background:rgba(127,119,221,0.08); border-color:rgba(127,119,221,0.6); }
-#group-label {
-  position:absolute; top:70px; left:50%; transform:translateX(-50%);
-  z-index:20; pointer-events:none; display:none;
-  font-family:var(--mono); font-size:9px; font-weight:400;
-  letter-spacing:0.22em; text-transform:uppercase; color:var(--hint);
-  white-space:nowrap; transition:opacity 0.4s;
-}
+#group-label { position:absolute; top:70px; left:50%; transform:translateX(-50%); z-index:20; pointer-events:none; display:none; font-family:var(--mono); font-size:9px; font-weight:400; letter-spacing:0.22em; text-transform:uppercase; color:var(--hint); white-space:nowrap; }
 #group-label.show { display:block; }
 
 /* Controls */
@@ -66,6 +52,13 @@ body.light #lbl-count { color:rgba(83,74,183,0.25); }
 body.light #tog-thumb { transform:translateX(16px); }
 #tog-icon { font-size:12px; color:var(--hint); user-select:none; line-height:1; transition:color 0.4s; }
 .sep { width:0.5px; height:16px; background:var(--hint); opacity:0.3; flex-shrink:0; }
+#view-btn { display:flex; align-items:center; gap:7px; background:transparent; border:0.5px solid var(--hint); border-radius:99px; padding:5px 13px 5px 9px; cursor:pointer; font-family:var(--mono); transition:border-color 0.25s, background 0.25s; }
+#view-btn:hover { background:rgba(127,119,221,0.07); }
+#view-btn.flat { border-color:rgba(127,119,221,0.7); background:rgba(127,119,221,0.1); }
+#view-ico-grouped { display:block; } #view-ico-flat { display:none; }
+#view-btn.flat #view-ico-grouped { display:none; } #view-btn.flat #view-ico-flat { display:block; }
+#view-lbl { font-size:10px; font-weight:300; letter-spacing:0.14em; text-transform:uppercase; color:var(--hint); white-space:nowrap; transition:color 0.3s; }
+#view-btn.flat #view-lbl { color:rgba(127,119,221,0.9); }
 #res-btn { display:flex; align-items:center; gap:7px; background:transparent; border:0.5px solid var(--hint); border-radius:99px; padding:5px 13px 5px 9px; cursor:pointer; font-family:var(--mono); transition:border-color 0.25s, background 0.25s; }
 #res-btn:hover { background:rgba(127,119,221,0.07); }
 #res-btn.on { border-color:rgba(127,119,221,0.7); background:rgba(127,119,221,0.1); }
@@ -74,17 +67,6 @@ body.light #tog-thumb { transform:translateX(16px); }
 @keyframes orbGlow { 0%,100%{box-shadow:0 0 4px rgba(127,119,221,0.4)} 50%{box-shadow:0 0 12px rgba(127,119,221,0.9)} }
 #res-lbl { font-size:10px; font-weight:300; letter-spacing:0.14em; text-transform:uppercase; color:var(--hint); white-space:nowrap; transition:color 0.3s; }
 #res-btn.on #res-lbl { color:rgba(127,119,221,0.9); }
-
-/* View mode toggle */
-#view-btn { display:flex; align-items:center; gap:7px; background:transparent; border:0.5px solid var(--hint); border-radius:99px; padding:5px 13px 5px 9px; cursor:pointer; font-family:var(--mono); transition:border-color 0.25s, background 0.25s; }
-#view-btn:hover { background:rgba(127,119,221,0.07); }
-#view-btn.flat { border-color:rgba(127,119,221,0.7); background:rgba(127,119,221,0.1); }
-#view-ico-grouped { display:block; }
-#view-ico-flat    { display:none; }
-#view-btn.flat #view-ico-grouped { display:none; }
-#view-btn.flat #view-ico-flat    { display:block; }
-#view-lbl { font-size:10px; font-weight:300; letter-spacing:0.14em; text-transform:uppercase; color:var(--hint); white-space:nowrap; transition:color 0.3s; }
-#view-btn.flat #view-lbl { color:rgba(127,119,221,0.9); }
 
 /* Resonance menu */
 #res-menu { position:absolute; bottom:56px; left:32px; z-index:50; background:var(--card-bg); border:0.5px solid rgba(127,119,221,0.3); border-radius:14px; padding:16px 18px 14px; width:210px; display:none; flex-direction:column; gap:10px; box-shadow:0 8px 32px rgba(0,0,0,0.4); }
@@ -110,8 +92,14 @@ body.light #tog-thumb { transform:translateX(16px); }
 #card-close { position:absolute; top:12px; right:14px; width:26px; height:26px; border-radius:50%; border:0.5px solid rgba(127,119,221,0.2); background:transparent; cursor:pointer; color:rgba(232,230,248,0.4); font-size:16px; display:flex; align-items:center; justify-content:center; transition:background 0.15s, border-color 0.15s; }
 body.light #card-close { color:rgba(26,24,48,0.4); border-color:rgba(83,74,183,0.2); }
 #card-close:hover { background:rgba(127,119,221,0.1); border-color:rgba(127,119,221,0.45); }
+
+/* Card favicon + name row */
+#c-name-row { display:flex; align-items:center; gap:10px; margin-bottom:9px; }
+#c-favicon { width:22px; height:22px; border-radius:5px; object-fit:contain; flex-shrink:0; display:none; }
+#c-favicon.show { display:block; }
+#c-name { font-size:21px; font-weight:300; color:var(--text); letter-spacing:-0.3px; line-height:1.15; transition:color 0.4s; }
+
 #c-eye { font-family:var(--mono); font-size:9px; font-weight:400; letter-spacing:0.17em; text-transform:uppercase; margin-bottom:10px; transition:color 0.3s; }
-#c-name { font-size:21px; font-weight:300; color:var(--text); letter-spacing:-0.3px; line-height:1.15; margin-bottom:9px; transition:color 0.4s; }
 #c-desc { font-size:12px; font-weight:300; color:var(--text2); line-height:1.65; margin-bottom:14px; transition:color 0.4s; }
 #c-tags { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:18px; }
 .ctag { font-family:var(--mono); font-size:9px; font-weight:300; padding:3px 9px; border-radius:99px; border:0.5px solid rgba(127,119,221,0.22); color:rgba(127,119,221,0.55); letter-spacing:0.04em; }
@@ -185,7 +173,10 @@ body.light .cbtn.pri { background:rgba(83,74,183,0.08); border-color:rgba(83,74,
       <div id="card-line"></div>
       <button id="card-close" aria-label="close">&#215;</button>
       <div id="c-eye"></div>
-      <div id="c-name"></div>
+      <div id="c-name-row">
+        <img id="c-favicon" alt="" aria-hidden="true"/>
+        <div id="c-name"></div>
+      </div>
       <div id="c-desc"></div>
       <div id="c-tags"></div>
       <div class="divider"></div>
@@ -208,193 +199,132 @@ body.light .cbtn.pri { background:rgba(83,74,183,0.08); border-color:rgba(83,74,
 'use strict';
 
 /* ═══════════════════════════════════════════════════════════
-   DATA LAYER — edit GROUPS and REPOS only.
-   Groups:    id, name, rgb, desc, eye, ghOwner, ghRepo (optional — for resonance)
-   Repos:     all existing fields + groupId (null = standalone at root)
-   Standalones (groupId:null) appear as direct nodes in the root field.
-   Adding a repo: add to REPOS with appropriate groupId.
-   Adding a group: add to GROUPS, assign groupId to repos.
+   DATA LAYER
+   Groups: id, name, rgb, eye, desc
+   Repos:  id, groupId (null=standalone), name, rgb, eye, desc,
+           tags, gh, io, ghOwner, ghRepo
+   To add a repo: append to REPOS with a groupId.
+   To add a group: append to GROUPS, set groupId on repos.
 ════════════════════════════════════════════════════════════ */
-
 var GROUPS = [
-  {
-    id: 'boss',
-    name: 'B.O.S.S.',
-    rgb: '127,119,221',
-    eye: 'biological operating system structure',
-    desc: 'A family of resonant systems treating AI intent as biological pulse. Architecture, deliberation, and somatic governance — built to think before it acts.',
-  },
-  {
-    id: 'signal',
-    name: 'Signal',
-    rgb: '29,158,117',
-    eye: 'intelligence & curation',
-    desc: 'Live feeds and intelligence tools that surface what matters before it goes mainstream. Music, code, data — curated by AI, delivered in real time.',
-  },
-  {
-    id: 'play',
-    name: 'Play',
-    rgb: '239,159,39',
-    eye: 'AI-driven interactive experiences',
-    desc: 'Games, simulators, and interactive worlds built with AI at the core. Every experience is generated, not scripted.',
-  },
-  {
-    id: 'tools',
-    name: 'Tools',
-    rgb: '0,200,255',
-    eye: 'utilities & productivity',
-    desc: 'Focused tools built for specific problems. Adaptive, intuitive, and designed to work with how you actually think.',
-  },
+  { id:'boss',   name:'B.O.S.S.',  rgb:'127,119,221', eye:'biological operating system structure',  desc:'A family of resonant systems treating AI intent as biological pulse. Architecture, deliberation, and somatic governance — built to think before it acts.' },
+  { id:'signal', name:'Signal',    rgb:'29,158,117',  eye:'intelligence & curation',                desc:'Live feeds and intelligence tools that surface what matters before it goes mainstream. Music, code, data — curated by AI, delivered in real time.' },
+  { id:'play',   name:'Play',      rgb:'239,159,39',  eye:'AI-driven interactive experiences',      desc:'Games, simulators, and interactive worlds built with AI at the core. Every experience is generated, not scripted.' },
+  { id:'tools',  name:'Tools',     rgb:'0,200,255',   eye:'utilities & productivity',               desc:'Focused tools built for specific problems. Adaptive, intuitive, and designed to work with how you actually think.' },
 ];
 
 var REPOS = [
   /* ── B.O.S.S. ── */
-  { id:0, groupId:'boss', name:'B.O.S.S. Kernel', rgb:'127,119,221',
-    eye:'biological kernel \u00b7 JS / Python / HTML',
-    desc:'A resonant routing kernel treating AI intent as a biological pulse. Nodes warm to fire and decay before re-activation. The Soma gates the Cortex through thermal readiness and semantic alignment.',
-    tags:['resonance physics','metabolic decay','sovereign AI','PWA','arbiter'],
-    gh:'https://github.com/nztdev/boss-kernel', io:'https://nztdev.github.io/boss-kernel/core/',
-    ghOwner:'nztdev', ghRepo:'boss-kernel' },
-
-  { id:1, groupId:'boss', name:'B.O.S.S. Deliberate', rgb:'127,119,221',
-    eye:'intentional interface \u00b7 HTML',
-    desc:'The deliberate layer of the B.O.S.S. architecture. Intention is set before action is permitted. Slow thought made visible \u2014 the counterweight to impulse.',
-    tags:['intentional UI','somatic design','B.O.S.S.','paced action'],
-    gh:'https://github.com/nztdev/boss-deliberate', io:'https://nztdev.github.io/boss-deliberate/',
-    ghOwner:'nztdev', ghRepo:'boss-deliberate' },
-
+  { id:0,  groupId:'boss',   name:'B.O.S.S. Kernel',    rgb:'127,119,221', eye:'biological kernel \u00b7 JS / Python / HTML',        desc:'A resonant routing kernel treating AI intent as a biological pulse. Nodes warm to fire and decay before re-activation. The Soma gates the Cortex through thermal readiness and semantic alignment.', tags:['resonance physics','metabolic decay','sovereign AI','PWA','arbiter'],         gh:'https://github.com/nztdev/boss-kernel',               io:'https://nztdev.github.io/boss-kernel/core/',       ghOwner:'nztdev',     ghRepo:'boss-kernel' },
+  { id:1,  groupId:'boss',   name:'B.O.S.S. Deliberate', rgb:'127,119,221', eye:'intentional interface \u00b7 HTML',                  desc:'The deliberate layer of the B.O.S.S. architecture. Intention is set before action is permitted. Slow thought made visible \u2014 the counterweight to impulse.',                        tags:['intentional UI','somatic design','B.O.S.S.','paced action'],                  gh:'https://github.com/nztdev/boss-deliberate',           io:'https://nztdev.github.io/boss-deliberate/',        ghOwner:'nztdev',     ghRepo:'boss-deliberate' },
   /* ── Signal ── */
-  { id:2, groupId:'signal', name:'Resonance Signal', rgb:'29,158,117',
-    eye:'electronic music intelligence \u00b7 HTML',
-    desc:'A global intelligence layer connecting DJ play signals with commercial purchase data across electronic music markets. Tracking what\'s moving, where it\'s moving, and what\'s coming next.',
-    tags:['music intelligence','electronic','live feed','DJ data'],
-    gh:'https://github.com/nztdev/resonance-signal', io:'https://nztdev.github.io/resonance-signal/',
-    ghOwner:'nztdev', ghRepo:'resonance-signal' },
-
-  { id:3, groupId:'signal', name:'GitWire', rgb:'29,158,117',
-    eye:'github intelligence briefing \u00b7 HTML',
-    desc:'A weekly AI-powered GitHub intelligence publication. Scans trending repositories and writes Signal, Under the Hood, The Idea, Fresh Drops, and Resurrection sections \u2014 live, via Gemini.',
-    tags:['AI editorial','GitHub trends','Gemini','weekly briefing'],
-    gh:'https://github.com/nztdev/GitWire', io:'https://nztdev.github.io/GitWire/',
-    ghOwner:'nztdev', ghRepo:'GitWire' },
-    
-  { id:12, groupId:'signal', name:'resonance.fm', rgb:'29,158,117',
-    eye:'resonant music nebula \u00b7 HTML',
-    desc:'The living map of your musical soul \u2014 live.',
-    tags:['Resonant','Music Genres','Artists','nebula'],
-    gh:'https://github.com/nztdev/resonance.fm', io:'https://nztdev.github.io/resonance.fm/',
-    ghOwner:'nztdev', ghRepo:'resonance.fm' },
-
-  { id:13, groupId:'signal', name:'Agora Viva', rgb:'29,158,117',
-    eye:'resonant news interface \u00b7 HTML',
-    desc:'A force-directed map of what the world is paying attention to right now. Events, not articles. Resonance, not recency. \u2014 live.',
-    tags:['Resonant','News','Global','Live'],
-    gh:'https://github.com/nztdev/agora-viva', io:'https://nztdev.github.io/agora-viva/',
-    ghOwner:'nztdev', ghRepo:'agora-viva' },
-  
+  { id:2,  groupId:'signal', name:'Resonance Signal',    rgb:'29,158,117',  eye:'electronic music intelligence \u00b7 HTML',           desc:'A global intelligence layer connecting DJ play signals with commercial purchase data across electronic music markets. Tracking what\'s moving, where it\'s moving, and what\'s coming next.',   tags:['music intelligence','electronic','live feed','DJ data'],                       gh:'https://github.com/nztdev/resonance-signal',          io:'https://nztdev.github.io/resonance-signal/',       ghOwner:'nztdev',     ghRepo:'resonance-signal' },
+  { id:3,  groupId:'signal', name:'GitWire',             rgb:'29,158,117',  eye:'github intelligence briefing \u00b7 HTML',            desc:'A weekly AI-powered GitHub intelligence publication. Scans trending repositories and writes Signal, Under the Hood, The Idea, Fresh Drops, and Resurrection sections \u2014 live, via Gemini.',  tags:['AI editorial','GitHub trends','Gemini','weekly briefing'],                     gh:'https://github.com/nztdev/GitWire',                   io:'https://nztdev.github.io/GitWire/',                ghOwner:'nztdev',     ghRepo:'GitWire' },
+  { id:12, groupId:'signal', name:'resonance.fm',        rgb:'29,158,117',  eye:'resonant music nebula \u00b7 HTML',                   desc:'The living map of your musical soul \u2014 live.',                                                                                                                                          tags:['Resonant','Music Genres','Artists','nebula'],                                  gh:'https://github.com/nztdev/resonance.fm',              io:'https://nztdev.github.io/resonance.fm/',           ghOwner:'nztdev',     ghRepo:'resonance.fm' },
+  { id:13, groupId:'signal', name:'Agora Viva',          rgb:'29,158,117',  eye:'resonant news interface \u00b7 HTML',                 desc:'A force-directed map of what the world is paying attention to right now. Events, not articles. Resonance, not recency. \u2014 live.',                                                          tags:['Resonant','News','Global','Live'],                                             gh:'https://github.com/nztdev/agora-viva',                io:'https://nztdev.github.io/agora-viva/',             ghOwner:'nztdev',     ghRepo:'agora-viva' },
   /* ── Play ── */
-  { id:4, groupId:'play', name:'CardForge', rgb:'239,159,39',
-    eye:'AI card game engine \u00b7 HTML / JS',
-    desc:'Describe any card game in a sentence \u2014 CardForge builds it and lets you play it instantly. Claude and Gemini, 13 real-world deck presets from Hanafuda to Tarot. Every game is unique.',
-    tags:['Claude','Gemini','card game','AI engine','Tarot','Hanafuda'],
-    gh:'https://github.com/nztdev/card-forge', io:'https://nztdev.github.io/card-forge/',
-    ghOwner:'nztdev', ghRepo:'card-forge' },
-
-  { id:5, groupId:'play', name:'The n\u1d57\u02b0 Life', rgb:'239,159,39',
-    eye:'brutalist AI life simulator \u00b7 HTML / JS',
-    desc:'A brutalist, AI-driven life simulator for 2026 tactical realism. Permadeath roguelike, Gemini-generated outcomes, Supabase cloud saves, global leaderboard. Your timeline ends. It is scored.',
-    tags:['life simulator','permadeath','Gemini 2.5','Supabase','roguelike'],
-    gh:'https://github.com/thenthlife/thenthlife.github.io', io:'https://thenthlife.github.io',
-    ghOwner:'thenthlife', ghRepo:'thenthlife.github.io' },
-
-  { id:6, groupId:'play', name:'Mythika', rgb:'239,159,39',
-    eye:'manga fantasy card game \u00b7 HTML',
-    desc:'Chronicles of the Eternal \u2014 36 characters across 5 rarity tiers, each a public-domain historical figure or myth reimagined as a manga fantasy spirit. Summon, collect, and battle.',
-    tags:['card game','manga','mythology','gacha','fantasy'],
-    gh:'https://github.com/nztdev/mythika', io:'https://nztdev.github.io/mythika/',
-    ghOwner:'nztdev', ghRepo:'mythika' },
-
-  { id:7, groupId:'play', name:'Climb the Towers', rgb:'239,159,39',
-    eye:'eternal MMO \u00b7 HTML',
-    desc:'Eternal MMO climbing progression game. Each version generated by a different AI model \u2014 ChatGPT, Gemini, Kimi, and Claude. Pick your favourite and climb.',
-    tags:['MMO','progression','AI-generated','multi-version','climbing'],
-    gh:'https://github.com/nztdev/climb-the-towers', io:'https://nztdev.github.io/climb-the-towers/',
-    ghOwner:'nztdev', ghRepo:'climb-the-towers' },
-
+  { id:4,  groupId:'play',   name:'CardForge',           rgb:'239,159,39',  eye:'AI card game engine \u00b7 HTML / JS',                desc:'Describe any card game in a sentence \u2014 CardForge builds it and lets you play it instantly. Claude and Gemini, 13 real-world deck presets from Hanafuda to Tarot. Every game is unique.',  tags:['Claude','Gemini','card game','AI engine','Tarot','Hanafuda'],                  gh:'https://github.com/nztdev/card-forge',                io:'https://nztdev.github.io/card-forge/',             ghOwner:'nztdev',     ghRepo:'card-forge' },
+  { id:5,  groupId:'play',   name:'The n\u1d57\u02b0 Life', rgb:'239,159,39', eye:'brutalist AI life simulator \u00b7 HTML / JS',      desc:'A brutalist, AI-driven life simulator for 2026 tactical realism. Permadeath roguelike, Gemini-generated outcomes, Supabase cloud saves, global leaderboard. Your timeline ends. It is scored.', tags:['life simulator','permadeath','Gemini 2.5','Supabase','roguelike'],             gh:'https://github.com/thenthlife/thenthlife.github.io',  io:'https://thenthlife.github.io',                     ghOwner:'thenthlife', ghRepo:'thenthlife.github.io' },
+  { id:6,  groupId:'play',   name:'Mythika',             rgb:'239,159,39',  eye:'manga fantasy card game \u00b7 HTML',                 desc:'Chronicles of the Eternal \u2014 36 characters across 5 rarity tiers, each a public-domain historical figure or myth reimagined as a manga fantasy spirit. Summon, collect, and battle.',           tags:['card game','manga','mythology','gacha','fantasy'],                             gh:'https://github.com/nztdev/mythika',                   io:'https://nztdev.github.io/mythika/',                ghOwner:'nztdev',     ghRepo:'mythika' },
+  { id:7,  groupId:'play',   name:'Climb the Towers',    rgb:'239,159,39',  eye:'eternal MMO \u00b7 HTML',                             desc:'Eternal MMO climbing progression game. Each version generated by a different AI model \u2014 ChatGPT, Gemini, Kimi, and Claude. Pick your favourite and climb.',                                     tags:['MMO','progression','AI-generated','multi-version','climbing'],                 gh:'https://github.com/nztdev/climb-the-towers',          io:'https://nztdev.github.io/climb-the-towers/',       ghOwner:'nztdev',     ghRepo:'climb-the-towers' },
   /* ── Tools ── */
-  { id:8, groupId:'tools', name:'Studyflow', rgb:'0,200,255',
-    eye:'adaptive study planner \u00b7 HTML',
-    desc:'Interactive and intuitive study planner that knows the difference between a sharp day and a burnt-out one. Adapts your schedule to how you actually feel, not how you planned to feel.',
-    tags:['productivity','study','adaptive','planner','PWA'],
-    gh:'https://github.com/nztdev/studyflow', io:'https://nztdev.github.io/studyflow/',
-    ghOwner:'nztdev', ghRepo:'studyflow' },
-
-  /* ── Standalones (groupId null = root orbit) ── */
-  { id:9, groupId:null, name:'radioPumpo', rgb:'254,1,154',
-    eye:'community radio \u00b7 HTML / JS',
-    desc:'A joke that got out of hand. Became a radio, then a TV, then a toolkit, then a community. 24/7, no investors, no ads, no agenda \u2014 just people on the same frequency.',
-    tags:['community','radio','no agenda','24/7','open'],
-    gh:'https://github.com/radiopumpo/radiopumpo.github.io', io:'https://radiopumpo.github.io',
-    ghOwner:'radiopumpo', ghRepo:'radiopumpo.github.io' },
-
-  { id:10, groupId:null, name:'nomad-poet', rgb:'200,160,255',
-    eye:'poetry \u00b7 HTML',
-    desc:'A poetry page for the restless. Words that move because staying still was never the point.',
-    tags:['poetry','creative','writing'],
-    gh:'https://github.com/nztdev/nomad-poet', io:'https://nztdev.github.io/nomad-poet/',
-    ghOwner:'nztdev', ghRepo:'nomad-poet' },
-
-  { id:11, groupId:null, name:'Paint the Chain', rgb:'255,165,0',
-    eye:'crypto community \u00b7 HTML',
-    desc:'A community-driven experiment at the intersection of meme culture, gamification, and decentralized coordination in crypto',
-    tags:['crypto','colors','community','proof of culture'],
-    gh:'https://github.com/coinofcolors/coinofcolors.github.io', io:'https://coinofcolors.github.io/',
-    ghOwner:'nztdev', ghRepo:'coinofcolors' },
+  { id:8,  groupId:'tools',  name:'Studyflow',           rgb:'0,200,255',   eye:'adaptive study planner \u00b7 HTML',                  desc:'Interactive and intuitive study planner that knows the difference between a sharp day and a burnt-out one. Adapts your schedule to how you actually feel, not how you planned to feel.',          tags:['productivity','study','adaptive','planner','PWA'],                             gh:'https://github.com/nztdev/studyflow',                  io:'https://nztdev.github.io/studyflow/',              ghOwner:'nztdev',     ghRepo:'studyflow' },
+  /* ── Standalones ── */
+  { id:9,  groupId:null,     name:'radioPumpo',          rgb:'254,1,154',   eye:'community radio \u00b7 HTML / JS',                    desc:'A joke that got out of hand. Became a radio, then a TV, then a toolkit, then a community. 24/7, no investors, no ads, no agenda \u2014 just people on the same frequency.',                      tags:['community','radio','no agenda','24/7','open'],                                 gh:'https://github.com/radiopumpo/radiopumpo.github.io',   io:'https://radiopumpo.github.io',                     ghOwner:'radiopumpo', ghRepo:'radiopumpo.github.io' },
+  { id:10, groupId:null,     name:'nomad-poet',          rgb:'200,160,255', eye:'poetry \u00b7 HTML',                                  desc:'A poetry page for the restless. Words that move because staying still was never the point.',                                                                                                         tags:['poetry','creative','writing'],                                                 gh:'https://github.com/nztdev/nomad-poet',                io:'https://nztdev.github.io/nomad-poet/',             ghOwner:'nztdev',     ghRepo:'nomad-poet' },
+  { id:11, groupId:null,     name:'Paint the Chain',     rgb:'255,165,0',   eye:'crypto community \u00b7 HTML',                        desc:'A community-driven experiment at the intersection of meme culture, gamification, and decentralized coordination in crypto.',                                                                        tags:['crypto','colors','community','proof of culture'],                              gh:'https://github.com/coinofcolors/coinofcolors.github.io', io:'https://coinofcolors.github.io/',                  ghOwner:'nztdev',     ghRepo:'coinofcolors' },
 ];
 
 /* ═══════════════════════════════════════════════════
-   STATE — three scenes: ROOT → GROUP → CARD
+   FAVICON SYSTEM
+   Tries each repo's live page domain in order:
+     1. /favicon.ico
+     2. /favicon.png
+     3. /apple-touch-icon.png  (many PWAs set this)
+   Uses crossOrigin="anonymous" — succeeds when the
+   host sends permissive CORS headers (GitHub Pages
+   does). Falls back silently if not. No Google API,
+   no canvas pixel reads, no CORS errors.
+   faviconMap[repoId] = loaded HTMLImageElement
+═══════════════════════════════════════════════════ */
+var faviconMap = {};
+
+function domainFromUrl(url) {
+  try {
+    var u = new URL(url);
+    return u.protocol + '//' + u.hostname;
+  } catch (e) { return null; }
+}
+
+function tryFaviconUrls(repo, urls, index) {
+  if (index >= urls.length) return; /* all failed — silent */
+  var img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.onload = function () {
+    /* Reject suspiciously small images (genuine favicons are ≥16px,
+       but we want something visible in a node, so require ≥16) */
+    if (img.width >= 16 && img.height >= 16) {
+      faviconMap[repo.id] = img;
+    } else {
+      tryFaviconUrls(repo, urls, index + 1);
+    }
+  };
+  img.onerror = function () {
+    tryFaviconUrls(repo, urls, index + 1);
+  };
+  img.src = urls[index];
+}
+
+function loadFavicon(repo) {
+  var base = domainFromUrl(repo.io);
+  if (!base) return;
+  var urls = [
+    base + '/favicon.ico',
+    base + '/favicon.png',
+    base + '/apple-touch-icon.png',
+    base + '/apple-touch-icon-precomposed.png',
+  ];
+  tryFaviconUrls(repo, urls, 0);
+}
+
+function initFavicons() {
+  for (var i = 0; i < REPOS.length; i++) { loadFavicon(REPOS[i]); }
+}
+
+/* ═══════════════════════════════════════════════════
+   STATE
 ═══════════════════════════════════════════════════ */
 var SCENE_ROOT  = 'root';
 var SCENE_GROUP = 'group';
 var SCENE_CARD  = 'card';
-
 var scene       = SCENE_ROOT;
-var activeGroup = null;   /* GROUPS entry currently open */
-var activeRepo  = null;   /* REPOS entry card is showing */
+var activeGroup = null;
+var activeRepo  = null;
 var locked      = false;
 var menuOpen    = false;
+var flatMode    = false;
 var t           = 0;
-
-/* ── Node pools ─────────────────────────────────────
-   rootNodes  — rendered at root (group nodes + standalones)
-   childNodes — rendered inside an open group
-─────────────────────────────────────────────────── */
-var rootNodes  = [];
-var childNodes = [];
+var rootNodes   = [];
+var childNodes  = [];
 
 function makeNode(entity, index, total, baseRadius) {
   return {
-    entity:      entity,          /* GROUPS entry or REPOS entry */
-    isGroup:     !!entity.id && GROUPS.indexOf(entity) >= 0,
-    x: 0, y: 0, tx: 0, ty: 0,
-    radius:      baseRadius || 26,
-    targetR:     baseRadius || 26,
-    baseR:       baseRadius || 26,
-    orbitAngle:  (index / total) * Math.PI * 2 - Math.PI / 2,
-    orbitSpeed:  (0.00020 + Math.random() * 0.00014) * (index % 2 === 0 ? 1 : -1),
-    pulse:       Math.random() * Math.PI * 2,
+    entity:     entity,
+    isGroup:    GROUPS.indexOf(entity) >= 0,
+    x:0, y:0, tx:0, ty:0,
+    radius:     baseRadius || 26,
+    targetR:    baseRadius || 26,
+    baseR:      baseRadius || 26,
+    orbitAngle: (index / total) * Math.PI * 2 - Math.PI / 2,
+    orbitSpeed: (0.00020 + Math.random() * 0.00014) * (index % 2 === 0 ? 1 : -1),
+    pulse:      Math.random() * Math.PI * 2,
   };
 }
 
 function buildRootNodes() {
-  /* Group nodes first, then standalones */
-  var items = [];
-  var i;
-  for (i = 0; i < GROUPS.length; i++) { items.push({ entity: GROUPS[i], isGroup: true }); }
-  for (i = 0; i < REPOS.length; i++) {
-    if (REPOS[i].groupId === null) { items.push({ entity: REPOS[i], isGroup: false }); }
-  }
+  var items = [], i;
+  for (i = 0; i < GROUPS.length; i++) { items.push({ entity:GROUPS[i], isGroup:true }); }
+  for (i = 0; i < REPOS.length;  i++) { if (REPOS[i].groupId === null) { items.push({ entity:REPOS[i], isGroup:false }); } }
   rootNodes = [];
   for (i = 0; i < items.length; i++) {
     var n = makeNode(items[i].entity, i, items.length, items[i].isGroup ? 30 : 24);
@@ -404,7 +334,6 @@ function buildRootNodes() {
 }
 
 function buildFlatNodes() {
-  /* All repos as individual nodes — no groups */
   rootNodes = [];
   for (var i = 0; i < REPOS.length; i++) {
     var n = makeNode(REPOS[i], i, REPOS.length, 22);
@@ -413,23 +342,16 @@ function buildFlatNodes() {
   }
 }
 
-var flatMode = false;
+function buildChildNodes(group) {
+  var members = [], i;
+  for (i = 0; i < REPOS.length; i++) { if (REPOS[i].groupId === group.id) { members.push(REPOS[i]); } }
+  childNodes = [];
+  for (i = 0; i < members.length; i++) { childNodes.push(makeNode(members[i], i, members.length, 22)); }
+}
 
 function applyViewMode(snap) {
   if (flatMode) { buildFlatNodes(); } else { buildRootNodes(); }
   resetNodes(rootNodes, CX(), CY(), OR, snap);
-}
-
-function buildChildNodes(group) {
-  var members = [];
-  var i;
-  for (i = 0; i < REPOS.length; i++) {
-    if (REPOS[i].groupId === group.id) { members.push(REPOS[i]); }
-  }
-  childNodes = [];
-  for (i = 0; i < members.length; i++) {
-    childNodes.push(makeNode(members[i], i, members.length, 22));
-  }
 }
 
 buildRootNodes();
@@ -446,11 +368,11 @@ var resBtn    = document.getElementById('res-btn');
 var resMenu   = document.getElementById('res-menu');
 var resOK     = document.getElementById('res-menu-ok');
 var resStatus = document.getElementById('res-status');
+var cardFavi  = document.getElementById('c-favicon');
 
-/* total repo count label */
 document.getElementById('lbl-count').textContent = REPOS.length + ' works';
 
-/* ── View mode toggle ───────────────────────────── */
+/* ── View mode ─────────────────────────────────── */
 var viewBtn = document.getElementById('view-btn');
 viewBtn.addEventListener('click', function () {
   if (locked || scene !== SCENE_ROOT) return;
@@ -466,7 +388,6 @@ var isLight = false;
 var DARK  = { bg:'9,8,14',      pt:'127,119,221', bA:0.011 };
 var LIGHT = { bg:'244,243,251', pt:'100,90,200',  bA:0.018 };
 function th() { return isLight ? LIGHT : DARK; }
-
 document.getElementById('theme-btn').addEventListener('click', function () {
   isLight = !isLight;
   document.body.classList.toggle('light', isLight);
@@ -475,47 +396,39 @@ document.getElementById('theme-btn').addEventListener('click', function () {
 
 /* ── Canvas sizing ──────────────────────────────── */
 var W = 300, H = 500, sizeReady = false;
-
 function measure() {
   var w = wrap.offsetWidth  || window.innerWidth  || 375;
   var h = wrap.offsetHeight || window.innerHeight || 667;
-  return { w: w, h: h };
+  return { w:w, h:h };
 }
+function CX() { return W/2; }
+function CY() { return H/2; }
+function OR() { return Math.min(W,H)*0.27; }
+function CR() { return Math.min(W,H)*0.20; }
 
-function CX() { return W / 2; }
-function CY() { return H / 2; }
-function OR()  { return Math.min(W, H) * 0.27; }    /* root orbit radius */
-function CR()  { return Math.min(W, H) * 0.20; }    /* child orbit radius */
-
-function resetNodes(pool, cx, cy, radius, snap) {
-  var or = radius();
+function resetNodes(pool, cx, cy, radiusFn, snap) {
+  var or = radiusFn();
   pool.forEach(function (n) {
-    n.tx = cx + Math.cos(n.orbitAngle) * or;
-    n.ty = cy + Math.sin(n.orbitAngle) * or;
+    n.tx = cx + Math.cos(n.orbitAngle)*or;
+    n.ty = cy + Math.sin(n.orbitAngle)*or;
     n.targetR = n.baseR;
-    if (snap) { n.x = n.tx; n.y = n.ty; n.radius = n.baseR; }
+    if (snap) { n.x=n.tx; n.y=n.ty; n.radius=n.baseR; }
   });
 }
 
 function resize() {
-  var s = measure(); W = s.w; H = s.h;
-  canvas.width = W; canvas.height = H;
-  spawnPts();
+  var s = measure(); W=s.w; H=s.h;
+  canvas.width=W; canvas.height=H; spawnPts();
   if (scene === SCENE_ROOT) { applyViewMode(true); }
   else { resetNodes(childNodes, CX(), CY(), CR, true); }
 }
-
 function initSize() {
   var s = measure();
   if (s.w > 10 && s.h > 10) {
-    W = s.w; H = s.h;
-    canvas.width = W; canvas.height = H;
-    sizeReady = true;
-    spawnPts();
-    applyViewMode(true);
+    W=s.w; H=s.h; canvas.width=W; canvas.height=H;
+    sizeReady=true; spawnPts(); applyViewMode(true);
   } else { setTimeout(initSize, 50); }
 }
-
 window.addEventListener('resize', resize);
 initSize();
 
@@ -523,7 +436,7 @@ initSize();
 var pts = [];
 function spawnPts() {
   pts = [];
-  for (var i = 0; i < 60; i++) {
+  for (var i=0;i<60;i++) {
     pts.push({ x:Math.random()*W, y:Math.random()*H,
       vx:(Math.random()-0.5)*0.19, vy:(Math.random()-0.5)*0.19,
       r:Math.random()*1.3+0.2, a:Math.random()*0.18+0.03, ph:Math.random()*Math.PI*2 });
@@ -533,306 +446,218 @@ spawnPts();
 
 /* ═══════════════════════════════════════════════════
    RESONANCE MODULE
-   Add a metric: one entry in METRICS with
-   { label, fetch(repo)→Promise<number> }
 ═══════════════════════════════════════════════════ */
 var _cache = {};
-
 function apiRepo(repo) {
-  var slug = repo.ghOwner + '/' + repo.ghRepo;
+  var slug = repo.ghOwner+'/'+repo.ghRepo;
   if (_cache[slug]) { return Promise.resolve(_cache[slug]); }
   return new Promise(function (resolve) {
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'https://api.github.com/repos/' + slug);
-    xhr.setRequestHeader('Accept', 'application/vnd.github+json');
-    xhr.onload = function () {
-      try { var d = JSON.parse(xhr.responseText); _cache[slug] = d; resolve(d); }
-      catch (e) { resolve(null); }
-    };
+    xhr.open('GET','https://api.github.com/repos/'+slug);
+    xhr.setRequestHeader('Accept','application/vnd.github+json');
+    xhr.onload = function () { try { var d=JSON.parse(xhr.responseText); _cache[slug]=d; resolve(d); } catch(e){resolve(null);} };
     xhr.onerror = function () { resolve(null); };
     xhr.send();
   });
 }
-
 function apiCommits(repo) {
-  var slug = repo.ghOwner + '/' + repo.ghRepo;
+  var slug = repo.ghOwner+'/'+repo.ghRepo;
   return new Promise(function (resolve) {
     var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'https://api.github.com/repos/' + slug + '/commits?per_page=1');
-    xhr.setRequestHeader('Accept', 'application/vnd.github+json');
+    xhr.open('GET','https://api.github.com/repos/'+slug+'/commits?per_page=1');
+    xhr.setRequestHeader('Accept','application/vnd.github+json');
     xhr.onload = function () {
-      var link = xhr.getResponseHeader('Link') || '';
-      var m = link.match(/[?&]page=(\d+)>; rel="last"/);
-      if (m) { resolve(parseInt(m[1], 10)); return; }
-      try { var d = JSON.parse(xhr.responseText); resolve(Array.isArray(d) ? d.length : 1); }
-      catch (e) { resolve(1); }
+      var link=xhr.getResponseHeader('Link')||'';
+      var m=link.match(/[?&]page=(\d+)>; rel="last"/);
+      if (m) { resolve(parseInt(m[1],10)); return; }
+      try { var d=JSON.parse(xhr.responseText); resolve(Array.isArray(d)?d.length:1); } catch(e){resolve(1);}
     };
-    xhr.onerror = function () { resolve(1); };
-    xhr.send();
+    xhr.onerror=function(){resolve(1);}; xhr.send();
   });
 }
-
 var METRICS = {
-  commits:  { label:'Commits',  fetch: apiCommits },
-  stars:    { label:'Stars',    fetch: function (r) { return apiRepo(r).then(function (d) { return (d && d.stargazers_count) || 0; }); } },
-  forks:    { label:'Forks',    fetch: function (r) { return apiRepo(r).then(function (d) { return (d && d.forks_count) || 0; }); } },
-  watchers: { label:'Watchers', fetch: function (r) { return apiRepo(r).then(function (d) { return (d && d.watchers_count) || 0; }); } },
+  commits:  { fetch: apiCommits },
+  stars:    { fetch: function(r){return apiRepo(r).then(function(d){return(d&&d.stargazers_count)||0;});} },
+  forks:    { fetch: function(r){return apiRepo(r).then(function(d){return(d&&d.forks_count)||0;});} },
+  watchers: { fetch: function(r){return apiRepo(r).then(function(d){return(d&&d.watchers_count)||0;});} },
 };
-
 var Res = {
-  active:false, loading:false, metric:'commits', scores:{}, norms:{},
-  groupScores:{}, groupNorms:{},
+  active:false, loading:false, metric:'commits', scores:{}, norms:{}, groupScores:{}, groupNorms:{},
   SMIN:14, SMAX:46,
-  rMin: function () { return Math.min(W,H)*0.09; },
-  rMax: function () { return Math.min(W,H)*0.38; },
+  rMin:function(){return Math.min(W,H)*0.09;},
+  rMax:function(){return Math.min(W,H)*0.38;},
 
-  /* Always fetch ALL repos so every node has a score */
-  _pool: function () {
-    if (scene === SCENE_GROUP && activeGroup) {
-      return REPOS.filter(function (r) { return r.groupId === activeGroup.id; });
-    }
-    return REPOS; /* flat mode and grouped root both score every repo */
+  _pool:function(){
+    if (scene===SCENE_GROUP&&activeGroup) { return REPOS.filter(function(r){return r.groupId===activeGroup.id;}); }
+    return REPOS;
   },
 
-  start: function (metric) {
-    var self = this;
+  start:function(metric){
+    var self=this;
     if (self.loading) return;
-    self.metric = metric; self.loading = true; self.active = false;
-    resStatus.style.display = 'block';
-    resStatus.textContent = 'fetching\u2026';
-    resOK.disabled = true;
-    var def = METRICS[self.metric];
-    if (!def) { self.loading = false; return; }
-    var pool = self._pool();
-    var pending = pool.length, results = [];
-    if (pending === 0) { self.loading = false; return; }
-    function done(id, val) {
-      results.push({ id:id, val:val||0 });
-      pending--;
-      if (pending === 0) { self._finish(results); }
-    }
-    pool.forEach(function (r) {
-      def.fetch(r).then(function (v) { done(r.id, v); })['catch'](function () { done(r.id, 0); });
-    });
+    self.metric=metric; self.loading=true; self.active=false;
+    resStatus.style.display='block'; resStatus.textContent='fetching\u2026'; resOK.disabled=true;
+    var def=METRICS[self.metric]; if (!def){self.loading=false;return;}
+    var pool=self._pool(), pending=pool.length, results=[];
+    if (!pending){self.loading=false;return;}
+    function done(id,val){ results.push({id:id,val:val||0}); pending--; if(!pending){self._finish(results);} }
+    pool.forEach(function(r){ def.fetch(r).then(function(v){done(r.id,v);})['catch'](function(){done(r.id,0);}); });
   },
 
-  _finish: function (results) {
-    var self = this;
-    /* Store repo scores */
-    results.forEach(function (item) { self.scores[item.id] = item.val; });
-
-    /* Normalise repo scores */
-    var vals = results.map(function (r) { return r.val; });
-    var mn = Math.min.apply(null, vals), mx = Math.max.apply(null, vals), sp = mx-mn||1;
-    results.forEach(function (item) { self.norms[item.id] = (item.val-mn)/sp; });
-
-    /* Compute group aggregate scores (sum of member repo scores) */
-    self.groupScores = {};
-    var i;
-    for (i = 0; i < GROUPS.length; i++) {
-      var g = GROUPS[i], total = 0, count = 0;
-      for (var j = 0; j < REPOS.length; j++) {
-        if (REPOS[j].groupId === g.id && self.scores[REPOS[j].id] !== undefined) {
-          total += self.scores[REPOS[j].id]; count++;
-        }
-      }
-      self.groupScores[g.id] = count > 0 ? total : 0;
+  _finish:function(results){
+    var self=this, i, j;
+    results.forEach(function(item){self.scores[item.id]=item.val;});
+    var vals=results.map(function(r){return r.val;});
+    var mn=Math.min.apply(null,vals), mx=Math.max.apply(null,vals), sp=mx-mn||1;
+    results.forEach(function(item){self.norms[item.id]=(item.val-mn)/sp;});
+    self.groupScores={};
+    for(i=0;i<GROUPS.length;i++){
+      var g=GROUPS[i], tot=0, cnt=0;
+      for(j=0;j<REPOS.length;j++){if(REPOS[j].groupId===g.id&&self.scores[REPOS[j].id]!==undefined){tot+=self.scores[REPOS[j].id];cnt++;}}
+      self.groupScores[g.id]=cnt>0?tot:0;
     }
-    /* Normalise group scores */
-    var gvals = GROUPS.map(function (g) { return self.groupScores[g.id] || 0; });
-    var gmn = Math.min.apply(null, gvals), gmx = Math.max.apply(null, gvals), gsp = gmx-gmn||1;
-    self.groupNorms = {};
-    for (i = 0; i < GROUPS.length; i++) {
-      self.groupNorms[GROUPS[i].id] = ((self.groupScores[GROUPS[i].id]||0) - gmn) / gsp;
-    }
-
-    self.loading = false; self.active = true;
-    resStatus.style.display = 'none'; resOK.disabled = false;
-    resBtn.classList.add('on');
-    document.getElementById('res-lbl').textContent = 'resonating';
+    var gv=GROUPS.map(function(g){return self.groupScores[g.id]||0;});
+    var gmn=Math.min.apply(null,gv), gmx=Math.max.apply(null,gv), gsp=gmx-gmn||1;
+    self.groupNorms={};
+    for(i=0;i<GROUPS.length;i++){self.groupNorms[GROUPS[i].id]=((self.groupScores[GROUPS[i].id]||0)-gmn)/gsp;}
+    self.loading=false; self.active=true;
+    resStatus.style.display='none'; resOK.disabled=false;
+    resBtn.classList.add('on'); document.getElementById('res-lbl').textContent='resonating';
     closeMenu(); self._apply();
   },
 
-  stop: function () {
-    this.active = false; this.loading = false;
-    resBtn.classList.remove('on');
-    document.getElementById('res-lbl').textContent = 'Resonate';
-    resStatus.style.display = 'none'; resOK.disabled = false;
-    var pool = scene === SCENE_GROUP ? childNodes : rootNodes;
-    pool.forEach(function (n) { n.targetR = n.baseR; });
+  stop:function(){
+    this.active=false; this.loading=false;
+    resBtn.classList.remove('on'); document.getElementById('res-lbl').textContent='Resonate';
+    resStatus.style.display='none'; resOK.disabled=false;
+    var pool=scene===SCENE_GROUP?childNodes:rootNodes;
+    pool.forEach(function(n){n.targetR=n.baseR;});
   },
 
-  _apply: function () {
+  _apply:function(){
     if (!this.active) return;
-    var self = this;
-    var cx = CX(), cy = CY();
-    var pool = scene === SCENE_GROUP ? childNodes : rootNodes;
-
-    pool.forEach(function (n) {
-      var norm;
-      if (n.isGroup) {
-        /* Group node — use aggregated group norm */
-        norm = (self.groupNorms[n.entity.id] !== undefined) ? self.groupNorms[n.entity.id] : 0.5;
-      } else {
-        /* Repo node (flat mode, child view, or standalone) */
-        norm = (self.norms[n.entity.id] !== undefined) ? self.norms[n.entity.id] : 0.5;
-      }
-      n.targetR = self.SMIN + norm * (self.SMAX - self.SMIN);
-      var dist = self.rMax() - norm * (self.rMax() - self.rMin());
-      if (scene === SCENE_GROUP) { dist = Math.min(dist, CR() * 1.6); }
-      n.tx = cx + Math.cos(n.orbitAngle) * dist;
-      n.ty = cy + Math.sin(n.orbitAngle) * dist;
+    var self=this, cx=CX(), cy=CY();
+    var pool=scene===SCENE_GROUP?childNodes:rootNodes;
+    pool.forEach(function(n){
+      var norm=n.isGroup
+        ?(self.groupNorms[n.entity.id]!==undefined?self.groupNorms[n.entity.id]:0.5)
+        :(self.norms[n.entity.id]!==undefined?self.norms[n.entity.id]:0.5);
+      n.targetR=self.SMIN+norm*(self.SMAX-self.SMIN);
+      var dist=self.rMax()-norm*(self.rMax()-self.rMin());
+      if (scene===SCENE_GROUP){dist=Math.min(dist,CR()*1.6);}
+      n.tx=cx+Math.cos(n.orbitAngle)*dist;
+      n.ty=cy+Math.sin(n.orbitAngle)*dist;
     });
   },
 
-  tick: function () { if (this.active) { this._apply(); } },
+  tick:function(){if(this.active){this._apply();}},
 
-  badges: function () {
+  badges:function(){
     if (!this.active) return;
-    var self = this;
-    var pool = scene === SCENE_GROUP ? childNodes : rootNodes;
-    pool.forEach(function (n) {
-      var raw;
-      if (n.isGroup) {
-        raw = self.groupScores[n.entity.id];
-      } else {
-        raw = self.scores[n.entity.id];
-      }
-      if (raw === undefined) return;
-      var lbl = raw >= 1000 ? (raw/1000).toFixed(1)+'k' : String(raw);
-      ctx.font = '300 9px \'DM Mono\',monospace';
-      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.fillStyle = 'rgba('+n.entity.rgb+',0.6)';
-      ctx.fillText(lbl, n.x, n.y + n.radius + 14);
+    var self=this;
+    var pool=scene===SCENE_GROUP?childNodes:rootNodes;
+    pool.forEach(function(n){
+      var raw=n.isGroup?self.groupScores[n.entity.id]:self.scores[n.entity.id];
+      if (raw===undefined) return;
+      var lbl=raw>=1000?(raw/1000).toFixed(1)+'k':String(raw);
+      ctx.font='300 9px \'DM Mono\',monospace';
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillStyle='rgba('+n.entity.rgb+',0.6)';
+      ctx.fillText(lbl, n.x, n.y+n.radius+14);
     });
   },
 };
 
 /* ── Resonance menu ─────────────────────────────── */
-var selectedMetric = 'commits';
-
-function openMenu()  { menuOpen = true;  resMenu.classList.add('open'); }
-function closeMenu() { menuOpen = false; resMenu.classList.remove('open'); }
-
-resBtn.addEventListener('click', function () {
+var selectedMetric='commits';
+function openMenu(){ menuOpen=true; resMenu.classList.add('open'); }
+function closeMenu(){ menuOpen=false; resMenu.classList.remove('open'); }
+resBtn.addEventListener('click',function(){
   if (Res.loading) return;
-  if (Res.active) { Res.stop(); closeMenu(); return; }
-  if (menuOpen) { closeMenu(); } else { openMenu(); }
+  if (Res.active){Res.stop();closeMenu();return;}
+  if (menuOpen){closeMenu();}else{openMenu();}
 });
-
-var opts = resMenu.querySelectorAll('.res-opt');
-for (var oi = 0; oi < opts.length; oi++) {
-  (function (opt) {
-    opt.addEventListener('click', function () {
-      for (var j = 0; j < opts.length; j++) { opts[j].classList.remove('sel'); }
-      opt.classList.add('sel');
-      selectedMetric = opt.getAttribute('data-m');
+var opts=resMenu.querySelectorAll('.res-opt');
+for (var oi=0;oi<opts.length;oi++){
+  (function(opt){
+    opt.addEventListener('click',function(){
+      for(var j=0;j<opts.length;j++){opts[j].classList.remove('sel');}
+      opt.classList.add('sel'); selectedMetric=opt.getAttribute('data-m');
     });
   }(opts[oi]));
 }
-
-resOK.addEventListener('click', function () { if (!Res.loading) { Res.start(selectedMetric); } });
-
-document.addEventListener('click', function (e) {
+resOK.addEventListener('click',function(){if(!Res.loading){Res.start(selectedMetric);}});
+document.addEventListener('click',function(e){
   if (!menuOpen) return;
-  if (!resMenu.contains(e.target) && e.target !== resBtn && !resBtn.contains(e.target)) { closeMenu(); }
+  if (!resMenu.contains(e.target)&&e.target!==resBtn&&!resBtn.contains(e.target)){closeMenu();}
 });
 
 /* ═══════════════════════════════════════════════════
    SCENE TRANSITIONS
 ═══════════════════════════════════════════════════ */
-
-function goToGroup(group) {
+function goToGroup(group){
   if (locked) return;
-  locked = true;
-  scene = SCENE_GROUP;
-  activeGroup = group;
-  if (Res.active) { Res.stop(); }
-  closeMenu();
-
-  /* Push root nodes outward */
-  var cx = CX(), cy = CY();
-  rootNodes.forEach(function (n) {
-    if (n.entity === group) { n.tx = cx; n.ty = cy; n.targetR = n.baseR * 1.3; }
-    else { n.tx = cx + Math.cos(n.orbitAngle) * OR() * 1.9; n.ty = cy + Math.sin(n.orbitAngle) * OR() * 1.9; n.targetR = n.baseR * 0.5; }
+  locked=true; scene=SCENE_GROUP; activeGroup=group;
+  if (Res.active){Res.stop();} closeMenu();
+  var cx=CX(), cy=CY();
+  rootNodes.forEach(function(n){
+    if (n.entity===group){n.tx=cx;n.ty=cy;n.targetR=n.baseR*1.3;}
+    else{n.tx=cx+Math.cos(n.orbitAngle)*OR()*1.9;n.ty=cy+Math.sin(n.orbitAngle)*OR()*1.9;n.targetR=n.baseR*0.5;}
   });
-
-  /* Build and place child nodes */
   buildChildNodes(group);
-  resetNodes(childNodes, cx, cy, CR, true);
-
-  /* UI */
-  hintEl.style.opacity = '0';
+  resetNodes(childNodes,cx,cy,CR,true);
+  hintEl.style.opacity='0';
   backBtn.classList.add('show');
-  groupLbl.textContent = group.name;
-  groupLbl.classList.add('show');
-
-  setTimeout(function () { locked = false; }, 520);
+  groupLbl.textContent=group.name; groupLbl.classList.add('show');
+  setTimeout(function(){locked=false;},520);
 }
 
-function goToRoot() {
+function goToRoot(){
   if (locked) return;
-  locked = true;
-  if (Res.active) { Res.stop(); }
+  locked=true;
+  if (Res.active){Res.stop();}
   card.classList.remove('show');
-  scene = SCENE_ROOT;
-  activeGroup = null;
-  activeRepo  = null;
-  childNodes  = [];
-
+  scene=SCENE_ROOT; activeGroup=null; activeRepo=null; childNodes=[];
   applyViewMode(false);
-
-  hintEl.style.opacity = '1';
-  backBtn.classList.remove('show');
-  groupLbl.classList.remove('show');
-
-  setTimeout(function () { locked = false; }, 520);
+  hintEl.style.opacity='1';
+  backBtn.classList.remove('show'); groupLbl.classList.remove('show');
+  setTimeout(function(){locked=false;},520);
 }
 
-function openRepoCard(repo) {
+function openRepoCard(repo){
   if (locked) return;
-  locked = true;
-  activeRepo = repo;
-  scene = SCENE_CARD;
-  hintEl.style.opacity = '0';
-  closeMenu();
-
-  /* Push sibling nodes outward */
-  var cx = CX(), cy = CY();
-  var pool = activeGroup ? childNodes : rootNodes;
-  pool.forEach(function (n) {
-    if (n.entity === repo) { n.tx = cx; n.ty = cy; n.targetR = 88; }
-    else {
-      var push = (activeGroup ? CR() : OR()) * 1.85;
-      n.tx = cx + Math.cos(n.orbitAngle) * push;
-      n.ty = cy + Math.sin(n.orbitAngle) * push;
-      n.targetR = n.baseR * 0.5;
+  locked=true; activeRepo=repo; scene=SCENE_CARD;
+  hintEl.style.opacity='0'; closeMenu();
+  var cx=CX(), cy=CY();
+  var pool=activeGroup?childNodes:rootNodes;
+  pool.forEach(function(n){
+    if (n.entity===repo){n.tx=cx;n.ty=cy;n.targetR=88;}
+    else{
+      var push=(activeGroup?CR():OR())*1.85;
+      n.tx=cx+Math.cos(n.orbitAngle)*push;
+      n.ty=cy+Math.sin(n.orbitAngle)*push;
+      n.targetR=n.baseR*0.5;
     }
   });
-
-  setTimeout(function () { showCard(repo); locked = false; }, 480);
+  setTimeout(function(){showCard(repo);locked=false;},480);
 }
 
-function closeRepoCard() {
+function closeRepoCard(){
   if (locked) return;
-  locked = true;
-  card.classList.remove('show');
-  activeRepo = null;
-  scene = activeGroup ? SCENE_GROUP : SCENE_ROOT;
-
-  /* Restore pool */
-  var cx = CX(), cy = CY();
-  var pool = activeGroup ? childNodes : rootNodes;
-  var orbitFn = activeGroup ? CR : OR;
-  if (!Res.active) {
-    pool.forEach(function (n) {
-      n.tx = cx + Math.cos(n.orbitAngle) * orbitFn();
-      n.ty = cy + Math.sin(n.orbitAngle) * orbitFn();
-      n.targetR = n.baseR;
+  locked=true; card.classList.remove('show');
+  activeRepo=null; scene=activeGroup?SCENE_GROUP:SCENE_ROOT;
+  var cx=CX(), cy=CY();
+  var pool=activeGroup?childNodes:rootNodes;
+  var orFn=activeGroup?CR:OR;
+  if (!Res.active){
+    pool.forEach(function(n){
+      n.tx=cx+Math.cos(n.orbitAngle)*orFn();
+      n.ty=cy+Math.sin(n.orbitAngle)*orFn();
+      n.targetR=n.baseR;
     });
   }
-  hintEl.style.opacity = '1';
-  setTimeout(function () { locked = false; }, 400);
+  hintEl.style.opacity='1';
+  setTimeout(function(){locked=false;},400);
 }
 
 function showCard(repo) {
@@ -840,266 +665,260 @@ function showCard(repo) {
   document.getElementById('c-eye').style.color = 'rgba('+repo.rgb+',0.65)';
   document.getElementById('c-name').textContent = repo.name;
   document.getElementById('c-desc').textContent = repo.desc;
-  var h = '';
-  for (var i = 0; i < repo.tags.length; i++) { h += '<span class="ctag">'+repo.tags[i]+'</span>'; }
-  document.getElementById('c-tags').innerHTML = h;
-  document.getElementById('btn-gh').href = repo.gh;
-  document.getElementById('btn-io').href = repo.io;
-  document.getElementById('card-line').style.background =
+  var h='';
+  for (var i=0;i<repo.tags.length;i++){h+='<span class="ctag">'+repo.tags[i]+'</span>';}
+  document.getElementById('c-tags').innerHTML=h;
+  document.getElementById('btn-gh').href=repo.gh;
+  document.getElementById('btn-io').href=repo.io;
+  document.getElementById('card-line').style.background=
     'linear-gradient(90deg,transparent,rgba('+repo.rgb+',0.5),transparent)';
-  card.style.borderColor = 'rgba('+repo.rgb+',0.32)';
-  requestAnimationFrame(function () { card.classList.add('show'); });
+  card.style.borderColor='rgba('+repo.rgb+',0.32)';
+
+  /* Favicon in card */
+  var fi = faviconMap[repo.id];
+  if (fi) {
+    cardFavi.src = fi.src;
+    cardFavi.classList.add('show');
+  } else {
+    cardFavi.src = '';
+    cardFavi.classList.remove('show');
+  }
+
+  requestAnimationFrame(function(){card.classList.add('show');});
 }
 
 document.getElementById('card-close').addEventListener('click', closeRepoCard);
 backBtn.addEventListener('click', goToRoot);
 
 /* ── Hit test ───────────────────────────────────── */
-function hitTest(mx, my) {
-  var pool = (scene === SCENE_GROUP) ? childNodes : rootNodes;
-  for (var i = 0; i < pool.length; i++) {
-    var n = pool[i];
-    var dx = mx - n.x, dy = my - n.y;
-    if (Math.sqrt(dx*dx+dy*dy) < n.radius + 16) { return n; }
+function hitTest(mx,my){
+  var pool=(scene===SCENE_GROUP)?childNodes:rootNodes;
+  for(var i=0;i<pool.length;i++){
+    var n=pool[i], dx=mx-n.x, dy=my-n.y;
+    if(Math.sqrt(dx*dx+dy*dy)<n.radius+16){return n;}
   }
   return null;
 }
-
-function handleTap(mx, my) {
-  if (locked || scene === SCENE_CARD) return;
-  var n = hitTest(mx, my);
-  if (!n) return;
-  if (n.isGroup) { goToGroup(n.entity); }
-  else { openRepoCard(n.entity); }
+function handleTap(mx,my){
+  if(locked||scene===SCENE_CARD)return;
+  var n=hitTest(mx,my); if(!n)return;
+  if(n.isGroup){goToGroup(n.entity);}else{openRepoCard(n.entity);}
 }
-
-canvas.addEventListener('click', function (e) {
-  var r = canvas.getBoundingClientRect();
-  handleTap(e.clientX - r.left, e.clientY - r.top);
+canvas.addEventListener('click',function(e){
+  var r=canvas.getBoundingClientRect(); handleTap(e.clientX-r.left,e.clientY-r.top);
 });
-
-canvas.addEventListener('mousemove', function (e) {
-  if (scene === SCENE_CARD || locked) { canvas.style.cursor = 'default'; return; }
-  var r = canvas.getBoundingClientRect();
-  canvas.style.cursor = hitTest(e.clientX - r.left, e.clientY - r.top) ? 'pointer' : 'default';
+canvas.addEventListener('mousemove',function(e){
+  if(scene===SCENE_CARD||locked){canvas.style.cursor='default';return;}
+  var r=canvas.getBoundingClientRect();
+  canvas.style.cursor=hitTest(e.clientX-r.left,e.clientY-r.top)?'pointer':'default';
 });
-
-canvas.addEventListener('touchend', function (e) {
-  var touch = e.changedTouches[0];
-  var r = canvas.getBoundingClientRect();
-  var mx = touch.clientX - r.left, my = touch.clientY - r.top;
-  if (locked || scene === SCENE_CARD) return;
-  var n = hitTest(mx, my);
-  if (n) { e.preventDefault(); if (n.isGroup) { goToGroup(n.entity); } else { openRepoCard(n.entity); } }
-}, { passive: false });
+canvas.addEventListener('touchend',function(e){
+  var touch=e.changedTouches[0], r=canvas.getBoundingClientRect();
+  var mx=touch.clientX-r.left, my=touch.clientY-r.top;
+  if(locked||scene===SCENE_CARD)return;
+  var n=hitTest(mx,my);
+  if(n){e.preventDefault();if(n.isGroup){goToGroup(n.entity);}else{openRepoCard(n.entity);}}
+},{passive:false});
 
 /* ═══════════════════════════════════════════════════
    DRAW LOOP
 ═══════════════════════════════════════════════════ */
-var EASE = 0.066;
-function lerp(a, b, k) { return a + (b-a) * k; }
+var EASE=0.066;
+function lerp(a,b,k){return a+(b-a)*k;}
+
+/* Draw a favicon clipped to a circle inside a node */
+function drawFavicon(img, nx, ny, nodeR) {
+  var fSize = Math.floor(nodeR * 0.72);  /* favicon fills ~72% of node radius */
+  if (fSize < 6) return;
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(nx, ny - fSize*0.18, fSize*0.72, 0, Math.PI*2);  /* sit slightly above centre */
+  ctx.clip();
+  ctx.drawImage(img, nx - fSize*0.72, ny - fSize*0.18 - fSize*0.72, fSize*1.44, fSize*1.44);
+  ctx.restore();
+}
 
 function drawNodeSet(pool, cx, cy, T) {
-  var i, j, md = Math.min(W,H);
+  var i, j, md=Math.min(W,H);
 
-  /* Edges between nodes */
-  for (i = 0; i < pool.length; i++) {
-    for (j = i+1; j < pool.length; j++) {
-      var na = pool[i], nb = pool[j];
-      var ex = na.x-nb.x, ey = na.y-nb.y, ed = Math.sqrt(ex*ex+ey*ey);
-      if (ed < md) {
-        ctx.beginPath(); ctx.moveTo(na.x, na.y); ctx.lineTo(nb.x, nb.y);
-        ctx.strokeStyle = 'rgba('+T.pt+','+((1-ed/md)*0.11*(0.6+0.4*Math.sin(t+i)))+')';
-        ctx.lineWidth = 0.5; ctx.stroke();
+  /* Edges */
+  for(i=0;i<pool.length;i++){
+    for(j=i+1;j<pool.length;j++){
+      var na=pool[i], nb=pool[j];
+      var ex=na.x-nb.x, ey=na.y-nb.y, ed=Math.sqrt(ex*ex+ey*ey);
+      if(ed<md){
+        ctx.beginPath(); ctx.moveTo(na.x,na.y); ctx.lineTo(nb.x,nb.y);
+        ctx.strokeStyle='rgba('+T.pt+','+((1-ed/md)*0.11*(0.6+0.4*Math.sin(t+i)))+')';
+        ctx.lineWidth=0.5; ctx.stroke();
       }
     }
   }
 
-  /* Pulse line from centre to active repo node */
-  if (scene === SCENE_CARD && activeRepo) {
-    pool.forEach(function (n) {
-      if (n.entity !== activeRepo) return;
-      ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(n.x, n.y);
-      ctx.strokeStyle = 'rgba('+n.entity.rgb+',0.06)';
-      ctx.lineWidth = 0.5; ctx.stroke();
-      var pr = (t*0.5)%1;
-      ctx.beginPath(); ctx.arc(cx+(n.x-cx)*pr, cy+(n.y-cy)*pr, 2.5, 0, Math.PI*2);
-      ctx.fillStyle = 'rgba('+n.entity.rgb+',0.7)'; ctx.fill();
+  /* Pulse line to active repo */
+  if(scene===SCENE_CARD&&activeRepo){
+    pool.forEach(function(n){
+      if(n.entity!==activeRepo)return;
+      ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(n.x,n.y);
+      ctx.strokeStyle='rgba('+n.entity.rgb+',0.06)'; ctx.lineWidth=0.5; ctx.stroke();
+      var pr=(t*0.5)%1;
+      ctx.beginPath(); ctx.arc(cx+(n.x-cx)*pr,cy+(n.y-cy)*pr,2.5,0,Math.PI*2);
+      ctx.fillStyle='rgba('+n.entity.rgb+',0.7)'; ctx.fill();
     });
   }
 
-  /* Draw nodes */
-  pool.forEach(function (n) {
-    var rgb   = n.isGroup ? n.entity.rgb : n.entity.rgb;
-    var isAct = scene === SCENE_CARD && n.entity === activeRepo;
-    var pv    = 0.65 + 0.35 * Math.sin(t*1.1 + n.pulse);
+  /* Nodes */
+  pool.forEach(function(n){
+    var rgb=n.entity.rgb;
+    var isAct=scene===SCENE_CARD&&n.entity===activeRepo;
+    var pv=0.65+0.35*Math.sin(t*1.1+n.pulse);
+    var hasFavi = !n.isGroup && faviconMap[n.entity.id];
 
     /* Outer breathing ring */
-    ctx.beginPath(); ctx.arc(n.x, n.y, n.radius + 7 + 5*Math.sin(t*1.3+n.pulse), 0, Math.PI*2);
-    ctx.strokeStyle = 'rgba('+rgb+','+(isAct ? 0.22*pv : 0.06*pv)+')';
-    ctx.lineWidth = isAct ? 1.5 : 0.5; ctx.stroke();
+    ctx.beginPath(); ctx.arc(n.x,n.y,n.radius+7+5*Math.sin(t*1.3+n.pulse),0,Math.PI*2);
+    ctx.strokeStyle='rgba('+rgb+','+(isAct?0.22*pv:0.06*pv)+')';
+    ctx.lineWidth=isAct?1.5:0.5; ctx.stroke();
 
-    /* Dashed ring for group nodes (signals expandability) */
-    if (n.isGroup && scene === SCENE_ROOT) {
-      ctx.beginPath(); ctx.arc(n.x, n.y, n.radius + 3, 0, Math.PI*2);
-      ctx.setLineDash([3, 4]);
-      ctx.strokeStyle = 'rgba('+rgb+',0.25)';
-      ctx.lineWidth = 0.5; ctx.stroke();
+    /* Dashed ring for group nodes */
+    if(n.isGroup&&scene===SCENE_ROOT){
+      ctx.beginPath(); ctx.arc(n.x,n.y,n.radius+3,0,Math.PI*2);
+      ctx.setLineDash([3,4]);
+      ctx.strokeStyle='rgba('+rgb+',0.25)'; ctx.lineWidth=0.5; ctx.stroke();
       ctx.setLineDash([]);
     }
 
     /* Inner ring */
-    ctx.beginPath(); ctx.arc(n.x, n.y, n.radius + 2, 0, Math.PI*2);
-    ctx.strokeStyle = 'rgba('+rgb+','+(isAct ? 0.38 : 0.12*pv)+')';
-    ctx.lineWidth = 0.5; ctx.stroke();
+    ctx.beginPath(); ctx.arc(n.x,n.y,n.radius+2,0,Math.PI*2);
+    ctx.strokeStyle='rgba('+rgb+','+(isAct?0.38:0.12*pv)+')'; ctx.lineWidth=0.5; ctx.stroke();
 
     /* Core fill */
-    ctx.beginPath(); ctx.arc(n.x, n.y, n.radius, 0, Math.PI*2);
-    ctx.fillStyle   = 'rgba('+rgb+','+(isAct ? 0.16 : n.isGroup ? 0.09 : 0.06)+')'; ctx.fill();
-    ctx.strokeStyle = 'rgba('+rgb+','+(isAct ? 0.82 : 0.32*pv)+')';
-    ctx.lineWidth = isAct ? 1 : 0.5; ctx.stroke();
+    ctx.beginPath(); ctx.arc(n.x,n.y,n.radius,0,Math.PI*2);
+    ctx.fillStyle='rgba('+rgb+','+(isAct?0.16:n.isGroup?0.09:0.06)+')'; ctx.fill();
+    ctx.strokeStyle='rgba('+rgb+','+(isAct?0.82:0.32*pv)+')';
+    ctx.lineWidth=isAct?1:0.5; ctx.stroke();
 
-    /* Label */
-    var fsize = isAct ? 12 : (n.isGroup ? 11 : 10);
-    ctx.font = '400 '+fsize+'px \'DM Mono\',monospace';
-    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillStyle = 'rgba('+rgb+','+(isAct ? 0.9 : n.isGroup ? 0.7 : 0.55)+')';
-    var label = n.isGroup ? n.entity.name : (function () {
-      var ps = n.entity.name.split(' ');
-      return ps.length > 2 ? ps.slice(-2).join(' ') : ps[ps.length-1];
-    }());
-    if (isAct) {
-      var ws = n.entity.name.split(' ');
-      if (ws.length <= 2) { ctx.fillText(n.entity.name, n.x, n.y); }
-      else { ctx.fillText(ws.slice(0,2).join(' '), n.x, n.y-8); ctx.fillText(ws.slice(2).join(' '), n.x, n.y+8); }
-    } else {
-      ctx.fillText(label, n.x, n.y);
+    /* Favicon inside node (repo nodes only, when loaded) */
+    if(hasFavi&&n.radius>10){
+      drawFavicon(faviconMap[n.entity.id], n.x, n.y, n.radius);
     }
 
-    /* Count badge on group nodes */
-    if (n.isGroup && scene === SCENE_ROOT) {
-      var count = 0;
-      for (var ri = 0; ri < REPOS.length; ri++) { if (REPOS[ri].groupId === n.entity.id) { count++; } }
-      ctx.font = '300 8px \'DM Mono\',monospace';
-      ctx.fillStyle = 'rgba('+rgb+',0.4)';
-      ctx.fillText(count + (count === 1 ? ' work' : ' works'), n.x, n.y + n.radius + 12);
+    /* Label — below node if favicon present, centred if not */
+    var fsize=isAct?12:(n.isGroup?11:10);
+    ctx.font='400 '+fsize+'px \'DM Mono\',monospace';
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillStyle='rgba('+rgb+','+(isAct?0.9:n.isGroup?0.7:0.55)+')';
+
+    /* When favicon is shown, push label below the node circle */
+    var labelY = hasFavi ? n.y + n.radius + 11 : n.y;
+    if(isAct){
+      ctx.textBaseline='middle';
+      var ws=n.entity.name.split(' ');
+      if(ws.length<=2){ ctx.fillText(n.entity.name,n.x,labelY); }
+      else{ ctx.fillText(ws.slice(0,2).join(' '),n.x,labelY-8); ctx.fillText(ws.slice(2).join(' '),n.x,labelY+8); }
+    } else {
+      var label=n.isGroup?n.entity.name:(function(){
+        var ps=n.entity.name.split(' ');
+        return ps.length>2?ps.slice(-2).join(' '):ps[ps.length-1];
+      }());
+      ctx.fillText(label,n.x,labelY);
+    }
+
+    /* Count badge on group nodes (below label) */
+    if(n.isGroup&&scene===SCENE_ROOT){
+      var count=0;
+      for(var ri=0;ri<REPOS.length;ri++){if(REPOS[ri].groupId===n.entity.id){count++;}}
+      ctx.font='300 8px \'DM Mono\',monospace';
+      ctx.fillStyle='rgba('+rgb+',0.4)';
+      ctx.fillText(count+(count===1?' work':' works'),n.x,n.y+n.radius+12);
     }
   });
 }
 
-function draw() {
+function draw(){
   requestAnimationFrame(draw);
-
-  if (!sizeReady || W < 10 || H < 10) {
-    var s = measure();
-    if (s.w > 10 && s.h > 10) {
-      W = s.w; H = s.h; canvas.width = W; canvas.height = H;
-      sizeReady = true; spawnPts(); resetNodes(rootNodes, CX(), CY(), OR, true);
-    }
+  if(!sizeReady||W<10||H<10){
+    var s=measure();
+    if(s.w>10&&s.h>10){W=s.w;H=s.h;canvas.width=W;canvas.height=H;sizeReady=true;spawnPts();applyViewMode(true);}
     return;
   }
-
-  ctx.clearRect(0, 0, W, H);
-  t += 0.012;
-  var cx = CX(), cy = CY();
-  var T = th();
+  ctx.clearRect(0,0,W,H); t+=0.012;
+  var cx=CX(), cy=CY(), T=th();
 
   /* Background */
-  ctx.fillStyle = 'rgb('+T.bg+')'; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle='rgb('+T.bg+')'; ctx.fillRect(0,0,W,H);
 
   /* Ambient blobs */
-  for (var bi = 0; bi < 3; bi++) {
+  for(var bi=0;bi<3;bi++){
     ctx.beginPath();
-    ctx.arc(cx + Math.sin(t*0.06+bi*2.1)*W*0.28, cy + Math.cos(t*0.045+bi*1.8)*H*0.22,
-      Math.min(W,H)*(0.32+bi*0.1), 0, Math.PI*2);
-    ctx.fillStyle = 'rgba('+(bi===1?'29,158,117':T.pt)+','+(T.bA+bi*0.004)+')';
-    ctx.fill();
+    ctx.arc(cx+Math.sin(t*0.06+bi*2.1)*W*0.28, cy+Math.cos(t*0.045+bi*1.8)*H*0.22, Math.min(W,H)*(0.32+bi*0.1),0,Math.PI*2);
+    ctx.fillStyle='rgba('+(bi===1?'29,158,117':T.pt)+','+(T.bA+bi*0.004)+')'; ctx.fill();
   }
 
   /* Particles */
-  for (var pi = 0; pi < pts.length; pi++) {
-    var p = pts[pi];
-    p.x += p.vx; p.y += p.vy;
-    if (p.x < 0) p.x = W; if (p.x > W) p.x = 0;
-    if (p.y < 0) p.y = H; if (p.y > H) p.y = 0;
-    ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-    ctx.fillStyle = 'rgba('+T.pt+','+(p.a*(0.5+0.5*Math.sin(t*0.8+p.ph)))+')'; ctx.fill();
+  for(var pi=0;pi<pts.length;pi++){
+    var p=pts[pi]; p.x+=p.vx; p.y+=p.vy;
+    if(p.x<0)p.x=W; if(p.x>W)p.x=0; if(p.y<0)p.y=H; if(p.y>H)p.y=0;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle='rgba('+T.pt+','+(p.a*(0.5+0.5*Math.sin(t*0.8+p.ph)))+')'; ctx.fill();
   }
 
   /* Particle web */
-  for (var wi = 0; wi < pts.length; wi += 2) {
-    for (var wj = wi+2; wj < pts.length; wj += 2) {
-      var pa = pts[wi], pb = pts[wj];
-      var wdx = pa.x-pb.x, wdy = pa.y-pb.y, wd = Math.sqrt(wdx*wdx+wdy*wdy);
-      if (wd < 115) {
-        ctx.beginPath(); ctx.moveTo(pa.x, pa.y); ctx.lineTo(pb.x, pb.y);
-        ctx.strokeStyle = 'rgba('+T.pt+','+((1-wd/115)*0.028)+')';
-        ctx.lineWidth = 0.5; ctx.stroke();
+  for(var wi=0;wi<pts.length;wi+=2){
+    for(var wj=wi+2;wj<pts.length;wj+=2){
+      var pa=pts[wi],pb=pts[wj],wdx=pa.x-pb.x,wdy=pa.y-pb.y,wd=Math.sqrt(wdx*wdx+wdy*wdy);
+      if(wd<115){
+        ctx.beginPath(); ctx.moveTo(pa.x,pa.y); ctx.lineTo(pb.x,pb.y);
+        ctx.strokeStyle='rgba('+T.pt+','+((1-wd/115)*0.028)+')'; ctx.lineWidth=0.5; ctx.stroke();
       }
     }
   }
 
   /* Orbit ticks */
-  var activePool = (scene === SCENE_GROUP || scene === SCENE_CARD && activeGroup) ? childNodes : rootNodes;
-  var orFn = activeGroup ? CR : OR;
-
-  if (scene !== SCENE_CARD) {
-    if (Res.active) {
-      activePool.forEach(function (n) { n.orbitAngle += n.orbitSpeed * 0.4; });
+  var activePool=(scene===SCENE_GROUP||(scene===SCENE_CARD&&activeGroup))?childNodes:rootNodes;
+  var orFn=activeGroup?CR:OR;
+  if(scene!==SCENE_CARD){
+    if(Res.active){
+      activePool.forEach(function(n){n.orbitAngle+=n.orbitSpeed*0.4;});
       Res.tick();
     } else {
-      var orV = orFn();
-      activePool.forEach(function (n) {
-        n.orbitAngle += n.orbitSpeed;
-        if (scene === SCENE_ROOT || scene === SCENE_GROUP) {
-          n.tx = cx + Math.cos(n.orbitAngle) * orV;
-          n.ty = cy + Math.sin(n.orbitAngle) * orV;
-        }
+      var orV=orFn();
+      activePool.forEach(function(n){
+        n.orbitAngle+=n.orbitSpeed;
+        if(scene===SCENE_ROOT||scene===SCENE_GROUP){n.tx=cx+Math.cos(n.orbitAngle)*orV;n.ty=cy+Math.sin(n.orbitAngle)*orV;}
       });
-      /* Also keep faded root nodes slowly orbiting in group scene */
-      if (scene === SCENE_GROUP) {
-        rootNodes.forEach(function (n) { n.orbitAngle += n.orbitSpeed * 0.2; });
-      }
+      if(scene===SCENE_GROUP){rootNodes.forEach(function(n){n.orbitAngle+=n.orbitSpeed*0.2;});}
     }
   }
 
-  /* Lerp all pools */
-  function lerpPool(pool) {
-    pool.forEach(function (n) {
-      n.x      = lerp(n.x,      n.tx,      EASE);
-      n.y      = lerp(n.y,      n.ty,      EASE);
-      n.radius = lerp(n.radius, n.targetR, EASE);
-    });
-  }
+  /* Lerp */
+  function lerpPool(pool){pool.forEach(function(n){n.x=lerp(n.x,n.tx,EASE);n.y=lerp(n.y,n.ty,EASE);n.radius=lerp(n.radius,n.targetR,EASE);});}
   lerpPool(rootNodes);
-  if (childNodes.length) { lerpPool(childNodes); }
+  if(childNodes.length){lerpPool(childNodes);}
 
-  /* Draw faded root nodes behind when inside a group */
-  if (scene === SCENE_GROUP || (scene === SCENE_CARD && activeGroup)) {
-    rootNodes.forEach(function (n) {
-      ctx.globalAlpha = 0.18;
-      ctx.beginPath(); ctx.arc(n.x, n.y, n.radius, 0, Math.PI*2);
-      ctx.fillStyle = 'rgba('+n.entity.rgb+',0.04)'; ctx.fill();
-      ctx.strokeStyle = 'rgba('+n.entity.rgb+',0.15)'; ctx.lineWidth = 0.5; ctx.stroke();
-      ctx.globalAlpha = 1;
+  /* Faded root nodes when inside group */
+  if(scene===SCENE_GROUP||(scene===SCENE_CARD&&activeGroup)){
+    rootNodes.forEach(function(n){
+      ctx.globalAlpha=0.18;
+      ctx.beginPath(); ctx.arc(n.x,n.y,n.radius,0,Math.PI*2);
+      ctx.fillStyle='rgba('+n.entity.rgb+',0.04)'; ctx.fill();
+      ctx.strokeStyle='rgba('+n.entity.rgb+',0.15)'; ctx.lineWidth=0.5; ctx.stroke();
+      ctx.globalAlpha=1;
     });
   }
 
   /* Draw active pool */
-  if (scene === SCENE_ROOT || (scene === SCENE_CARD && !activeGroup)) {
-    drawNodeSet(rootNodes, cx, cy, T);
-  } else {
-    drawNodeSet(childNodes, cx, cy, T);
-  }
+  if(scene===SCENE_ROOT||(scene===SCENE_CARD&&!activeGroup)){drawNodeSet(rootNodes,cx,cy,T);}
+  else{drawNodeSet(childNodes,cx,cy,T);}
 
   /* Origin pulse */
-  ctx.beginPath(); ctx.arc(cx, cy, 2.5, 0, Math.PI*2);
-  ctx.fillStyle = 'rgba('+T.pt+','+(0.14+0.1*Math.sin(t))+')'; ctx.fill();
+  ctx.beginPath(); ctx.arc(cx,cy,2.5,0,Math.PI*2);
+  ctx.fillStyle='rgba('+T.pt+','+(0.14+0.1*Math.sin(t))+')'; ctx.fill();
 
   /* Resonance badges */
   Res.badges();
 }
 
+/* Start favicons and draw */
+initFavicons();
 draw();
 
 }());
