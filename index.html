@@ -755,13 +755,12 @@ function lerp(a,b,k){return a+(b-a)*k;}
 
 /* Draw a favicon clipped to a circle inside a node */
 function drawFavicon(img, nx, ny, nodeR) {
-  var fSize = Math.floor(nodeR * 0.72);  /* favicon fills ~72% of node radius */
-  if (fSize < 6) return;
+  var r = nodeR - 1; /* fill to just inside the node stroke */
   ctx.save();
   ctx.beginPath();
-  ctx.arc(nx, ny - fSize*0.18, fSize*0.72, 0, Math.PI*2);  /* sit slightly above centre */
+  ctx.arc(nx, ny, r, 0, Math.PI * 2);
   ctx.clip();
-  ctx.drawImage(img, nx - fSize*0.72, ny - fSize*0.18 - fSize*0.72, fSize*1.44, fSize*1.44);
+  ctx.drawImage(img, nx - r, ny - r, r * 2, r * 2);
   ctx.restore();
 }
 
@@ -834,7 +833,7 @@ function drawNodeSet(pool, cx, cy, T) {
     ctx.textAlign='center'; ctx.textBaseline='middle';
     ctx.fillStyle='rgba('+rgb+','+(isAct?0.9:n.isGroup?0.7:0.55)+')';
 
-    /* When favicon is shown, push label below the node circle */
+    /* When favicon is shown, label always goes below the node */
     var labelY = hasFavi ? n.y + n.radius + 11 : n.y;
     if(isAct){
       ctx.textBaseline='middle';
