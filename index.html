@@ -237,54 +237,81 @@ var REPOS = [
 
 /* ═══════════════════════════════════════════════════
    FAVICON SYSTEM
-   Tries each repo's live page domain in order:
-     1. /favicon.ico
-     2. /favicon.png
-     3. /apple-touch-icon.png  (many PWAs set this)
-   Uses crossOrigin="anonymous" — succeeds when the
-   host sends permissive CORS headers (GitHub Pages
-   does). Falls back silently if not. No Google API,
-   no canvas pixel reads, no CORS errors.
+   Fetches each repo's live page HTML, parses out the
+   <link rel="icon"> / <link rel="shortcut icon"> /
+   <link rel="apple-touch-icon"> href, then loads that
+   image. Falls back to /favicon.ico if no tag found.
+   All failures are silent — repos without a resolvable
+   favicon simply render without one.
    faviconMap[repoId] = loaded HTMLImageElement
 ═══════════════════════════════════════════════════ */
 var faviconMap = {};
 
 function domainFromUrl(url) {
-  try {
-    var u = new URL(url);
-    return u.protocol + '//' + u.hostname;
-  } catch (e) { return null; }
+  try { var u = new URL(url); return u.protocol + '//' + u.hostname; }
+  catch (e) { return null; }
 }
 
-function tryFaviconUrls(repo, urls, index) {
-  if (index >= urls.length) return; /* all failed — silent */
+function resolveUrl(base, href) {
+  try { return new URL(href, base).href; }
+  catch (e) { return null; }
+}
+
+function extractFaviconHref(html, pageUrl) {
+  /* Look for link tags with rel containing "icon" — prefer apple-touch-icon
+     as it tends to be higher resolution, fall back to shortcut icon / icon */
+  var candidates = [];
+  var re = /<link([^>]+)>/gi;
+  var match;
+  while ((match = re.exec(html)) !== null) {
+    var attrs = match[1];
+    if (/rel\s*=\s*["'][^"']*icon[^"']*["']/i.test(attrs)) {
+      var hm = attrs.match(/href\s*=\s*["']([^"']+)["']/i);
+      if (hm) {
+        var rel = (attrs.match(/rel\s*=\s*["']([^"']+)["']/i) || ['',''])[1].toLowerCase();
+        var priority = rel.indexOf('apple') >= 0 ? 0 : 1;
+        candidates.push({ href: hm[1], priority: priority });
+      }
+    }
+  }
+  if (!candidates.length) return null;
+  candidates.sort(function (a, b) { return a.priority - b.priority; });
+  return resolveUrl(pageUrl, candidates[0].href);
+}
+
+function loadImageSilently(url, cb) {
   var img = new Image();
   img.crossOrigin = 'anonymous';
   img.onload = function () {
-    /* Reject suspiciously small images (genuine favicons are ≥16px,
-       but we want something visible in a node, so require ≥16) */
-    if (img.width >= 16 && img.height >= 16) {
-      faviconMap[repo.id] = img;
-    } else {
-      tryFaviconUrls(repo, urls, index + 1);
-    }
+    if (img.width >= 16 && img.height >= 16) { cb(img); } else { cb(null); }
   };
-  img.onerror = function () {
-    tryFaviconUrls(repo, urls, index + 1);
-  };
-  img.src = urls[index];
+  img.onerror = function () { cb(null); };
+  img.src = url;
 }
 
 function loadFavicon(repo) {
-  var base = domainFromUrl(repo.io);
+  var pageUrl = repo.io;
+  var base    = domainFromUrl(pageUrl);
   if (!base) return;
-  var urls = [
-    base + '/favicon.ico',
-    base + '/favicon.png',
-    base + '/apple-touch-icon.png',
-    base + '/apple-touch-icon-precomposed.png',
-  ];
-  tryFaviconUrls(repo, urls, 0);
+
+  /* Step 1: fetch the page HTML to find the real favicon link */
+  fetch(pageUrl, { mode: 'cors' })
+    .then(function (res) {
+      if (!res.ok) { throw new Error('page fetch failed'); }
+      return res.text();
+    })
+    .then(function (html) {
+      var iconUrl = extractFaviconHref(html, pageUrl) || (base + '/favicon.ico');
+      loadImageSilently(iconUrl, function (img) {
+        if (img) { faviconMap[repo.id] = img; }
+      });
+    })
+    ['catch'](function () {
+      /* Page fetch failed — try bare /favicon.ico as last resort */
+      loadImageSilently(base + '/favicon.ico', function (img) {
+        if (img) { faviconMap[repo.id] = img; }
+      });
+    });
 }
 
 function initFavicons() {
