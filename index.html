@@ -524,6 +524,9 @@ var Res = {
     var self=this;
     if (self.loading) return;
     self.metric=metric; self.loading=true; self.active=false;
+    /* Clear previous scores so stale data never lingers */
+    self.scores={}; self.norms={}; self.groupScores={}; self.groupNorms={};
+    _cache = {}; /* clear GitHub API cache for fresh data */
     resStatus.style.display='block'; resStatus.textContent='fetching\u2026'; resOK.disabled=true;
     var def=METRICS[self.metric]; if (!def){self.loading=false;return;}
     var pool=self._pool(), pending=pool.length, results=[];
@@ -591,7 +594,7 @@ var Res = {
       ctx.font='300 9px \'DM Mono\',monospace';
       ctx.textAlign='center'; ctx.textBaseline='middle';
       ctx.fillStyle='rgba('+n.entity.rgb+',0.6)';
-      ctx.fillText(lbl, n.x, n.y+n.radius+14);
+      ctx.fillText(lbl, n.x, n.y - n.radius - 8);
     });
   },
 };
