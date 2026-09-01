@@ -35,14 +35,23 @@ canvas { position:absolute; top:0; left:0; display:block; }
 body.light #intro { background:rgba(244,243,251,0.97); }
 #intro.fade { opacity:0; pointer-events:none; }
 
-#intro-slides { width:100%; max-width:360px; position:relative; }
+#intro-slides { width:100%; max-width:360px; position:relative; overflow:hidden; min-height:320px; }
 
 .i-slide {
   width:100%; text-align:center;
   transition:opacity 0.4s ease, transform 0.4s cubic-bezier(0.22,1,0.36,1);
+  position:relative;
 }
-.i-slide.out-left  { opacity:0; pointer-events:none; position:absolute; top:0; left:0; transform:translateX(-36px); }
-.i-slide.out-right { opacity:0; pointer-events:none; position:absolute; top:0; left:0; transform:translateX(36px); }
+.i-slide.out-left {
+  opacity:0; pointer-events:none;
+  position:absolute; top:0; left:0; right:0;
+  transform:translateX(-36px);
+}
+.i-slide.out-right {
+  opacity:0; pointer-events:none;
+  position:absolute; top:0; left:0; right:0;
+  transform:translateX(36px);
+}
 
 .i-mark {
   font-family:var(--mono); font-size:10px; font-weight:400;
@@ -239,8 +248,7 @@ body.light .cbtn.pri { background:rgba(83,74,183,0.08); border-color:rgba(83,74,
     <div class="i-slide" id="i-s0">
       <span class="i-mark">nztdev &nbsp;·&nbsp; field of works</span>
       <div class="i-h">What is this place?</div>
-      <div class="i-h">Everything being built,<br>in one living field.</div>
-      <div class="i-p">A map of projects, tools, and experiments — grouped by what they do, orbiting in real time. Each node is something you can open, explore, and install.</div>
+      <div class="i-p">A living map of everything being built — projects, tools, and experiments grouped by what they do, orbiting in real time. Each node is something you can open, explore, and install.</div>
 
       <!-- Animated mini-field preview -->
       <div id="preview-wrap">
@@ -530,19 +538,36 @@ initPreview();
 drawPreview();
 
 function goSlide(to){
-  var from = curSlide;
+  var from=curSlide;
   if(to===from)return;
-  var leaving = to > from ? 'out-left' : 'out-right';
-  var entering = to > from ? 'out-right' : 'out-left';
   var slides=[slide0,slide1];
-  slides[from].classList.add(leaving);
-  slides[to].classList.remove('out-left');
-  slides[to].classList.remove('out-right');
-  curSlide=to;
-  dots.forEach(function(d,i){d.classList.toggle('on',i===to);});
-  iNext.textContent = to === 1 ? 'Enter the field \u2192' : 'Continue \u00a0\u2192';
-  /* clean up after transition */
-  setTimeout(function(){slides[from].classList.remove(leaving);},500);
+  var container=document.getElementById('intro-slides');
+
+  /* Lock container height to current slide height before animating */
+  container.style.height=slides[from].offsetHeight+'px';
+
+  /* Mark outgoing slide as exiting in the correct direction */
+  var outClass=to>from?'out-left':'out-right';
+  var inClass =to>from?'out-right':'out-left';
+
+  /* Stage incoming slide offscreen without display:none */
+  slides[to].classList.add(inClass);
+
+  /* Small rAF so browser registers the initial state before transitioning */
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){
+      slides[from].classList.add(outClass);
+      slides[to].classList.remove(inClass);
+      curSlide=to;
+      dots.forEach(function(d,i){d.classList.toggle('on',i===to);});
+      iNext.textContent=to===1?'Enter the field \u2192':'Continue \u00a0\u2192';
+      /* Release height lock after transition */
+      setTimeout(function(){
+        container.style.height='';
+        slides[from].classList.remove(outClass);
+      },500);
+    });
+  });
 }
 
 iNext.addEventListener('click',function(){
