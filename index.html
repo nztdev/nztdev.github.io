@@ -35,22 +35,26 @@ canvas { position:absolute; top:0; left:0; display:block; }
 body.light #intro { background:rgba(244,243,251,0.97); }
 #intro.fade { opacity:0; pointer-events:none; }
 
-#intro-slides { width:100%; max-width:360px; position:relative; overflow:hidden; min-height:320px; }
+#intro-slides { width:100%; max-width:360px; position:relative; overflow:hidden; }
 
 .i-slide {
   width:100%; text-align:center;
   transition:opacity 0.4s ease, transform 0.4s cubic-bezier(0.22,1,0.36,1);
-  position:relative;
 }
-.i-slide.out-left {
-  opacity:0; pointer-events:none;
-  position:absolute; top:0; left:0; right:0;
-  transform:translateX(-36px);
-}
-.i-slide.out-right {
-  opacity:0; pointer-events:none;
-  position:absolute; top:0; left:0; right:0;
+/* Hidden state — fully out of view and non-interactive */
+.i-slide.hidden {
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  position:absolute;
+  top:0; left:0; right:0;
   transform:translateX(36px);
+}
+.i-slide.hidden.from-right {
+  transform:translateX(36px);
+}
+.i-slide.hidden.from-left {
+  transform:translateX(-36px);
 }
 
 .i-mark {
@@ -537,35 +541,66 @@ function drawPreview() {
 initPreview();
 drawPreview();
 
+/* Set up initial slide states — slide 0 visible, slide 1 hidden off to right */
+var slides=[slide0,slide1];
+slides[1].classList.add('hidden','from-right');
+
 function goSlide(to){
   var from=curSlide;
   if(to===from)return;
-  var slides=[slide0,slide1];
   var container=document.getElementById('intro-slides');
+  var goingForward=to>from;
 
-  /* Lock container height to current slide height before animating */
+  /* Lock height to prevent collapse during absolute positioning */
   container.style.height=slides[from].offsetHeight+'px';
 
-  /* Mark outgoing slide as exiting in the correct direction */
-  var outClass=to>from?'out-left':'out-right';
-  var inClass =to>from?'out-right':'out-left';
+  /* Position incoming slide off-screen in the correct direction, hidden */
+  slides[to].classList.remove('hidden','from-left','from-right');
+  slides[to].style.position='absolute';
+  slides[to].style.top='0';
+  slides[to].style.left='0';
+  slides[to].style.right='0';
+  slides[to].style.opacity='0';
+  slides[to].style.transform=goingForward?'translateX(36px)':'translateX(-36px)';
+  slides[to].style.visibility='visible';
 
-  /* Stage incoming slide offscreen without display:none */
-  slides[to].classList.add(inClass);
-
-  /* Small rAF so browser registers the initial state before transitioning */
+  /* Double rAF so browser registers initial offscreen state */
   requestAnimationFrame(function(){
     requestAnimationFrame(function(){
-      slides[from].classList.add(outClass);
-      slides[to].classList.remove(inClass);
+      /* Animate outgoing slide out */
+      slides[from].style.transition='opacity 0.38s ease, transform 0.38s cubic-bezier(0.22,1,0.36,1)';
+      slides[from].style.opacity='0';
+      slides[from].style.transform=goingForward?'translateX(-36px)':'translateX(36px)';
+
+      /* Animate incoming slide in */
+      slides[to].style.transition='opacity 0.38s ease, transform 0.38s cubic-bezier(0.22,1,0.36,1)';
+      slides[to].style.opacity='1';
+      slides[to].style.transform='translateX(0)';
+
       curSlide=to;
       dots.forEach(function(d,i){d.classList.toggle('on',i===to);});
       iNext.textContent=to===1?'Enter the field \u2192':'Continue \u00a0\u2192';
-      /* Release height lock after transition */
+
       setTimeout(function(){
+        /* Finalise: incoming slide becomes the flow element */
+        slides[to].style.position='';
+        slides[to].style.top='';
+        slides[to].style.left='';
+        slides[to].style.right='';
+        slides[to].style.transition='';
+        slides[to].style.transform='';
+        slides[to].style.opacity='';
+        slides[to].style.visibility='';
+
+        /* Hide outgoing slide completely */
+        slides[from].style.transition='';
+        slides[from].style.opacity='';
+        slides[from].style.transform='';
+        slides[from].classList.add('hidden', goingForward?'from-left':'from-right');
+
+        /* Release height lock */
         container.style.height='';
-        slides[from].classList.remove(outClass);
-      },500);
+      },420);
     });
   });
 }
