@@ -11,19 +11,104 @@
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --bg: #09080e; --card-bg: rgba(12,10,22,0.97); --card-border: rgba(127,119,221,0.28);
-  --text: #e8e6f8; --text2: rgba(232,230,248,0.5); --hint: rgba(127,119,221,0.35);
-  --mono: 'DM Mono','Courier New',monospace; --sans: 'DM Sans',system-ui,sans-serif;
+  --bg:#09080e; --card-bg:rgba(12,10,22,0.97); --card-border:rgba(127,119,221,0.28);
+  --text:#e8e6f8; --text2:rgba(232,230,248,0.5); --hint:rgba(127,119,221,0.35);
+  --mono:'DM Mono','Courier New',monospace; --sans:'DM Sans',system-ui,sans-serif;
 }
 body.light {
-  --bg: #f4f3fb; --card-bg: rgba(255,255,255,0.97); --card-border: rgba(100,90,200,0.22);
-  --text: #1a1830; --text2: rgba(26,24,48,0.55); --hint: rgba(83,74,183,0.4);
+  --bg:#f4f3fb; --card-bg:rgba(255,255,255,0.97); --card-border:rgba(100,90,200,0.22);
+  --text:#1a1830; --text2:rgba(26,24,48,0.55); --hint:rgba(83,74,183,0.4);
 }
-html, body { width:100%; height:100%; background:var(--bg); overflow:hidden; font-family:var(--sans); -webkit-font-smoothing:antialiased; transition:background 0.4s; }
+html,body { width:100%; height:100%; background:var(--bg); overflow:hidden; font-family:var(--sans); -webkit-font-smoothing:antialiased; transition:background 0.4s; }
 #wrap { position:fixed; top:0; left:0; right:0; bottom:0; }
 canvas { position:absolute; top:0; left:0; display:block; }
 
-/* Chrome */
+/* ── Intro overlay ─────────────────────────────── */
+#intro {
+  position:fixed; inset:0; z-index:200;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  background:rgba(9,8,14,0.97);
+  backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  transition:opacity 0.55s cubic-bezier(0.22,1,0.36,1);
+  padding:24px;
+}
+body.light #intro { background:rgba(244,243,251,0.97); }
+#intro.fade { opacity:0; pointer-events:none; }
+
+#intro-slides { width:100%; max-width:360px; position:relative; }
+
+.i-slide {
+  width:100%; text-align:center;
+  transition:opacity 0.4s ease, transform 0.4s cubic-bezier(0.22,1,0.36,1);
+}
+.i-slide.out-left  { opacity:0; pointer-events:none; position:absolute; top:0; left:0; transform:translateX(-36px); }
+.i-slide.out-right { opacity:0; pointer-events:none; position:absolute; top:0; left:0; transform:translateX(36px); }
+
+.i-mark {
+  font-family:var(--mono); font-size:10px; font-weight:400;
+  letter-spacing:0.26em; text-transform:uppercase;
+  color:rgba(127,119,221,0.38); margin-bottom:22px; display:block;
+}
+.i-h {
+  font-size:26px; font-weight:300; color:var(--text);
+  letter-spacing:-0.4px; line-height:1.2; margin-bottom:11px;
+}
+.i-p {
+  font-size:13px; font-weight:300; color:var(--text2);
+  line-height:1.7; margin-bottom:24px;
+}
+
+/* Slide 1 — animated field preview */
+#preview-wrap {
+  width:100%; height:130px; border-radius:14px;
+  border:0.5px solid rgba(127,119,221,0.12);
+  overflow:hidden; margin-bottom:24px; position:relative;
+}
+#preview-canvas { width:100%; height:100%; display:block; }
+/* Labels inside preview */
+.prev-lbl {
+  position:absolute; font-family:var(--mono); font-size:8px;
+  font-weight:300; letter-spacing:0.12em; text-transform:uppercase;
+  color:rgba(127,119,221,0.45); pointer-events:none;
+}
+#plbl-group { top:10px; left:12px; }
+#plbl-node  { bottom:10px; right:12px; }
+
+/* Slide 2 — how-to rows */
+.i-rows { display:flex; flex-direction:column; gap:8px; margin-bottom:24px; text-align:left; }
+.i-row {
+  display:flex; align-items:flex-start; gap:11px;
+  padding:10px 13px; border-radius:10px;
+  border:0.5px solid rgba(127,119,221,0.12);
+  background:rgba(127,119,221,0.04);
+}
+body.light .i-row { background:rgba(83,74,183,0.04); border-color:rgba(83,74,183,0.12); }
+.i-row-ico { font-size:14px; flex-shrink:0; line-height:1.6; }
+.i-row-txt { font-size:11px; font-weight:300; color:var(--text2); line-height:1.55; }
+.i-row-txt strong { color:var(--text); font-weight:400; }
+
+/* Dots */
+#i-dots { display:flex; justify-content:center; gap:6px; margin-bottom:18px; }
+.i-dot { width:5px; height:5px; border-radius:50%; background:rgba(127,119,221,0.2); transition:background 0.3s; cursor:pointer; }
+.i-dot.on { background:rgba(127,119,221,0.75); }
+
+/* Buttons */
+#i-next {
+  width:100%; padding:12px; margin-bottom:10px;
+  background:rgba(127,119,221,0.12); border:0.5px solid rgba(127,119,221,0.4);
+  border-radius:12px; cursor:pointer; font-family:var(--mono); font-size:11px;
+  font-weight:400; letter-spacing:0.14em; text-transform:uppercase; color:var(--text);
+  transition:background 0.2s, border-color 0.2s;
+}
+#i-next:hover { background:rgba(127,119,221,0.22); border-color:rgba(127,119,221,0.65); }
+#i-skip {
+  display:block; width:100%; padding:4px; background:none; border:none; cursor:pointer;
+  font-family:var(--mono); font-size:9px; font-weight:300; letter-spacing:0.12em;
+  text-transform:uppercase; color:rgba(127,119,221,0.25); transition:color 0.2s;
+}
+#i-skip:hover { color:rgba(127,119,221,0.55); }
+
+/* ── Chrome ────────────────────────────────────── */
 .chrome { position:absolute; font-family:var(--mono); pointer-events:none; z-index:20; transition:color 0.4s, opacity 0.5s; }
 #lbl-name { top:26px; left:32px; font-size:11px; font-weight:400; letter-spacing:0.22em; text-transform:uppercase; color:rgba(127,119,221,0.45); }
 body.light #lbl-name { color:rgba(83,74,183,0.6); }
@@ -37,14 +122,26 @@ body.light #lbl-live { color:rgba(15,110,86,0.65); }
 #lbl-count { bottom:30px; right:32px; font-size:10px; font-weight:300; letter-spacing:0.1em; color:rgba(127,119,221,0.18); }
 body.light #lbl-count { color:rgba(83,74,183,0.25); }
 
-/* Back button */
+/* ── Back button ───────────────────────────────── */
 #back-btn { position:absolute; top:26px; left:50%; transform:translateX(-50%); z-index:30; display:none; align-items:center; gap:7px; background:transparent; border:0.5px solid var(--hint); border-radius:99px; padding:5px 14px 5px 10px; cursor:pointer; font-family:var(--mono); font-size:10px; font-weight:300; letter-spacing:0.14em; text-transform:uppercase; color:var(--hint); transition:background 0.2s, border-color 0.2s; }
 #back-btn.show { display:flex; }
 #back-btn:hover { background:rgba(127,119,221,0.08); border-color:rgba(127,119,221,0.6); }
 #group-label { position:absolute; top:70px; left:50%; transform:translateX(-50%); z-index:20; pointer-events:none; display:none; font-family:var(--mono); font-size:9px; font-weight:400; letter-spacing:0.22em; text-transform:uppercase; color:var(--hint); white-space:nowrap; }
 #group-label.show { display:block; }
 
-/* Controls */
+/* ── Legend ────────────────────────────────────── */
+#legend { position:absolute; top:68px; right:32px; z-index:20; display:flex; flex-direction:column; gap:5px; pointer-events:none; transition:opacity 0.6s; }
+#legend.hide { opacity:0; }
+.leg-item { display:flex; align-items:center; gap:7px; }
+.leg-ico { width:16px; height:16px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+.leg-lbl { font-family:var(--mono); font-size:8px; font-weight:300; letter-spacing:0.1em; text-transform:uppercase; color:rgba(127,119,221,0.28); white-space:nowrap; }
+body.light .leg-lbl { color:rgba(83,74,183,0.35); }
+
+/* ── Tooltip ───────────────────────────────────── */
+#tooltip { position:absolute; z-index:35; pointer-events:none; background:var(--card-bg); border:0.5px solid rgba(127,119,221,0.25); border-radius:8px; padding:7px 11px; font-family:var(--mono); font-size:9px; font-weight:300; letter-spacing:0.1em; color:var(--text2); opacity:0; transition:opacity 0.2s; white-space:nowrap; max-width:200px; }
+#tooltip.show { opacity:1; }
+
+/* ── Controls ──────────────────────────────────── */
 #controls { position:absolute; bottom:22px; left:32px; z-index:30; display:flex; align-items:center; gap:10px; }
 #theme-btn { display:flex; align-items:center; gap:7px; background:transparent; border:none; padding:0; cursor:pointer; }
 #tog-track { width:36px; height:20px; border-radius:99px; border:0.5px solid var(--hint); position:relative; flex-shrink:0; }
@@ -68,7 +165,7 @@ body.light #tog-thumb { transform:translateX(16px); }
 #res-lbl { font-size:10px; font-weight:300; letter-spacing:0.14em; text-transform:uppercase; color:var(--hint); white-space:nowrap; transition:color 0.3s; }
 #res-btn.on #res-lbl { color:rgba(127,119,221,0.9); }
 
-/* Resonance menu */
+/* ── Resonance menu ────────────────────────────── */
 #res-menu { position:absolute; bottom:56px; left:32px; z-index:50; background:var(--card-bg); border:0.5px solid rgba(127,119,221,0.3); border-radius:14px; padding:16px 18px 14px; width:210px; display:none; flex-direction:column; gap:10px; box-shadow:0 8px 32px rgba(0,0,0,0.4); }
 #res-menu.open { display:flex; }
 #res-menu-title { font-family:var(--mono); font-size:9px; font-weight:400; letter-spacing:0.18em; text-transform:uppercase; color:rgba(127,119,221,0.5); margin-bottom:2px; }
@@ -83,7 +180,7 @@ body.light #tog-thumb { transform:translateX(16px); }
 #res-menu-ok:hover { background:rgba(127,119,221,0.22); }
 #res-status { font-family:var(--mono); font-size:9px; letter-spacing:0.1em; color:rgba(127,119,221,0.5); text-align:center; display:none; }
 
-/* Card overlay */
+/* ── Card overlay ──────────────────────────────── */
 #overlay { position:absolute; top:0; left:0; right:0; bottom:0; z-index:40; display:flex; align-items:center; justify-content:center; pointer-events:none; }
 #card { width:340px; max-width:calc(100% - 40px); background:var(--card-bg); border:0.5px solid var(--card-border); border-radius:20px; padding:28px 28px 24px; position:relative; pointer-events:all; opacity:0; transform:scale(0.84) translateY(12px); transition:opacity 0.36s cubic-bezier(0.22,1,0.36,1), transform 0.36s cubic-bezier(0.22,1,0.36,1), background 0.4s, border-color 0.4s; }
 #card.show { opacity:1; transform:scale(1) translateY(0); }
@@ -92,13 +189,10 @@ body.light #tog-thumb { transform:translateX(16px); }
 #card-close { position:absolute; top:12px; right:14px; width:26px; height:26px; border-radius:50%; border:0.5px solid rgba(127,119,221,0.2); background:transparent; cursor:pointer; color:rgba(232,230,248,0.4); font-size:16px; display:flex; align-items:center; justify-content:center; transition:background 0.15s, border-color 0.15s; }
 body.light #card-close { color:rgba(26,24,48,0.4); border-color:rgba(83,74,183,0.2); }
 #card-close:hover { background:rgba(127,119,221,0.1); border-color:rgba(127,119,221,0.45); }
-
-/* Card favicon + name row */
 #c-name-row { display:flex; align-items:center; gap:10px; margin-bottom:9px; }
 #c-favicon { width:22px; height:22px; border-radius:5px; object-fit:contain; flex-shrink:0; display:none; }
 #c-favicon.show { display:block; }
 #c-name { font-size:21px; font-weight:300; color:var(--text); letter-spacing:-0.3px; line-height:1.15; transition:color 0.4s; }
-
 #c-eye { font-family:var(--mono); font-size:9px; font-weight:400; letter-spacing:0.17em; text-transform:uppercase; margin-bottom:10px; transition:color 0.3s; }
 #c-desc { font-size:12px; font-weight:300; color:var(--text2); line-height:1.65; margin-bottom:14px; transition:color 0.4s; }
 #c-tags { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:18px; }
@@ -113,11 +207,93 @@ body.light .ctag { border-color:rgba(83,74,183,0.2); color:rgba(83,74,183,0.65);
 body.light .cbtn { border-color:rgba(83,74,183,0.22); color:rgba(26,24,48,0.5); }
 body.light .cbtn.pri { background:rgba(83,74,183,0.08); border-color:rgba(83,74,183,0.35); color:var(--text); }
 .cbtn svg { width:13px; height:13px; flex-shrink:0; stroke:currentColor; fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+
+/* ── Install section ───────────────────────────── */
+#c-install { margin-top:14px; border-top:0.5px solid rgba(127,119,221,0.1); padding-top:14px; display:none; }
+#c-install.show { display:block; }
+#install-toggle { display:flex; align-items:center; justify-content:space-between; cursor:pointer; padding:2px 0; }
+#install-toggle-lbl { font-family:var(--mono); font-size:9px; font-weight:400; letter-spacing:0.14em; text-transform:uppercase; color:rgba(127,119,221,0.5); }
+#install-toggle-ico { font-size:10px; color:rgba(127,119,221,0.4); transition:transform 0.2s; }
+#install-toggle.open #install-toggle-ico { transform:rotate(180deg); }
+#install-body { display:none; margin-top:10px; }
+#install-toggle.open + #install-body { display:block; }
+#install-platform { font-family:var(--mono); font-size:9px; font-weight:400; letter-spacing:0.1em; text-transform:uppercase; color:rgba(127,119,221,0.4); margin-bottom:8px; }
+.install-step { display:flex; align-items:flex-start; gap:8px; margin-bottom:7px; }
+.install-num { font-family:var(--mono); font-size:8px; font-weight:400; color:rgba(127,119,221,0.4); min-width:12px; padding-top:1px; }
+.install-txt { font-size:11px; font-weight:300; color:var(--text2); line-height:1.5; }
+.install-txt strong { color:var(--text); font-weight:400; }
+#install-btn { width:100%; display:none; align-items:center; justify-content:center; gap:6px; margin-top:8px; font-family:var(--mono); font-size:10px; font-weight:400; letter-spacing:0.1em; text-transform:uppercase; padding:9px; border-radius:10px; border:0.5px solid rgba(127,119,221,0.35); color:var(--text); background:rgba(127,119,221,0.08); cursor:pointer; transition:background 0.15s; }
+#install-btn:hover { background:rgba(127,119,221,0.16); }
+#install-btn.show { display:flex; }
 </style>
 </head>
 <body>
+
+<!-- ════════════════════════════════════════════════
+     INTRO OVERLAY — always shown, two slides
+════════════════════════════════════════════════ -->
+<div id="intro" role="dialog" aria-modal="true" aria-label="Welcome to nztdev">
+  <div id="intro-slides">
+
+    <!-- Slide 1 — what is this place -->
+    <div class="i-slide" id="i-s0">
+      <span class="i-mark">nztdev &nbsp;·&nbsp; field of works</span>
+      <div class="i-h">What is this place?</div>
+      <div class="i-h">Everything being built,<br>in one living field.</div>
+      <div class="i-p">A map of projects, tools, and experiments — grouped by what they do, orbiting in real time. Each node is something you can open, explore, and install.</div>
+
+      <!-- Animated mini-field preview -->
+      <div id="preview-wrap">
+        <canvas id="preview-canvas"></canvas>
+        <span class="prev-lbl" id="plbl-group">&#9675; group — tap to expand</span>
+        <span class="prev-lbl" id="plbl-node" style="bottom:10px;right:12px;">&#9679; project — tap to open</span>
+      </div>
+    </div>
+
+    <!-- Slide 2 — how to use it -->
+    <div class="i-slide out-right" id="i-s1">
+      <span class="i-mark">how it works</span>
+      <div class="i-h">Navigate the field.</div>
+      <div class="i-p">There are currently <strong id="intro-repo-count">—</strong> projects across 4 groups and 3 standalones. More are forming.</div>
+      <div class="i-rows">
+        <div class="i-row">
+          <span class="i-row-ico">&#9675;</span>
+          <div class="i-row-txt"><strong>Dashed ring = group.</strong> Tap to expand it — its projects orbit inside. Tap the back arrow to return.</div>
+        </div>
+        <div class="i-row">
+          <span class="i-row-ico">&#9679;</span>
+          <div class="i-row-txt"><strong>Solid ring = project.</strong> Tap to open the card — find links to the repo, the live page, and install instructions if it's a PWA.</div>
+        </div>
+        <div class="i-row">
+          <span class="i-row-ico">&#8767;</span>
+          <div class="i-row-txt"><strong>Resonate</strong> compares all projects by commits, stars, forks, or watchers. The field reorganises around the data — highest metric grows largest and drifts to centre.</div>
+        </div>
+        <div class="i-row">
+          <span class="i-row-ico">&#9673;</span>
+          <div class="i-row-txt"><strong>Grouped / All</strong> toggle switches between the clustered group view and every project as its own individual node.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /intro-slides -->
+
+  <!-- Dots + buttons — outside slides so they don't shift -->
+  <div style="width:100%;max-width:360px;margin-top:16px;">
+    <div id="i-dots">
+      <div class="i-dot on" data-slide="0"></div>
+      <div class="i-dot" data-slide="1"></div>
+    </div>
+    <button id="i-next">Continue &nbsp;&#8594;</button>
+    <button id="i-skip">I know how this works — skip</button>
+  </div>
+</div><!-- /intro -->
+
+<!-- ════════════════════════════════════════════════
+     MAIN FIELD
+════════════════════════════════════════════════ -->
 <div id="wrap">
-  <canvas id="c"></canvas>
+  <canvas id="c" tabindex="0" aria-label="nztdev project field — tab to navigate, enter to activate, escape to go back"></canvas>
+
   <div class="chrome" id="lbl-name">nztdev</div>
   <div class="chrome" id="lbl-sub">field of works</div>
   <div class="chrome" id="lbl-live" style="position:absolute">
@@ -126,11 +302,29 @@ body.light .cbtn.pri { background:rgba(83,74,183,0.08); border-color:rgba(83,74,
   <div class="chrome" id="lbl-hint">select a node</div>
   <div class="chrome" id="lbl-count"></div>
 
-  <button id="back-btn" aria-label="back to root">&#8592; <span id="back-lbl">all works</span></button>
-  <div id="group-label"></div>
+  <!-- Legend -->
+  <div id="legend" aria-hidden="true">
+    <div class="leg-item">
+      <div class="leg-ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="rgba(127,119,221,0.3)" stroke-width="0.8" stroke-dasharray="2.5 3"/></svg></div>
+      <span class="leg-lbl">group — tap to expand</span>
+    </div>
+    <div class="leg-item">
+      <div class="leg-ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="rgba(127,119,221,0.3)" stroke-width="0.8"/></svg></div>
+      <span class="leg-lbl">project — tap to open</span>
+    </div>
+    <div class="leg-item">
+      <div class="leg-ico"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="rgba(127,119,221,0.25)"/><circle cx="8" cy="2.5" r="1.5" fill="rgba(127,119,221,0.2)"/><circle cx="13" cy="11" r="1.5" fill="rgba(127,119,221,0.2)"/><circle cx="3" cy="11" r="1.5" fill="rgba(127,119,221,0.2)"/></svg></div>
+      <span class="leg-lbl">resonate — compare by metric</span>
+    </div>
+  </div>
+
+  <div id="tooltip" role="tooltip"></div>
+
+  <button id="back-btn" aria-label="back to all groups">&#8592; <span id="back-lbl">all works</span></button>
+  <div id="group-label" aria-live="polite"></div>
 
   <div id="controls">
-    <button id="theme-btn" aria-label="toggle theme">
+    <button id="theme-btn" aria-label="toggle light/dark theme">
       <div id="tog-track"><div id="tog-thumb"></div></div>
       <span id="tog-icon">&#9788;</span>
     </button>
@@ -143,16 +337,13 @@ body.light .cbtn.pri { background:rgba(83,74,183,0.08); border-color:rgba(83,74,
         <circle cx="2.5" cy="10" r="1.8" stroke-width="0.8"/>
       </svg>
       <svg id="view-ico-flat" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="0.8" opacity="0.8">
-        <circle cx="2.5" cy="7" r="1.8"/>
-        <circle cx="7" cy="7" r="1.8"/>
-        <circle cx="11.5" cy="7" r="1.8"/>
-        <line x1="4.3" y1="7" x2="5.2" y2="7"/>
-        <line x1="8.8" y1="7" x2="9.7" y2="7"/>
+        <circle cx="2.5" cy="7" r="1.8"/><circle cx="7" cy="7" r="1.8"/><circle cx="11.5" cy="7" r="1.8"/>
+        <line x1="4.3" y1="7" x2="5.2" y2="7"/><line x1="8.8" y1="7" x2="9.7" y2="7"/>
       </svg>
       <span id="view-lbl">grouped</span>
     </button>
     <div class="sep"></div>
-    <button id="res-btn" aria-label="toggle resonance">
+    <button id="res-btn" aria-label="toggle resonance mode">
       <div id="res-orb"></div>
       <span id="res-lbl">Resonate</span>
     </button>
@@ -190,832 +381,682 @@ body.light .cbtn.pri { background:rgba(83,74,183,0.08); border-color:rgba(83,74,
           live page
         </a>
       </div>
+      <div id="c-install">
+        <div id="install-toggle" role="button" tabindex="0" aria-expanded="false">
+          <span id="install-toggle-lbl">&#8595; install as app</span>
+          <span id="install-toggle-ico">&#9660;</span>
+        </div>
+        <div id="install-body">
+          <div id="install-platform"></div>
+          <div id="install-steps"></div>
+          <button id="install-btn">&#8615; install now</button>
+        </div>
+      </div>
     </div>
   </div>
-</div>
+</div><!-- /wrap -->
 
 <script>
-(function () {
+(function(){
 'use strict';
 
-/* ═══════════════════════════════════════════════════════════
-   DATA LAYER
-   Groups: id, name, rgb, eye, desc
-   Repos:  id, groupId (null=standalone), name, rgb, eye, desc,
-           tags, gh, io, ghOwner, ghRepo
-   To add a repo: append to REPOS with a groupId.
-   To add a group: append to GROUPS, set groupId on repos.
-════════════════════════════════════════════════════════════ */
-var GROUPS = [
-  { id:'boss',   name:'B.O.S.S.',  rgb:'127,119,221', eye:'biological operating system structure',  desc:'A family of resonant systems treating AI intent as biological pulse. Architecture, deliberation, and somatic governance — built to think before it acts.' },
-  { id:'signal', name:'Signal',    rgb:'29,158,117',  eye:'intelligence & curation',                desc:'Live feeds and intelligence tools that surface what matters before it goes mainstream. Music, code, data — curated by AI, delivered in real time.' },
-  { id:'play',   name:'Play',      rgb:'239,159,39',  eye:'AI-driven interactive experiences',      desc:'Games, simulators, and interactive worlds built with AI at the core. Every experience is generated, not scripted.' },
-  { id:'learn',  name:'Learn',     rgb:'0,200,255',   eye:'interactive learning & productivity',    desc:'Focused learning tools built for specific problems. Adaptive, intuitive, and designed learn with how you actually think.' },
+/* ════════════════════════════════════════════════
+   DATA
+════════════════════════════════════════════════ */
+var GROUPS=[
+  {id:'boss',  name:'B.O.S.S.',rgb:'127,119,221',eye:'biological operating system structure',desc:'A family of resonant systems treating AI intent as biological pulse. Architecture, deliberation, and somatic governance \u2014 built to think before it acts.'},
+  {id:'signal',name:'Signal',  rgb:'29,158,117', eye:'intelligence & curation',              desc:'Live feeds and intelligence tools that surface what matters before it goes mainstream. Music, code, data \u2014 curated by AI, delivered in real time.'},
+  {id:'play',  name:'Play',    rgb:'239,159,39', eye:'AI-driven interactive experiences',    desc:'Games, simulators, and interactive worlds built with AI at the core. Every experience is generated, not scripted.'},
+  {id:'learn', name:'Learn',   rgb:'0,200,255',  eye:'interactive learning & productivity',  desc:'Focused learning tools built for specific problems. Adaptive, intuitive, and designed to work with how you actually think.'},
+];
+var REPOS=[
+  {id:0, groupId:'boss',  installable:true,  name:'B.O.S.S. Kernel',    rgb:'127,119,221',eye:'biological kernel \u00b7 JS / Python / HTML',       desc:'A resonant routing kernel treating AI intent as a biological pulse. Nodes warm to fire and decay before re-activation. The Soma gates the Cortex through thermal readiness and semantic alignment.',       tags:['resonance physics','metabolic decay','sovereign AI','PWA','arbiter'],       gh:'https://github.com/nztdev/boss-kernel',               io:'https://nztdev.github.io/boss-kernel/core/',      ghOwner:'nztdev',    ghRepo:'boss-kernel'},
+  {id:1, groupId:'boss',  installable:true,  name:'B.O.S.S. Deliberate',rgb:'127,119,221',eye:'intentional interface \u00b7 HTML',                  desc:'The deliberate layer of the B.O.S.S. architecture. Intention is set before action is permitted. Slow thought made visible \u2014 the counterweight to impulse.',                    tags:['intentional UI','somatic design','B.O.S.S.','paced action'],               gh:'https://github.com/nztdev/boss-deliberate',           io:'https://nztdev.github.io/boss-deliberate/',       ghOwner:'nztdev',    ghRepo:'boss-deliberate'},
+  {id:2, groupId:'signal',installable:false, name:'Resonance Signal',   rgb:'29,158,117', eye:'electronic music intelligence \u00b7 HTML',           desc:'A global intelligence layer connecting DJ play signals with commercial purchase data across electronic music markets. Tracking what\'s moving, where it\'s moving, and what\'s coming next.',tags:['music intelligence','electronic','live feed','DJ data'],                    gh:'https://github.com/nztdev/resonance-signal',          io:'https://nztdev.github.io/resonance-signal/',      ghOwner:'nztdev',    ghRepo:'resonance-signal'},
+  {id:3, groupId:'signal',installable:false, name:'GitWire',            rgb:'29,158,117', eye:'github intelligence briefing \u00b7 HTML',            desc:'A weekly AI-powered GitHub intelligence publication. Scans trending repositories and writes Signal, Under the Hood, The Idea, Fresh Drops, and Resurrection sections \u2014 live, via Gemini.',tags:['AI editorial','GitHub trends','Gemini','weekly briefing'],                  gh:'https://github.com/nztdev/GitWire',                   io:'https://nztdev.github.io/GitWire/',               ghOwner:'nztdev',    ghRepo:'GitWire'},
+  {id:12,groupId:'signal',installable:false, name:'resonance.fm',      rgb:'29,158,117', eye:'resonant music nebula \u00b7 HTML',                   desc:'The living map of your musical soul \u2014 live.',                                                                                                                                      tags:['Resonant','Music Genres','Artists','nebula'],                               gh:'https://github.com/nztdev/resonance.fm',              io:'https://nztdev.github.io/resonance.fm/',          ghOwner:'nztdev',    ghRepo:'resonance.fm'},
+  {id:13,groupId:'signal',installable:false, name:'Agora Viva',        rgb:'29,158,117', eye:'resonant news interface \u00b7 HTML',                 desc:'A force-directed map of what the world is paying attention to right now. Events, not articles. Resonance, not recency. \u2014 live.',                                                    tags:['Resonant','News','Global','Live'],                                          gh:'https://github.com/nztdev/agora-viva',                io:'https://nztdev.github.io/agora-viva/',            ghOwner:'nztdev',    ghRepo:'agora-viva'},
+  {id:4, groupId:'play',  installable:true,  name:'CardForge',         rgb:'239,159,39', eye:'AI card game engine \u00b7 HTML / JS',                desc:'Describe any card game in a sentence \u2014 CardForge builds it and lets you play it instantly. Claude and Gemini, 13 real-world deck presets from Hanafuda to Tarot. Every game is unique.',tags:['Claude','Gemini','card game','AI engine','Tarot','Hanafuda'],              gh:'https://github.com/nztdev/card-forge',                io:'https://nztdev.github.io/card-forge/',            ghOwner:'nztdev',    ghRepo:'card-forge'},
+  {id:5, groupId:'play',  installable:true,  name:'The n\u1d57\u02b0 Life',rgb:'239,159,39',eye:'brutalist AI life simulator \u00b7 HTML / JS',    desc:'A brutalist, AI-driven life simulator for 2026 tactical realism. Permadeath roguelike, Gemini-generated outcomes, Supabase cloud saves, global leaderboard. Your timeline ends. It is scored.',tags:['life simulator','permadeath','Gemini 3.5','Supabase','roguelike'],         gh:'https://github.com/thenthlife/thenthlife.github.io',  io:'https://thenthlife.github.io',                    ghOwner:'thenthlife',ghRepo:'thenthlife.github.io'},
+  {id:6, groupId:'play',  installable:false, name:'Mythika',           rgb:'239,159,39', eye:'manga fantasy card game \u00b7 HTML',                 desc:'Chronicles of the Eternal \u2014 36 characters across 5 rarity tiers, each a public-domain historical figure or myth reimagined as a manga fantasy spirit. Summon, collect, and battle.',     tags:['card game','manga','mythology','gacha','fantasy'],                          gh:'https://github.com/nztdev/mythika',                   io:'https://nztdev.github.io/mythika/',               ghOwner:'nztdev',    ghRepo:'mythika'},
+  {id:7, groupId:'play',  installable:false, name:'Climb the Towers',  rgb:'239,159,39', eye:'eternal MMO \u00b7 HTML',                             desc:'Eternal MMO climbing progression game. Each version generated by a different AI model \u2014 ChatGPT, Gemini, Kimi, and Claude. Pick your favourite and climb.',                             tags:['MMO','progression','AI-generated','multi-version','climbing'],              gh:'https://github.com/nztdev/climb-the-towers',          io:'https://nztdev.github.io/climb-the-towers/',      ghOwner:'nztdev',    ghRepo:'climb-the-towers'},
+  {id:8, groupId:'learn', installable:true,  name:'Studyflow',         rgb:'0,200,255',  eye:'adaptive study planner \u00b7 HTML',                  desc:'Interactive and intuitive study planner that knows the difference between a sharp day and a burnt-out one. Adapts your schedule to how you actually feel, not how you planned to feel.',  tags:['productivity','study','adaptive','planner','PWA'],                          gh:'https://github.com/nztdev/studyflow',                  io:'https://nztdev.github.io/studyflow/',             ghOwner:'nztdev',    ghRepo:'studyflow'},
+  {id:14,groupId:'learn', installable:false, name:'GOAT League Uni',   rgb:'0,200,255',  eye:'Football Players University \u00b7 HTML',             desc:'A gamified educational card system for exploring football history and casting informed GOAT votes.',                                                                                      tags:['football','uni','GOATs','gacha','votes','PWA'],                             gh:'https://github.com/nztdev/glu',                       io:'https://nztdev.github.io/glu/',                   ghOwner:'nztdev',    ghRepo:'glu'},
+  {id:15,groupId:'learn', installable:true,  name:'Keep Moving',       rgb:'0,200,255',  eye:'Unstuck Tool \u00b7 HTML',                            desc:'An honest breakdown of where you are and what to actually do next.',                                                                                                                        tags:['tool','unstuck','AI engine','Gemini 3.5','PWA'],                            gh:'https://github.com/nztdev/keep-moving',               io:'https://nztdev.github.io/keep-moving/',           ghOwner:'nztdev',    ghRepo:'keep-moving'},
+  {id:9, groupId:null,    installable:false, name:'radioPumpo',        rgb:'254,1,154',  eye:'community radio \u00b7 HTML / JS',                    desc:'A joke that got out of hand. Became a radio, then a TV, then a toolkit, then a community. 24/7, no investors, no ads, no agenda \u2014 just people on the same frequency.',              tags:['community','radio','no agenda','24/7','open'],                              gh:'https://github.com/radiopumpo/radiopumpo.github.io',  io:'https://radiopumpo.github.io',                    ghOwner:'radiopumpo',ghRepo:'radiopumpo.github.io'},
+  {id:10,groupId:null,    installable:false, name:'nomad-poet',        rgb:'200,160,255',eye:'poetry \u00b7 HTML',                                  desc:'A poetry page for the restless. Words that move because staying still was never the point.',                                                                                             tags:['poetry','creative','writing'],                                              gh:'https://github.com/nztdev/nomad-poet',                io:'https://nztdev.github.io/nomad-poet/',            ghOwner:'nztdev',    ghRepo:'nomad-poet'},
+  {id:11,groupId:null,    installable:false, name:'Paint the Chain',   rgb:'255,165,0',  eye:'crypto community \u00b7 HTML',                        desc:'A community-driven experiment at the intersection of meme culture, gamification, and decentralized coordination in crypto.',                                                              tags:['crypto','colors','community','proof of culture'],                           gh:'https://github.com/coinofcolors/coinofcolors.github.io',io:'https://coinofcolors.github.io/',               ghOwner:'nztdev',    ghRepo:'coinofcolors'},
 ];
 
-var REPOS = [
-  /* ── B.O.S.S. ── */
-  { id:0,  groupId:'boss',   name:'B.O.S.S. Kernel',    rgb:'127,119,221', eye:'biological kernel \u00b7 JS / Python / HTML',        desc:'A resonant routing kernel treating AI intent as a biological pulse. Nodes warm to fire and decay before re-activation. The Soma gates the Cortex through thermal readiness and semantic alignment.', tags:['resonance physics','metabolic decay','sovereign AI','PWA','arbiter'],         gh:'https://github.com/nztdev/boss-kernel',               io:'https://nztdev.github.io/boss-kernel/core/',       ghOwner:'nztdev',     ghRepo:'boss-kernel' },
-  { id:1,  groupId:'boss',   name:'B.O.S.S. Deliberate', rgb:'127,119,221', eye:'intentional interface \u00b7 HTML',                  desc:'The deliberate layer of the B.O.S.S. architecture. Intention is set before action is permitted. Slow thought made visible \u2014 the counterweight to impulse.',                        tags:['intentional UI','somatic design','B.O.S.S.','paced action'],                  gh:'https://github.com/nztdev/boss-deliberate',           io:'https://nztdev.github.io/boss-deliberate/',        ghOwner:'nztdev',     ghRepo:'boss-deliberate' },
-  /* ── Signal ── */
-  { id:2,  groupId:'signal', name:'Resonance Signal',    rgb:'29,158,117',  eye:'electronic music intelligence \u00b7 HTML',           desc:'A global intelligence layer connecting DJ play signals with commercial purchase data across electronic music markets. Tracking what\'s moving, where it\'s moving, and what\'s coming next.',   tags:['music intelligence','electronic','live feed','DJ data'],                       gh:'https://github.com/nztdev/resonance-signal',          io:'https://nztdev.github.io/resonance-signal/',       ghOwner:'nztdev',     ghRepo:'resonance-signal' },
-  { id:3,  groupId:'signal', name:'GitWire',             rgb:'29,158,117',  eye:'github intelligence briefing \u00b7 HTML',            desc:'A weekly AI-powered GitHub intelligence publication. Scans trending repositories and writes Signal, Under the Hood, The Idea, Fresh Drops, and Resurrection sections \u2014 live, via Gemini.',  tags:['AI editorial','GitHub trends','Gemini','weekly briefing'],                     gh:'https://github.com/nztdev/GitWire',                   io:'https://nztdev.github.io/GitWire/',                ghOwner:'nztdev',     ghRepo:'GitWire' },
-  { id:12, groupId:'signal', name:'resonance.fm',        rgb:'29,158,117',  eye:'resonant music nebula \u00b7 HTML',                   desc:'The living map of your musical soul \u2014 live.',                                                                                                                                          tags:['Resonant','Music Genres','Artists','nebula'],                                  gh:'https://github.com/nztdev/resonance.fm',              io:'https://nztdev.github.io/resonance.fm/',           ghOwner:'nztdev',     ghRepo:'resonance.fm' },
-  { id:13, groupId:'signal', name:'Agora Viva',          rgb:'29,158,117',  eye:'resonant news interface \u00b7 HTML',                 desc:'A force-directed map of what the world is paying attention to right now. Events, not articles. Resonance, not recency. \u2014 live.',                                                          tags:['Resonant','News','Global','Live'],                                             gh:'https://github.com/nztdev/agora-viva',                io:'https://nztdev.github.io/agora-viva/',             ghOwner:'nztdev',     ghRepo:'agora-viva' },
-  /* ── Play ── */
-  { id:4,  groupId:'play',   name:'CardForge',           rgb:'239,159,39',  eye:'AI card game engine \u00b7 HTML / JS',                desc:'Describe any card game in a sentence \u2014 CardForge builds it and lets you play it instantly. Claude and Gemini, 13 real-world deck presets from Hanafuda to Tarot. Every game is unique.',  tags:['Claude','Gemini','card game','AI engine','Tarot','Hanafuda'],                  gh:'https://github.com/nztdev/card-forge',                io:'https://nztdev.github.io/card-forge/',             ghOwner:'nztdev',     ghRepo:'card-forge' },
-  { id:5,  groupId:'play',   name:'The n\u1d57\u02b0 Life', rgb:'239,159,39', eye:'brutalist AI life simulator \u00b7 HTML / JS',      desc:'A brutalist, AI-driven life simulator for 2026 tactical realism. Permadeath roguelike, Gemini-generated outcomes, Supabase cloud saves, global leaderboard. Your timeline ends. It is scored.', tags:['life simulator','permadeath','Gemini 3.5','Supabase','roguelike'],             gh:'https://github.com/thenthlife/thenthlife.github.io',  io:'https://thenthlife.github.io',                     ghOwner:'thenthlife', ghRepo:'thenthlife.github.io' },
-  { id:6,  groupId:'play',   name:'Mythika',             rgb:'239,159,39',  eye:'manga fantasy card game \u00b7 HTML',                 desc:'Chronicles of the Eternal \u2014 36 characters across 5 rarity tiers, each a public-domain historical figure or myth reimagined as a manga fantasy spirit. Summon, collect, and battle.',           tags:['card game','manga','mythology','gacha','fantasy'],                             gh:'https://github.com/nztdev/mythika',                   io:'https://nztdev.github.io/mythika/',                ghOwner:'nztdev',     ghRepo:'mythika' },
-  { id:7,  groupId:'play',   name:'Climb the Towers',    rgb:'239,159,39',  eye:'eternal MMO \u00b7 HTML',                             desc:'Eternal MMO climbing progression game. Each version generated by a different AI model \u2014 ChatGPT, Gemini, Kimi, and Claude. Pick your favourite and climb.',                                     tags:['MMO','progression','AI-generated','multi-version','climbing'],                 gh:'https://github.com/nztdev/climb-the-towers',          io:'https://nztdev.github.io/climb-the-towers/',       ghOwner:'nztdev',     ghRepo:'climb-the-towers' },
-  /* ── Learn ── */
-  { id:8,  groupId:'learn',  name:'Studyflow',           rgb:'0,200,255',   eye:'adaptive study planner \u00b7 HTML',                  desc:'Interactive and intuitive study planner that knows the difference between a sharp day and a burnt-out one. Adapts your schedule to how you actually feel, not how you planned to feel.',          tags:['productivity','study','adaptive','planner','PWA'],                             gh:'https://github.com/nztdev/studyflow',                  io:'https://nztdev.github.io/studyflow/',              ghOwner:'nztdev',     ghRepo:'studyflow' },
-  { id:14, groupId:'learn',  name:'GOAT League Uni',     rgb:'0,200,255',   eye:'Football Players University \u00b7 HTML',             desc:'A gamified educational card system for exploring football history and casting informed GOAT votes.',                                                                                              tags:['football','uni','GOATs','gacha','votes','PWA'],                                gh:'https://github.com/nztdev/glu',                        io:'https://nztdev.github.io/glu/',                    ghOwner:'nztdev',     ghRepo:'glu' },
-  { id:15, groupId:'learn',  name:'Keep Moving',         rgb:'0,200,255',   eye:'Unstuck Tool \u00b7 HTML',                            desc:'An honest breakdown of where you are and what to actually do next.',                                                                                                                              tags:['tool','unstuck','AI engine','Gemini 3.5','PWA'],                               gh:'https://github.com/nztdev/keep-moving',                io:'https://nztdev.github.io/keep-moving/',            ghOwner:'nztdev',     ghRepo:'keep-moving' },
-  /* ── Standalones ── */
-  { id:9,  groupId:null,     name:'radioPumpo',          rgb:'254,1,154',   eye:'community radio \u00b7 HTML / JS',                    desc:'A joke that got out of hand. Became a radio, then a TV, then a toolkit, then a community. 24/7, no investors, no ads, no agenda \u2014 just people on the same frequency.',                      tags:['community','radio','no agenda','24/7','open'],                                 gh:'https://github.com/radiopumpo/radiopumpo.github.io',   io:'https://radiopumpo.github.io',                     ghOwner:'radiopumpo', ghRepo:'radiopumpo.github.io' },
-  { id:10, groupId:null,     name:'nomad-poet',          rgb:'200,160,255', eye:'poetry \u00b7 HTML',                                  desc:'A poetry page for the restless. Words that move because staying still was never the point.',                                                                                                         tags:['poetry','creative','writing'],                                                 gh:'https://github.com/nztdev/nomad-poet',                io:'https://nztdev.github.io/nomad-poet/',             ghOwner:'nztdev',     ghRepo:'nomad-poet' },
-  { id:11, groupId:null,     name:'Paint the Chain',     rgb:'255,165,0',   eye:'crypto community \u00b7 HTML',                        desc:'A community-driven experiment at the intersection of meme culture, gamification, and decentralized coordination in crypto.',                                                                        tags:['crypto','colors','community','proof of culture'],                              gh:'https://github.com/coinofcolors/coinofcolors.github.io', io:'https://coinofcolors.github.io/',                  ghOwner:'nztdev',     ghRepo:'coinofcolors' },
-];
+/* ════════════════════════════════════════════════
+   INTRO — always shown, two slides
+════════════════════════════════════════════════ */
+var introEl  = document.getElementById('intro');
+var iNext    = document.getElementById('i-next');
+var iSkip    = document.getElementById('i-skip');
+var slide0   = document.getElementById('i-s0');
+var slide1   = document.getElementById('i-s1');
+var dots     = document.querySelectorAll('.i-dot');
+var curSlide = 0;
 
-/* ═══════════════════════════════════════════════════
-   FAVICON SYSTEM
-   Fetches each repo's live page HTML, parses out the
-   <link rel="icon"> / <link rel="shortcut icon"> /
-   <link rel="apple-touch-icon"> href, then loads that
-   image. Falls back to /favicon.ico if no tag found.
-   All failures are silent — repos without a resolvable
-   favicon simply render without one.
-   faviconMap[repoId] = loaded HTMLImageElement
-═══════════════════════════════════════════════════ */
-var faviconMap = {};
+/* Set repo count in slide 2 */
+document.getElementById('intro-repo-count').textContent = REPOS.length;
 
-function domainFromUrl(url) {
-  try { var u = new URL(url); return u.protocol + '//' + u.hostname; }
-  catch (e) { return null; }
+/* Mini animated preview canvas on slide 1 */
+var pc   = document.getElementById('preview-canvas');
+var pctx = pc.getContext('2d');
+var pW   = 0, pH = 0, pt = 0;
+var pNodes = [];
+
+function initPreview() {
+  var wrap2 = document.getElementById('preview-wrap');
+  pW = pc.width  = wrap2.offsetWidth  || 320;
+  pH = pc.height = wrap2.offsetHeight || 130;
+  var cx = pW / 2, cy = pH / 2;
+  /* 4 group nodes + 2 standalones */
+  var configs = [
+    {rgb:'127,119,221',r:16,dist:0.32,isG:true},
+    {rgb:'29,158,117', r:16,dist:0.32,isG:true},
+    {rgb:'239,159,39', r:16,dist:0.32,isG:true},
+    {rgb:'0,200,255',  r:16,dist:0.32,isG:true},
+    {rgb:'254,1,154',  r:11,dist:0.32,isG:false},
+    {rgb:'200,160,255',r:11,dist:0.32,isG:false},
+  ];
+  pNodes = configs.map(function(c,i){
+    var a = (i/configs.length)*Math.PI*2 - Math.PI/2;
+    var d = Math.min(pW,pH)*c.dist;
+    return {rgb:c.rgb,r:c.r,isG:c.isG,
+      x:cx+Math.cos(a)*d, y:cy+Math.sin(a)*d,
+      angle:a, speed:(0.003+Math.random()*0.002)*(i%2===0?1:-1),
+      pulse:Math.random()*Math.PI*2, dist:d};
+  });
 }
 
-function resolveUrl(base, href) {
-  try { return new URL(href, base).href; }
-  catch (e) { return null; }
-}
+function drawPreview() {
+  if (!introEl || introEl.style.display==='none') return;
+  requestAnimationFrame(drawPreview);
+  pctx.clearRect(0,0,pW,pH);
+  pt += 0.018;
+  var cx=pW/2,cy=pH/2;
 
-function extractFaviconHref(html, pageUrl) {
-  /* Look for link tags with rel containing "icon" — prefer apple-touch-icon
-     as it tends to be higher resolution, fall back to shortcut icon / icon */
-  var candidates = [];
-  var re = /<link([^>]+)>/gi;
-  var match;
-  while ((match = re.exec(html)) !== null) {
-    var attrs = match[1];
-    if (/rel\s*=\s*["'][^"']*icon[^"']*["']/i.test(attrs)) {
-      var hm = attrs.match(/href\s*=\s*["']([^"']+)["']/i);
-      if (hm) {
-        var rel = (attrs.match(/rel\s*=\s*["']([^"']+)["']/i) || ['',''])[1].toLowerCase();
-        var priority = rel.indexOf('apple') >= 0 ? 0 : 1;
-        candidates.push({ href: hm[1], priority: priority });
+  /* dark bg */
+  pctx.fillStyle='rgba(9,8,14,1)';
+  pctx.fillRect(0,0,pW,pH);
+
+  /* edges */
+  for(var i=0;i<pNodes.length;i++){
+    for(var j=i+1;j<pNodes.length;j++){
+      var a=pNodes[i],b=pNodes[j];
+      var dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);
+      if(d<pW*0.7){
+        pctx.beginPath();pctx.moveTo(a.x,a.y);pctx.lineTo(b.x,b.y);
+        pctx.strokeStyle='rgba(127,119,221,'+((1-d/(pW*0.7))*0.12)+')';
+        pctx.lineWidth=0.5;pctx.stroke();
       }
     }
   }
-  if (!candidates.length) return null;
-  candidates.sort(function (a, b) { return a.priority - b.priority; });
-  return resolveUrl(pageUrl, candidates[0].href);
+
+  /* orbit nodes */
+  pNodes.forEach(function(n){
+    n.angle += n.speed;
+    n.x = cx + Math.cos(n.angle)*n.dist;
+    n.y = cy + Math.sin(n.angle)*n.dist;
+    var pv = 0.6+0.4*Math.sin(pt*1.1+n.pulse);
+
+    /* outer ring */
+    pctx.beginPath();pctx.arc(n.x,n.y,n.r+4+3*Math.sin(pt*1.3+n.pulse),0,Math.PI*2);
+    pctx.strokeStyle='rgba('+n.rgb+','+(0.07*pv)+')';pctx.lineWidth=0.5;pctx.stroke();
+
+    /* dashed for groups */
+    if(n.isG){
+      pctx.beginPath();pctx.arc(n.x,n.y,n.r+2,0,Math.PI*2);
+      pctx.setLineDash([2,3]);
+      pctx.strokeStyle='rgba('+n.rgb+',0.22)';pctx.lineWidth=0.5;pctx.stroke();
+      pctx.setLineDash([]);
+    }
+
+    /* core */
+    pctx.beginPath();pctx.arc(n.x,n.y,n.r,0,Math.PI*2);
+    pctx.fillStyle='rgba('+n.rgb+',0.08)';pctx.fill();
+    pctx.strokeStyle='rgba('+n.rgb+','+(0.3*pv)+')';pctx.lineWidth=0.5;pctx.stroke();
+  });
+
+  /* origin */
+  pctx.beginPath();pctx.arc(cx,cy,2,0,Math.PI*2);
+  pctx.fillStyle='rgba(127,119,221,'+(0.12+0.08*Math.sin(pt))+')';pctx.fill();
 }
 
-function loadImageSilently(url, cb) {
-  var img = new Image();
-  img.crossOrigin = 'anonymous';
-  img.onload = function () {
-    if (img.width >= 16 && img.height >= 16) { cb(img); } else { cb(null); }
-  };
-  img.onerror = function () { cb(null); };
-  img.src = url;
+initPreview();
+drawPreview();
+
+function goSlide(to){
+  var from = curSlide;
+  if(to===from)return;
+  var leaving = to > from ? 'out-left' : 'out-right';
+  var entering = to > from ? 'out-right' : 'out-left';
+  var slides=[slide0,slide1];
+  slides[from].classList.add(leaving);
+  slides[to].classList.remove('out-left');
+  slides[to].classList.remove('out-right');
+  curSlide=to;
+  dots.forEach(function(d,i){d.classList.toggle('on',i===to);});
+  iNext.textContent = to === 1 ? 'Enter the field \u2192' : 'Continue \u00a0\u2192';
+  /* clean up after transition */
+  setTimeout(function(){slides[from].classList.remove(leaving);},500);
 }
 
-function loadFavicon(repo) {
-  var pageUrl = repo.io;
-  var base    = domainFromUrl(pageUrl);
-  if (!base) return;
+iNext.addEventListener('click',function(){
+  if(curSlide===0){goSlide(1);}
+  else{dismissIntro();}
+});
+iSkip.addEventListener('click',dismissIntro);
+dots.forEach(function(d){
+  d.addEventListener('click',function(){goSlide(parseInt(d.getAttribute('data-slide'),10));});
+});
 
-  /* Step 1: fetch the page HTML to find the real favicon link */
-  fetch(pageUrl, { mode: 'cors' })
-    .then(function (res) {
-      if (!res.ok) { throw new Error('page fetch failed'); }
-      return res.text();
-    })
-    .then(function (html) {
-      var iconUrl = extractFaviconHref(html, pageUrl) || (base + '/favicon.ico');
-      loadImageSilently(iconUrl, function (img) {
-        if (img) { faviconMap[repo.id] = img; }
-      });
-    })
-    ['catch'](function () {
-      /* Page fetch failed — try bare /favicon.ico as last resort */
-      loadImageSilently(base + '/favicon.ico', function (img) {
-        if (img) { faviconMap[repo.id] = img; }
-      });
-    });
+function dismissIntro(){
+  introEl.classList.add('fade');
+  setTimeout(function(){introEl.style.display='none';},600);
 }
 
-function initFavicons() {
-  for (var i = 0; i < REPOS.length; i++) { loadFavicon(REPOS[i]); }
+/* ════════════════════════════════════════════════
+   LEGEND
+════════════════════════════════════════════════ */
+var legendEl = document.getElementById('legend');
+var legendHidden = false;
+function hideLegend(){
+  if(legendHidden)return;
+  legendHidden=true;
+  legendEl.classList.add('hide');
 }
 
-/* ═══════════════════════════════════════════════════
+/* ════════════════════════════════════════════════
+   FAVICON SYSTEM
+════════════════════════════════════════════════ */
+var faviconMap={};
+function domainFromUrl(url){try{var u=new URL(url);return u.protocol+'//'+u.hostname;}catch(e){return null;}}
+function resolveUrl(base,href){try{return new URL(href,base).href;}catch(e){return null;}}
+function extractFaviconHref(html,pageUrl){
+  var candidates=[],re=/<link([^>]+)>/gi,match;
+  while((match=re.exec(html))!==null){
+    var attrs=match[1];
+    if(/rel\s*=\s*["'][^"']*icon[^"']*["']/i.test(attrs)){
+      var hm=attrs.match(/href\s*=\s*["']([^"']+)["']/i);
+      if(hm){var rel=(attrs.match(/rel\s*=\s*["']([^"']+)["']/i)||['',''])[1].toLowerCase();candidates.push({href:hm[1],priority:rel.indexOf('apple')>=0?0:1});}
+    }
+  }
+  if(!candidates.length)return null;
+  candidates.sort(function(a,b){return a.priority-b.priority;});
+  return resolveUrl(pageUrl,candidates[0].href);
+}
+function loadImageSilently(url,cb){
+  var img=new Image();img.crossOrigin='anonymous';
+  img.onload=function(){if(img.width>=16&&img.height>=16){cb(img);}else{cb(null);}};
+  img.onerror=function(){cb(null);};img.src=url;
+}
+function loadFavicon(repo){
+  var pageUrl=repo.io,base=domainFromUrl(pageUrl);if(!base)return;
+  fetch(pageUrl,{mode:'cors'})
+    .then(function(res){if(!res.ok){throw new Error('fail');}return res.text();})
+    .then(function(html){var url=extractFaviconHref(html,pageUrl)||(base+'/favicon.ico');loadImageSilently(url,function(img){if(img){faviconMap[repo.id]=img;}});})
+    ['catch'](function(){loadImageSilently(base+'/favicon.ico',function(img){if(img){faviconMap[repo.id]=img;}});});
+}
+function initFavicons(){for(var i=0;i<REPOS.length;i++){loadFavicon(REPOS[i]);}}
+
+/* ════════════════════════════════════════════════
+   PWA INSTALL
+════════════════════════════════════════════════ */
+var deferredInstall=null;
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferredInstall=e;});
+function isIOS(){return /iphone|ipad|ipod/i.test(navigator.userAgent)&&!window.MSStream;}
+function isAndroid(){return /android/i.test(navigator.userAgent)&&/chrome/i.test(navigator.userAgent);}
+
+function showInstallSection(repo){
+  var sec=document.getElementById('c-install');
+  var toggle=document.getElementById('install-toggle');
+  var platEl=document.getElementById('install-platform');
+  var stepsEl=document.getElementById('install-steps');
+  var btn=document.getElementById('install-btn');
+  if(!repo.installable){sec.classList.remove('show');return;}
+  sec.classList.add('show');btn.classList.remove('show');
+  toggle.classList.remove('open');toggle.setAttribute('aria-expanded','false');
+  if(isIOS()){
+    platEl.textContent='iPhone / iPad \u2014 Safari';
+    stepsEl.innerHTML='<div class="install-step"><div class="install-num">1</div><div class="install-txt">Open the <strong>Live Page</strong> in Safari.</div></div><div class="install-step"><div class="install-num">2</div><div class="install-txt">Tap the <strong>Share</strong> button &#9633;&#8593; at the bottom.</div></div><div class="install-step"><div class="install-num">3</div><div class="install-txt">Tap <strong>Add to Home Screen</strong> then <strong>Add</strong>.</div></div>';
+  } else if(isAndroid()&&deferredInstall){
+    platEl.textContent='Android \u2014 Chrome';
+    stepsEl.innerHTML='<div class="install-step"><div class="install-num">1</div><div class="install-txt">Open the <strong>Live Page</strong> in Chrome.</div></div><div class="install-step"><div class="install-num">2</div><div class="install-txt">Tap <strong>Install now</strong> below.</div></div>';
+    btn.classList.add('show');
+  } else {
+    platEl.textContent='Desktop / Android \u2014 Chrome or Edge';
+    stepsEl.innerHTML='<div class="install-step"><div class="install-num">1</div><div class="install-txt">Open the <strong>Live Page</strong> in Chrome or Edge.</div></div><div class="install-step"><div class="install-num">2</div><div class="install-txt">Look for the <strong>install icon</strong> &#8615; in the address bar, or use the browser menu \u2192 <strong>Install app</strong>.</div></div>';
+    if(deferredInstall){btn.classList.add('show');}
+  }
+}
+document.getElementById('install-btn').addEventListener('click',function(){
+  if(!deferredInstall)return;
+  deferredInstall.prompt();
+  deferredInstall.userChoice.then(function(){deferredInstall=null;});
+});
+var installToggle=document.getElementById('install-toggle');
+installToggle.addEventListener('click',function(){
+  var open=installToggle.classList.toggle('open');
+  installToggle.setAttribute('aria-expanded',open?'true':'false');
+});
+installToggle.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();installToggle.click();}});
+
+/* ════════════════════════════════════════════════
    STATE
-═══════════════════════════════════════════════════ */
-var SCENE_ROOT  = 'root';
-var SCENE_GROUP = 'group';
-var SCENE_CARD  = 'card';
-var scene       = SCENE_ROOT;
-var activeGroup = null;
-var activeRepo  = null;
-var locked      = false;
-var menuOpen    = false;
-var flatMode    = false;
-var t           = 0;
-var rootNodes   = [];
-var childNodes  = [];
+════════════════════════════════════════════════ */
+var SCENE_ROOT='root',SCENE_GROUP='group',SCENE_CARD='card';
+var scene=SCENE_ROOT,activeGroup=null,activeRepo=null;
+var locked=false,menuOpen=false,flatMode=false,t=0;
+var rootNodes=[],childNodes=[],focusIdx=-1;
 
-function makeNode(entity, index, total, baseRadius) {
-  return {
-    entity:     entity,
-    isGroup:    GROUPS.indexOf(entity) >= 0,
-    x:0, y:0, tx:0, ty:0,
-    radius:     baseRadius || 26,
-    targetR:    baseRadius || 26,
-    baseR:      baseRadius || 26,
-    orbitAngle: (index / total) * Math.PI * 2 - Math.PI / 2,
-    orbitSpeed: (0.00020 + Math.random() * 0.00014) * (index % 2 === 0 ? 1 : -1),
-    pulse:      Math.random() * Math.PI * 2,
-  };
+function makeNode(entity,index,total,baseR){
+  return{entity:entity,isGroup:GROUPS.indexOf(entity)>=0,
+    x:0,y:0,tx:0,ty:0,radius:baseR||26,targetR:baseR||26,baseR:baseR||26,
+    orbitAngle:(index/total)*Math.PI*2-Math.PI/2,
+    orbitSpeed:(0.00020+Math.random()*0.00014)*(index%2===0?1:-1),
+    pulse:Math.random()*Math.PI*2};
 }
-
-function buildRootNodes() {
-  var items = [], i;
-  for (i = 0; i < GROUPS.length; i++) { items.push({ entity:GROUPS[i], isGroup:true }); }
-  for (i = 0; i < REPOS.length;  i++) { if (REPOS[i].groupId === null) { items.push({ entity:REPOS[i], isGroup:false }); } }
-  rootNodes = [];
-  for (i = 0; i < items.length; i++) {
-    var n = makeNode(items[i].entity, i, items.length, items[i].isGroup ? 30 : 24);
-    n.isGroup = items[i].isGroup;
-    rootNodes.push(n);
-  }
+function buildRootNodes(){
+  var items=[],i;
+  for(i=0;i<GROUPS.length;i++){items.push({entity:GROUPS[i],isGroup:true});}
+  for(i=0;i<REPOS.length;i++){if(REPOS[i].groupId===null){items.push({entity:REPOS[i],isGroup:false});}}
+  rootNodes=[];
+  for(i=0;i<items.length;i++){var n=makeNode(items[i].entity,i,items.length,items[i].isGroup?30:24);n.isGroup=items[i].isGroup;rootNodes.push(n);}
 }
-
-function buildFlatNodes() {
-  rootNodes = [];
-  for (var i = 0; i < REPOS.length; i++) {
-    var n = makeNode(REPOS[i], i, REPOS.length, 22);
-    n.isGroup = false;
-    rootNodes.push(n);
-  }
+function buildFlatNodes(){
+  rootNodes=[];
+  for(var i=0;i<REPOS.length;i++){var n=makeNode(REPOS[i],i,REPOS.length,22);n.isGroup=false;rootNodes.push(n);}
 }
-
-function buildChildNodes(group) {
-  var members = [], i;
-  for (i = 0; i < REPOS.length; i++) { if (REPOS[i].groupId === group.id) { members.push(REPOS[i]); } }
-  childNodes = [];
-  for (i = 0; i < members.length; i++) { childNodes.push(makeNode(members[i], i, members.length, 22)); }
+function buildChildNodes(group){
+  var members=[],i;
+  for(i=0;i<REPOS.length;i++){if(REPOS[i].groupId===group.id){members.push(REPOS[i]);}}
+  childNodes=[];
+  for(i=0;i<members.length;i++){childNodes.push(makeNode(members[i],i,members.length,22));}
 }
-
-function applyViewMode(snap) {
-  if (flatMode) { buildFlatNodes(); } else { buildRootNodes(); }
-  resetNodes(rootNodes, CX(), CY(), OR, snap);
-}
-
+function applyViewMode(snap){if(flatMode){buildFlatNodes();}else{buildRootNodes();}resetNodes(rootNodes,CX(),CY(),OR,snap);}
 buildRootNodes();
 
-/* ── DOM refs ──────────────────────────────────── */
-var wrap      = document.getElementById('wrap');
-var canvas    = document.getElementById('c');
-var ctx       = canvas.getContext('2d');
-var card      = document.getElementById('card');
-var hintEl    = document.getElementById('lbl-hint');
-var backBtn   = document.getElementById('back-btn');
-var groupLbl  = document.getElementById('group-label');
-var resBtn    = document.getElementById('res-btn');
-var resMenu   = document.getElementById('res-menu');
-var resOK     = document.getElementById('res-menu-ok');
-var resStatus = document.getElementById('res-status');
-var cardFavi  = document.getElementById('c-favicon');
+/* ── DOM ───────────────────────────────────────── */
+var wrap=document.getElementById('wrap');
+var canvas=document.getElementById('c');
+var ctx=canvas.getContext('2d');
+var card=document.getElementById('card');
+var hintEl=document.getElementById('lbl-hint');
+var backBtn=document.getElementById('back-btn');
+var groupLbl=document.getElementById('group-label');
+var resBtn=document.getElementById('res-btn');
+var resMenu=document.getElementById('res-menu');
+var resOK=document.getElementById('res-menu-ok');
+var resStatus=document.getElementById('res-status');
+var cardFavi=document.getElementById('c-favicon');
+var tooltip=document.getElementById('tooltip');
 
-document.getElementById('lbl-count').textContent = REPOS.length + ' works';
+document.getElementById('lbl-count').textContent=REPOS.length+' works';
 
 /* ── View mode ─────────────────────────────────── */
-var viewBtn = document.getElementById('view-btn');
-viewBtn.addEventListener('click', function () {
-  if (locked || scene !== SCENE_ROOT) return;
-  if (Res.active) { Res.stop(); }
-  flatMode = !flatMode;
-  viewBtn.classList.toggle('flat', flatMode);
-  document.getElementById('view-lbl').textContent = flatMode ? 'all' : 'grouped';
+var viewBtn=document.getElementById('view-btn');
+viewBtn.addEventListener('click',function(){
+  if(locked||scene!==SCENE_ROOT)return;
+  if(Res.active){Res.stop();}
+  flatMode=!flatMode;
+  viewBtn.classList.toggle('flat',flatMode);
+  document.getElementById('view-lbl').textContent=flatMode?'all':'grouped';
   applyViewMode(false);
 });
 
 /* ── Theme ──────────────────────────────────────── */
-var isLight = false;
-var DARK  = { bg:'9,8,14',      pt:'127,119,221', bA:0.011 };
-var LIGHT = { bg:'244,243,251', pt:'100,90,200',  bA:0.018 };
-function th() { return isLight ? LIGHT : DARK; }
-document.getElementById('theme-btn').addEventListener('click', function () {
-  isLight = !isLight;
-  document.body.classList.toggle('light', isLight);
-  document.getElementById('tog-icon').textContent = isLight ? '\u263d' : '\u2600';
+var isLight=false;
+var DARK={bg:'9,8,14',pt:'127,119,221',bA:0.011};
+var LIGHT={bg:'244,243,251',pt:'100,90,200',bA:0.018};
+function th(){return isLight?LIGHT:DARK;}
+document.getElementById('theme-btn').addEventListener('click',function(){
+  isLight=!isLight;
+  document.body.classList.toggle('light',isLight);
+  document.getElementById('tog-icon').textContent=isLight?'\u263d':'\u2600';
 });
 
 /* ── Canvas sizing ──────────────────────────────── */
-var W = 300, H = 500, sizeReady = false;
-function measure() {
-  var w = wrap.offsetWidth  || window.innerWidth  || 375;
-  var h = wrap.offsetHeight || window.innerHeight || 667;
-  return { w:w, h:h };
+var W=300,H=500,sizeReady=false;
+function measure(){return{w:wrap.offsetWidth||window.innerWidth||375,h:wrap.offsetHeight||window.innerHeight||667};}
+function CX(){return W/2;} function CY(){return H/2;}
+function OR(){return Math.min(W,H)*0.27;}
+function CR(){return Math.min(W,H)*0.20;}
+function resetNodes(pool,cx,cy,rFn,snap){
+  var or=rFn();
+  pool.forEach(function(n){n.tx=cx+Math.cos(n.orbitAngle)*or;n.ty=cy+Math.sin(n.orbitAngle)*or;n.targetR=n.baseR;if(snap){n.x=n.tx;n.y=n.ty;n.radius=n.baseR;}});
 }
-function CX() { return W/2; }
-function CY() { return H/2; }
-function OR() { return Math.min(W,H)*0.27; }
-function CR() { return Math.min(W,H)*0.20; }
-
-function resetNodes(pool, cx, cy, radiusFn, snap) {
-  var or = radiusFn();
-  pool.forEach(function (n) {
-    n.tx = cx + Math.cos(n.orbitAngle)*or;
-    n.ty = cy + Math.sin(n.orbitAngle)*or;
-    n.targetR = n.baseR;
-    if (snap) { n.x=n.tx; n.y=n.ty; n.radius=n.baseR; }
-  });
+function resize(){var s=measure();W=s.w;H=s.h;canvas.width=W;canvas.height=H;spawnPts();if(scene===SCENE_ROOT){applyViewMode(true);}else{resetNodes(childNodes,CX(),CY(),CR,true);}}
+function initSize(){
+  var s=measure();
+  if(s.w>10&&s.h>10){W=s.w;H=s.h;canvas.width=W;canvas.height=H;sizeReady=true;spawnPts();applyViewMode(true);}
+  else{setTimeout(initSize,50);}
 }
-
-function resize() {
-  var s = measure(); W=s.w; H=s.h;
-  canvas.width=W; canvas.height=H; spawnPts();
-  if (scene === SCENE_ROOT) { applyViewMode(true); }
-  else { resetNodes(childNodes, CX(), CY(), CR, true); }
-}
-function initSize() {
-  var s = measure();
-  if (s.w > 10 && s.h > 10) {
-    W=s.w; H=s.h; canvas.width=W; canvas.height=H;
-    sizeReady=true; spawnPts(); applyViewMode(true);
-  } else { setTimeout(initSize, 50); }
-}
-window.addEventListener('resize', resize);
+window.addEventListener('resize',resize);
 initSize();
 
 /* ── Particles ──────────────────────────────────── */
-var pts = [];
-function spawnPts() {
-  pts = [];
-  for (var i=0;i<60;i++) {
-    pts.push({ x:Math.random()*W, y:Math.random()*H,
-      vx:(Math.random()-0.5)*0.19, vy:(Math.random()-0.5)*0.19,
-      r:Math.random()*1.3+0.2, a:Math.random()*0.18+0.03, ph:Math.random()*Math.PI*2 });
-  }
-}
+var pts=[];
+function spawnPts(){pts=[];for(var i=0;i<60;i++){pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-0.5)*0.19,vy:(Math.random()-0.5)*0.19,r:Math.random()*1.3+0.2,a:Math.random()*0.18+0.03,ph:Math.random()*Math.PI*2});}}
 spawnPts();
 
-/* ═══════════════════════════════════════════════════
+/* ── Tooltip ────────────────────────────────────── */
+var ttTimer=null;
+function countMembers(gid){var c=0;for(var i=0;i<REPOS.length;i++){if(REPOS[i].groupId===gid){c++;}}return c;}
+function showTooltip(n,mx,my){
+  clearTimeout(ttTimer);
+  ttTimer=setTimeout(function(){
+    var txt=n.isGroup?(n.entity.eye+' \u2014 '+countMembers(n.entity.id)+' works'):n.entity.eye;
+    tooltip.textContent=txt;
+    tooltip.style.left=Math.min(mx+14,W-220)+'px';
+    tooltip.style.top=Math.max(my-36,8)+'px';
+    tooltip.classList.add('show');
+  },550);
+}
+function hideTooltip(){clearTimeout(ttTimer);tooltip.classList.remove('show');}
+
+var lpTimer=null,lpNode=null;
+canvas.addEventListener('touchstart',function(e){
+  var touch=e.touches[0],r=canvas.getBoundingClientRect();
+  var n=hitTest(touch.clientX-r.left,touch.clientY-r.top);
+  if(!n)return;lpNode=n;
+  lpTimer=setTimeout(function(){
+    if(!lpNode)return;
+    var txt=lpNode.isGroup?(lpNode.entity.eye+' \u2014 '+countMembers(lpNode.entity.id)+' works'):lpNode.entity.eye;
+    tooltip.textContent=txt;
+    tooltip.style.left=(touch.clientX-r.left+14)+'px';
+    tooltip.style.top=Math.max(touch.clientY-r.top-36,8)+'px';
+    tooltip.classList.add('show');
+    setTimeout(function(){tooltip.classList.remove('show');},2500);
+  },500);
+},{passive:true});
+canvas.addEventListener('touchend',function(){clearTimeout(lpTimer);lpNode=null;},{passive:true});
+
+/* ════════════════════════════════════════════════
    RESONANCE MODULE
-═══════════════════════════════════════════════════ */
-var _cache = {};
-function apiRepo(repo) {
-  var slug = repo.ghOwner+'/'+repo.ghRepo;
-  if (_cache[slug]) { return Promise.resolve(_cache[slug]); }
-  return new Promise(function (resolve) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET','https://api.github.com/repos/'+slug);
+════════════════════════════════════════════════ */
+var _cache={};
+function apiRepo(repo){
+  var slug=repo.ghOwner+'/'+repo.ghRepo;
+  if(_cache[slug]){return Promise.resolve(_cache[slug]);}
+  return new Promise(function(resolve){
+    var xhr=new XMLHttpRequest();xhr.open('GET','https://api.github.com/repos/'+slug);
     xhr.setRequestHeader('Accept','application/vnd.github+json');
-    xhr.onload = function () { try { var d=JSON.parse(xhr.responseText); _cache[slug]=d; resolve(d); } catch(e){resolve(null);} };
-    xhr.onerror = function () { resolve(null); };
-    xhr.send();
+    xhr.onload=function(){try{var d=JSON.parse(xhr.responseText);_cache[slug]=d;resolve(d);}catch(e){resolve(null);}};
+    xhr.onerror=function(){resolve(null);};xhr.send();
   });
 }
-function apiCommits(repo) {
-  var slug = repo.ghOwner+'/'+repo.ghRepo;
-  return new Promise(function (resolve) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET','https://api.github.com/repos/'+slug+'/commits?per_page=1');
+function apiCommits(repo){
+  var slug=repo.ghOwner+'/'+repo.ghRepo;
+  return new Promise(function(resolve){
+    var xhr=new XMLHttpRequest();xhr.open('GET','https://api.github.com/repos/'+slug+'/commits?per_page=1');
     xhr.setRequestHeader('Accept','application/vnd.github+json');
-    xhr.onload = function () {
+    xhr.onload=function(){
       var link=xhr.getResponseHeader('Link')||'';
       var m=link.match(/[?&]page=(\d+)>; rel="last"/);
-      if (m) { resolve(parseInt(m[1],10)); return; }
-      try { var d=JSON.parse(xhr.responseText); resolve(Array.isArray(d)?d.length:1); } catch(e){resolve(1);}
+      if(m){resolve(parseInt(m[1],10));return;}
+      try{var d=JSON.parse(xhr.responseText);resolve(Array.isArray(d)?d.length:1);}catch(e){resolve(1);}
     };
-    xhr.onerror=function(){resolve(1);}; xhr.send();
+    xhr.onerror=function(){resolve(1);};xhr.send();
   });
 }
-var METRICS = {
-  commits:  { fetch: apiCommits },
-  stars:    { fetch: function(r){return apiRepo(r).then(function(d){return(d&&d.stargazers_count)||0;});} },
-  forks:    { fetch: function(r){return apiRepo(r).then(function(d){return(d&&d.forks_count)||0;});} },
-  watchers: { fetch: function(r){return apiRepo(r).then(function(d){return(d&&d.watchers_count)||0;});} },
+var METRICS={
+  commits:{fetch:apiCommits},
+  stars:{fetch:function(r){return apiRepo(r).then(function(d){return(d&&d.stargazers_count)||0;});}},
+  forks:{fetch:function(r){return apiRepo(r).then(function(d){return(d&&d.forks_count)||0;});}},
+  watchers:{fetch:function(r){return apiRepo(r).then(function(d){return(d&&d.watchers_count)||0;});}},
 };
-var Res = {
-  active:false, loading:false, metric:'commits', scores:{}, norms:{}, groupScores:{}, groupNorms:{},
-  SMIN:14, SMAX:46,
+var Res={
+  active:false,loading:false,metric:'commits',scores:{},norms:{},groupScores:{},groupNorms:{},
+  SMIN:14,SMAX:46,
   rMin:function(){return Math.min(W,H)*0.09;},
   rMax:function(){return Math.min(W,H)*0.38;},
-
-  _pool:function(){
-    if (scene===SCENE_GROUP&&activeGroup) { return REPOS.filter(function(r){return r.groupId===activeGroup.id;}); }
-    return REPOS;
-  },
-
+  _pool:function(){if(scene===SCENE_GROUP&&activeGroup){return REPOS.filter(function(r){return r.groupId===activeGroup.id;});}return REPOS;},
   start:function(metric){
-    var self=this;
-    if (self.loading) return;
-    self.metric=metric; self.loading=true; self.active=false;
-    /* Clear previous scores so stale data never lingers */
-    self.scores={}; self.norms={}; self.groupScores={}; self.groupNorms={};
-    _cache = {}; /* clear GitHub API cache for fresh data */
-    resStatus.style.display='block'; resStatus.textContent='fetching\u2026'; resOK.disabled=true;
-    var def=METRICS[self.metric]; if (!def){self.loading=false;return;}
-    var pool=self._pool(), pending=pool.length, results=[];
-    if (!pending){self.loading=false;return;}
-    function done(id,val){ results.push({id:id,val:val||0}); pending--; if(!pending){self._finish(results);} }
-    pool.forEach(function(r){ def.fetch(r).then(function(v){done(r.id,v);})['catch'](function(){done(r.id,0);}); });
+    var self=this;if(self.loading)return;
+    self.metric=metric;self.loading=true;self.active=false;
+    self.scores={};self.norms={};self.groupScores={};self.groupNorms={};_cache={};
+    resStatus.style.display='block';resStatus.textContent='fetching\u2026';resOK.disabled=true;
+    var def=METRICS[self.metric];if(!def){self.loading=false;return;}
+    var pool=self._pool(),pending=pool.length,results=[];
+    if(!pending){self.loading=false;return;}
+    function done(id,val){results.push({id:id,val:val||0});pending--;if(!pending){self._finish(results);}}
+    pool.forEach(function(r){def.fetch(r).then(function(v){done(r.id,v);})['catch'](function(){done(r.id,0);});});
   },
-
   _finish:function(results){
-    var self=this, i, j;
+    var self=this,i,j;
     results.forEach(function(item){self.scores[item.id]=item.val;});
     var vals=results.map(function(r){return r.val;});
-    var mn=Math.min.apply(null,vals), mx=Math.max.apply(null,vals), sp=mx-mn||1;
+    var mn=Math.min.apply(null,vals),mx=Math.max.apply(null,vals),sp=mx-mn||1;
     results.forEach(function(item){self.norms[item.id]=(item.val-mn)/sp;});
     self.groupScores={};
     for(i=0;i<GROUPS.length;i++){
-      var g=GROUPS[i], tot=0, cnt=0;
+      var g=GROUPS[i],tot=0,cnt=0;
       for(j=0;j<REPOS.length;j++){if(REPOS[j].groupId===g.id&&self.scores[REPOS[j].id]!==undefined){tot+=self.scores[REPOS[j].id];cnt++;}}
       self.groupScores[g.id]=cnt>0?tot:0;
     }
     var gv=GROUPS.map(function(g){return self.groupScores[g.id]||0;});
-    var gmn=Math.min.apply(null,gv), gmx=Math.max.apply(null,gv), gsp=gmx-gmn||1;
+    var gmn=Math.min.apply(null,gv),gmx=Math.max.apply(null,gv),gsp=gmx-gmn||1;
     self.groupNorms={};
     for(i=0;i<GROUPS.length;i++){self.groupNorms[GROUPS[i].id]=((self.groupScores[GROUPS[i].id]||0)-gmn)/gsp;}
-    self.loading=false; self.active=true;
-    resStatus.style.display='none'; resOK.disabled=false;
-    resBtn.classList.add('on'); document.getElementById('res-lbl').textContent='resonating';
-    closeMenu(); self._apply();
+    self.loading=false;self.active=true;
+    resStatus.style.display='none';resOK.disabled=false;
+    resBtn.classList.add('on');document.getElementById('res-lbl').textContent='resonating';
+    closeMenu();self._apply();
   },
-
   stop:function(){
-    this.active=false; this.loading=false;
-    resBtn.classList.remove('on'); document.getElementById('res-lbl').textContent='Resonate';
-    resStatus.style.display='none'; resOK.disabled=false;
-    var pool=scene===SCENE_GROUP?childNodes:rootNodes;
-    pool.forEach(function(n){n.targetR=n.baseR;});
+    this.active=false;this.loading=false;
+    resBtn.classList.remove('on');document.getElementById('res-lbl').textContent='Resonate';
+    resStatus.style.display='none';resOK.disabled=false;
+    var pool=scene===SCENE_GROUP?childNodes:rootNodes;pool.forEach(function(n){n.targetR=n.baseR;});
   },
-
   _apply:function(){
-    if (!this.active) return;
-    var self=this, cx=CX(), cy=CY();
+    if(!this.active)return;
+    var self=this,cx=CX(),cy=CY();
     var pool=scene===SCENE_GROUP?childNodes:rootNodes;
     pool.forEach(function(n){
-      var norm=n.isGroup
-        ?(self.groupNorms[n.entity.id]!==undefined?self.groupNorms[n.entity.id]:0.5)
-        :(self.norms[n.entity.id]!==undefined?self.norms[n.entity.id]:0.5);
+      var norm=n.isGroup?(self.groupNorms[n.entity.id]!==undefined?self.groupNorms[n.entity.id]:0.5):(self.norms[n.entity.id]!==undefined?self.norms[n.entity.id]:0.5);
       n.targetR=self.SMIN+norm*(self.SMAX-self.SMIN);
       var dist=self.rMax()-norm*(self.rMax()-self.rMin());
-      if (scene===SCENE_GROUP){dist=Math.min(dist,CR()*1.6);}
-      n.tx=cx+Math.cos(n.orbitAngle)*dist;
-      n.ty=cy+Math.sin(n.orbitAngle)*dist;
+      if(scene===SCENE_GROUP){dist=Math.min(dist,CR()*1.6);}
+      n.tx=cx+Math.cos(n.orbitAngle)*dist;n.ty=cy+Math.sin(n.orbitAngle)*dist;
     });
   },
-
   tick:function(){if(this.active){this._apply();}},
-
   badges:function(){
-    if (!this.active) return;
-    var self=this;
-    var pool=scene===SCENE_GROUP?childNodes:rootNodes;
+    if(!this.active)return;
+    var self=this,pool=scene===SCENE_GROUP?childNodes:rootNodes;
     pool.forEach(function(n){
       var raw=n.isGroup?self.groupScores[n.entity.id]:self.scores[n.entity.id];
-      if (raw===undefined) return;
+      if(raw===undefined)return;
       var lbl=raw>=1000?(raw/1000).toFixed(1)+'k':String(raw);
-      ctx.font='300 9px \'DM Mono\',monospace';
-      ctx.textAlign='center'; ctx.textBaseline='middle';
-      ctx.fillStyle='rgba('+n.entity.rgb+',0.6)';
-      ctx.fillText(lbl, n.x, n.y - n.radius - 8);
+      ctx.font='300 9px \'DM Mono\',monospace';ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillStyle='rgba('+n.entity.rgb+',0.6)';ctx.fillText(lbl,n.x,n.y-n.radius-8);
     });
   },
 };
 
 /* ── Resonance menu ─────────────────────────────── */
 var selectedMetric='commits';
-function openMenu(){ menuOpen=true; resMenu.classList.add('open'); }
-function closeMenu(){ menuOpen=false; resMenu.classList.remove('open'); }
-resBtn.addEventListener('click',function(){
-  if (Res.loading) return;
-  if (Res.active){Res.stop();closeMenu();return;}
-  if (menuOpen){closeMenu();}else{openMenu();}
-});
+function openMenu(){menuOpen=true;resMenu.classList.add('open');}
+function closeMenu(){menuOpen=false;resMenu.classList.remove('open');}
+resBtn.addEventListener('click',function(){if(Res.loading)return;if(Res.active){Res.stop();closeMenu();return;}if(menuOpen){closeMenu();}else{openMenu();}});
 var opts=resMenu.querySelectorAll('.res-opt');
-for (var oi=0;oi<opts.length;oi++){
-  (function(opt){
-    opt.addEventListener('click',function(){
-      for(var j=0;j<opts.length;j++){opts[j].classList.remove('sel');}
-      opt.classList.add('sel'); selectedMetric=opt.getAttribute('data-m');
-    });
-  }(opts[oi]));
-}
+for(var oi=0;oi<opts.length;oi++){(function(opt){opt.addEventListener('click',function(){for(var j=0;j<opts.length;j++){opts[j].classList.remove('sel');}opt.classList.add('sel');selectedMetric=opt.getAttribute('data-m');});}(opts[oi]));}
 resOK.addEventListener('click',function(){if(!Res.loading){Res.start(selectedMetric);}});
-document.addEventListener('click',function(e){
-  if (!menuOpen) return;
-  if (!resMenu.contains(e.target)&&e.target!==resBtn&&!resBtn.contains(e.target)){closeMenu();}
-});
+document.addEventListener('click',function(e){if(!menuOpen)return;if(!resMenu.contains(e.target)&&e.target!==resBtn&&!resBtn.contains(e.target)){closeMenu();}});
 
-/* ═══════════════════════════════════════════════════
+/* ════════════════════════════════════════════════
    SCENE TRANSITIONS
-═══════════════════════════════════════════════════ */
+════════════════════════════════════════════════ */
 function goToGroup(group){
-  if (locked) return;
-  locked=true; scene=SCENE_GROUP; activeGroup=group;
-  if (Res.active){Res.stop();} closeMenu();
-  var cx=CX(), cy=CY();
-  rootNodes.forEach(function(n){
-    if (n.entity===group){n.tx=cx;n.ty=cy;n.targetR=n.baseR*1.3;}
-    else{n.tx=cx+Math.cos(n.orbitAngle)*OR()*1.9;n.ty=cy+Math.sin(n.orbitAngle)*OR()*1.9;n.targetR=n.baseR*0.5;}
-  });
-  buildChildNodes(group);
-  resetNodes(childNodes,cx,cy,CR,true);
-  hintEl.style.opacity='0';
-  backBtn.classList.add('show');
-  groupLbl.textContent=group.name; groupLbl.classList.add('show');
+  if(locked)return;locked=true;scene=SCENE_GROUP;activeGroup=group;
+  if(Res.active){Res.stop();}closeMenu();hideTooltip();hideLegend();
+  var cx=CX(),cy=CY();
+  rootNodes.forEach(function(n){if(n.entity===group){n.tx=cx;n.ty=cy;n.targetR=n.baseR*1.3;}else{n.tx=cx+Math.cos(n.orbitAngle)*OR()*1.9;n.ty=cy+Math.sin(n.orbitAngle)*OR()*1.9;n.targetR=n.baseR*0.5;}});
+  buildChildNodes(group);resetNodes(childNodes,cx,cy,CR,true);
+  hintEl.style.opacity='0';backBtn.classList.add('show');
+  groupLbl.textContent=group.name;groupLbl.classList.add('show');
   setTimeout(function(){locked=false;},520);
 }
-
 function goToRoot(){
-  if (locked) return;
-  locked=true;
-  if (Res.active){Res.stop();}
-  card.classList.remove('show');
-  scene=SCENE_ROOT; activeGroup=null; activeRepo=null; childNodes=[];
-  applyViewMode(false);
-  hintEl.style.opacity='1';
-  backBtn.classList.remove('show'); groupLbl.classList.remove('show');
+  if(locked)return;locked=true;
+  if(Res.active){Res.stop();}card.classList.remove('show');
+  scene=SCENE_ROOT;activeGroup=null;activeRepo=null;childNodes=[];
+  applyViewMode(false);hintEl.style.opacity='1';
+  backBtn.classList.remove('show');groupLbl.classList.remove('show');
   setTimeout(function(){locked=false;},520);
 }
-
 function openRepoCard(repo){
-  if (locked) return;
-  locked=true; activeRepo=repo; scene=SCENE_CARD;
-  hintEl.style.opacity='0'; closeMenu();
-  var cx=CX(), cy=CY();
+  if(locked)return;locked=true;activeRepo=repo;scene=SCENE_CARD;
+  hintEl.style.opacity='0';closeMenu();hideTooltip();
+  var cx=CX(),cy=CY();
   var pool=activeGroup?childNodes:rootNodes;
-  pool.forEach(function(n){
-    if (n.entity===repo){n.tx=cx;n.ty=cy;n.targetR=88;}
-    else{
-      var push=(activeGroup?CR():OR())*1.85;
-      n.tx=cx+Math.cos(n.orbitAngle)*push;
-      n.ty=cy+Math.sin(n.orbitAngle)*push;
-      n.targetR=n.baseR*0.5;
-    }
-  });
+  pool.forEach(function(n){if(n.entity===repo){n.tx=cx;n.ty=cy;n.targetR=88;}else{var push=(activeGroup?CR():OR())*1.85;n.tx=cx+Math.cos(n.orbitAngle)*push;n.ty=cy+Math.sin(n.orbitAngle)*push;n.targetR=n.baseR*0.5;}});
   setTimeout(function(){showCard(repo);locked=false;},480);
 }
-
 function closeRepoCard(){
-  if (locked) return;
-  locked=true; card.classList.remove('show');
-  activeRepo=null; scene=activeGroup?SCENE_GROUP:SCENE_ROOT;
-  var cx=CX(), cy=CY();
-  var pool=activeGroup?childNodes:rootNodes;
-  var orFn=activeGroup?CR:OR;
-  if (!Res.active){
-    pool.forEach(function(n){
-      n.tx=cx+Math.cos(n.orbitAngle)*orFn();
-      n.ty=cy+Math.sin(n.orbitAngle)*orFn();
-      n.targetR=n.baseR;
-    });
-  }
-  hintEl.style.opacity='1';
-  setTimeout(function(){locked=false;},400);
+  if(locked)return;locked=true;card.classList.remove('show');
+  activeRepo=null;scene=activeGroup?SCENE_GROUP:SCENE_ROOT;
+  var cx=CX(),cy=CY(),pool=activeGroup?childNodes:rootNodes,orFn=activeGroup?CR:OR;
+  if(!Res.active){pool.forEach(function(n){n.tx=cx+Math.cos(n.orbitAngle)*orFn();n.ty=cy+Math.sin(n.orbitAngle)*orFn();n.targetR=n.baseR;});}
+  hintEl.style.opacity='1';setTimeout(function(){locked=false;},400);
 }
-
-function showCard(repo) {
-  document.getElementById('c-eye').textContent = repo.eye;
-  document.getElementById('c-eye').style.color = 'rgba('+repo.rgb+',0.65)';
-  document.getElementById('c-name').textContent = repo.name;
-  document.getElementById('c-desc').textContent = repo.desc;
-  var h='';
-  for (var i=0;i<repo.tags.length;i++){h+='<span class="ctag">'+repo.tags[i]+'</span>';}
+function showCard(repo){
+  document.getElementById('c-eye').textContent=repo.eye;
+  document.getElementById('c-eye').style.color='rgba('+repo.rgb+',0.65)';
+  document.getElementById('c-name').textContent=repo.name;
+  document.getElementById('c-desc').textContent=repo.desc;
+  var h='';for(var i=0;i<repo.tags.length;i++){h+='<span class="ctag">'+repo.tags[i]+'</span>';}
   document.getElementById('c-tags').innerHTML=h;
   document.getElementById('btn-gh').href=repo.gh;
   document.getElementById('btn-io').href=repo.io;
-  document.getElementById('card-line').style.background=
-    'linear-gradient(90deg,transparent,rgba('+repo.rgb+',0.5),transparent)';
+  document.getElementById('card-line').style.background='linear-gradient(90deg,transparent,rgba('+repo.rgb+',0.5),transparent)';
   card.style.borderColor='rgba('+repo.rgb+',0.32)';
-
-  /* Favicon in card */
-  var fi = faviconMap[repo.id];
-  if (fi) {
-    cardFavi.src = fi.src;
-    cardFavi.classList.add('show');
-  } else {
-    cardFavi.src = '';
-    cardFavi.classList.remove('show');
-  }
-
+  var fi=faviconMap[repo.id];
+  if(fi){cardFavi.src=fi.src;cardFavi.classList.add('show');}else{cardFavi.src='';cardFavi.classList.remove('show');}
+  showInstallSection(repo);
   requestAnimationFrame(function(){card.classList.add('show');});
 }
-
-document.getElementById('card-close').addEventListener('click', closeRepoCard);
-backBtn.addEventListener('click', goToRoot);
+document.getElementById('card-close').addEventListener('click',closeRepoCard);
+backBtn.addEventListener('click',goToRoot);
 
 /* ── Hit test ───────────────────────────────────── */
 function hitTest(mx,my){
-  var pool=(scene===SCENE_GROUP)?childNodes:rootNodes;
-  for(var i=0;i<pool.length;i++){
-    var n=pool[i], dx=mx-n.x, dy=my-n.y;
-    if(Math.sqrt(dx*dx+dy*dy)<n.radius+16){return n;}
-  }
+  var pool=scene===SCENE_GROUP?childNodes:rootNodes;
+  for(var i=0;i<pool.length;i++){var n=pool[i],dx=mx-n.x,dy=my-n.y;if(Math.sqrt(dx*dx+dy*dy)<n.radius+16){return n;}}
   return null;
 }
 function handleTap(mx,my){
   if(locked||scene===SCENE_CARD)return;
-  var n=hitTest(mx,my); if(!n)return;
+  var n=hitTest(mx,my);if(!n)return;hideTooltip();
   if(n.isGroup){goToGroup(n.entity);}else{openRepoCard(n.entity);}
 }
-canvas.addEventListener('click',function(e){
-  var r=canvas.getBoundingClientRect(); handleTap(e.clientX-r.left,e.clientY-r.top);
-});
+canvas.addEventListener('click',function(e){var r=canvas.getBoundingClientRect();handleTap(e.clientX-r.left,e.clientY-r.top);});
 canvas.addEventListener('mousemove',function(e){
-  if(scene===SCENE_CARD||locked){canvas.style.cursor='default';return;}
-  var r=canvas.getBoundingClientRect();
-  canvas.style.cursor=hitTest(e.clientX-r.left,e.clientY-r.top)?'pointer':'default';
+  if(scene===SCENE_CARD||locked){canvas.style.cursor='default';hideTooltip();return;}
+  var r=canvas.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top;
+  var n=hitTest(mx,my);canvas.style.cursor=n?'pointer':'default';
+  if(n){showTooltip(n,mx,my);}else{hideTooltip();}
 });
+canvas.addEventListener('mouseleave',hideTooltip);
 canvas.addEventListener('touchend',function(e){
-  var touch=e.changedTouches[0], r=canvas.getBoundingClientRect();
-  var mx=touch.clientX-r.left, my=touch.clientY-r.top;
+  clearTimeout(lpTimer);
+  var touch=e.changedTouches[0],r=canvas.getBoundingClientRect();
+  var mx=touch.clientX-r.left,my=touch.clientY-r.top;
   if(locked||scene===SCENE_CARD)return;
   var n=hitTest(mx,my);
-  if(n){e.preventDefault();if(n.isGroup){goToGroup(n.entity);}else{openRepoCard(n.entity);}}
+  if(n&&!tooltip.classList.contains('show')){e.preventDefault();if(n.isGroup){goToGroup(n.entity);}else{openRepoCard(n.entity);}}
 },{passive:false});
 
-/* ═══════════════════════════════════════════════════
+/* ── Keyboard ───────────────────────────────────── */
+canvas.addEventListener('keydown',function(e){
+  var pool=scene===SCENE_GROUP?childNodes:rootNodes;if(!pool.length)return;
+  if(e.key==='Tab'||e.key==='ArrowRight'||e.key==='ArrowDown'){e.preventDefault();focusIdx=(focusIdx+1)%pool.length;}
+  else if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();focusIdx=(focusIdx-1+pool.length)%pool.length;}
+  else if((e.key==='Enter'||e.key===' ')&&focusIdx>=0){e.preventDefault();var n=pool[focusIdx];if(n.isGroup){goToGroup(n.entity);}else{openRepoCard(n.entity);}}
+  else if(e.key==='Escape'){if(scene===SCENE_CARD){closeRepoCard();}else if(scene===SCENE_GROUP){goToRoot();}}
+});
+
+/* ════════════════════════════════════════════════
    DRAW LOOP
-═══════════════════════════════════════════════════ */
+════════════════════════════════════════════════ */
 var EASE=0.066;
 function lerp(a,b,k){return a+(b-a)*k;}
 
-/* Draw a favicon clipped to a circle inside a node */
-function drawFavicon(img, nx, ny, nodeR) {
-  var r = nodeR - 1; /* fill to just inside the node stroke */
-  ctx.save();
-  ctx.beginPath();
-  ctx.arc(nx, ny, r, 0, Math.PI * 2);
-  ctx.clip();
-  ctx.drawImage(img, nx - r, ny - r, r * 2, r * 2);
-  ctx.restore();
+function drawFavicon(img,nx,ny,nodeR){
+  var r=nodeR-1;ctx.save();ctx.beginPath();ctx.arc(nx,ny,r,0,Math.PI*2);ctx.clip();
+  ctx.drawImage(img,nx-r,ny-r,r*2,r*2);ctx.restore();
+}
+function drawGroupFavicons(groupId,nx,ny,nodeR){
+  var imgs=[];
+  for(var i=0;i<REPOS.length&&imgs.length<4;i++){if(REPOS[i].groupId===groupId&&faviconMap[REPOS[i].id]){imgs.push(faviconMap[REPOS[i].id]);}}
+  if(!imgs.length)return false;
+  var pad=nodeR*0.08,half=(nodeR-pad*1.5)/2;if(half<4)return false;
+  var offsets=[{x:-half-pad*0.5,y:-half-pad*0.5},{x:half+pad*0.5,y:-half-pad*0.5},{x:-half-pad*0.5,y:half+pad*0.5},{x:half+pad*0.5,y:half+pad*0.5}];
+  if(imgs.length===1){offsets=[{x:0,y:0}];half=nodeR*0.55;}
+  else if(imgs.length===2){offsets=[{x:-half-pad*0.5,y:0},{x:half+pad*0.5,y:0}];}
+  else if(imgs.length===3){offsets=[{x:0,y:-half-pad*0.5},{x:-half-pad*0.5,y:half+pad*0.5},{x:half+pad*0.5,y:half+pad*0.5}];}
+  ctx.save();ctx.beginPath();ctx.arc(nx,ny,nodeR-1,0,Math.PI*2);ctx.clip();
+  for(var j=0;j<imgs.length;j++){
+    var ox=nx+offsets[j].x,oy=ny+offsets[j].y;
+    ctx.save();ctx.beginPath();ctx.arc(ox,oy,half,0,Math.PI*2);ctx.clip();
+    ctx.drawImage(imgs[j],ox-half,oy-half,half*2,half*2);ctx.restore();
+  }
+  ctx.restore();return true;
 }
 
-/* Draw a 2x2 (or fewer) cluster of favicons inside a group node */
-function drawGroupFavicons(groupId, nx, ny, nodeR) {
-  /* Collect up to 4 loaded favicons from this group's repos */
-  var imgs = [];
-  for (var i = 0; i < REPOS.length && imgs.length < 4; i++) {
-    if (REPOS[i].groupId === groupId && faviconMap[REPOS[i].id]) {
-      imgs.push(faviconMap[REPOS[i].id]);
-    }
-  }
-  if (!imgs.length) return false; /* no favicons yet */
-
-  var pad  = nodeR * 0.08;            /* gap between mini icons */
-  var half = (nodeR - pad * 1.5) / 2; /* radius of each mini circle */
-  if (half < 4) return false;
-
-  /* Positions: top-left, top-right, bottom-left, bottom-right */
-  var offsets = [
-    { x: -half - pad * 0.5, y: -half - pad * 0.5 },
-    { x:  half + pad * 0.5, y: -half - pad * 0.5 },
-    { x: -half - pad * 0.5, y:  half + pad * 0.5 },
-    { x:  half + pad * 0.5, y:  half + pad * 0.5 },
-  ];
-
-  /* For 1 or 2 images centre them on a single row */
-  if (imgs.length === 1) {
-    offsets = [{ x: 0, y: 0 }];
-    half = nodeR * 0.55;
-  } else if (imgs.length === 2) {
-    offsets = [
-      { x: -half - pad * 0.5, y: 0 },
-      { x:  half + pad * 0.5, y: 0 },
-    ];
-  } else if (imgs.length === 3) {
-    offsets = [
-      { x: 0,                  y: -half - pad * 0.5 },
-      { x: -half - pad * 0.5,  y:  half + pad * 0.5 },
-      { x:  half + pad * 0.5,  y:  half + pad * 0.5 },
-    ];
-  }
-
-  /* Clip entire group to node boundary first */
-  ctx.save();
-  ctx.beginPath();
-  ctx.arc(nx, ny, nodeR - 1, 0, Math.PI * 2);
-  ctx.clip();
-
-  for (var j = 0; j < imgs.length; j++) {
-    var ox = nx + offsets[j].x;
-    var oy = ny + offsets[j].y;
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(ox, oy, half, 0, Math.PI * 2);
-    ctx.clip();
-    ctx.drawImage(imgs[j], ox - half, oy - half, half * 2, half * 2);
-    ctx.restore();
-  }
-
-  ctx.restore();
-  return true;
-}
-
-function drawNodeSet(pool, cx, cy, T) {
-  var i, j, md=Math.min(W,H);
-
-  /* Edges */
-  for(i=0;i<pool.length;i++){
-    for(j=i+1;j<pool.length;j++){
-      var na=pool[i], nb=pool[j];
-      var ex=na.x-nb.x, ey=na.y-nb.y, ed=Math.sqrt(ex*ex+ey*ey);
-      if(ed<md){
-        ctx.beginPath(); ctx.moveTo(na.x,na.y); ctx.lineTo(nb.x,nb.y);
-        ctx.strokeStyle='rgba('+T.pt+','+((1-ed/md)*0.11*(0.6+0.4*Math.sin(t+i)))+')';
-        ctx.lineWidth=0.5; ctx.stroke();
-      }
-    }
-  }
-
-  /* Pulse line to active repo */
-  if(scene===SCENE_CARD&&activeRepo){
-    pool.forEach(function(n){
-      if(n.entity!==activeRepo)return;
-      ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(n.x,n.y);
-      ctx.strokeStyle='rgba('+n.entity.rgb+',0.06)'; ctx.lineWidth=0.5; ctx.stroke();
-      var pr=(t*0.5)%1;
-      ctx.beginPath(); ctx.arc(cx+(n.x-cx)*pr,cy+(n.y-cy)*pr,2.5,0,Math.PI*2);
-      ctx.fillStyle='rgba('+n.entity.rgb+',0.7)'; ctx.fill();
-    });
-  }
-
-  /* Nodes */
-  pool.forEach(function(n){
-    var rgb=n.entity.rgb;
-    var isAct=scene===SCENE_CARD&&n.entity===activeRepo;
-    var pv=0.65+0.35*Math.sin(t*1.1+n.pulse);
-    var hasFavi = !n.isGroup && faviconMap[n.entity.id];
-
-    /* Outer breathing ring */
-    ctx.beginPath(); ctx.arc(n.x,n.y,n.radius+7+5*Math.sin(t*1.3+n.pulse),0,Math.PI*2);
-    ctx.strokeStyle='rgba('+rgb+','+(isAct?0.22*pv:0.06*pv)+')';
-    ctx.lineWidth=isAct?1.5:0.5; ctx.stroke();
-
-    /* Dashed ring for group nodes */
-    if(n.isGroup&&scene===SCENE_ROOT){
-      ctx.beginPath(); ctx.arc(n.x,n.y,n.radius+3,0,Math.PI*2);
-      ctx.setLineDash([3,4]);
-      ctx.strokeStyle='rgba('+rgb+',0.25)'; ctx.lineWidth=0.5; ctx.stroke();
-      ctx.setLineDash([]);
-    }
-
-    /* Inner ring */
-    ctx.beginPath(); ctx.arc(n.x,n.y,n.radius+2,0,Math.PI*2);
-    ctx.strokeStyle='rgba('+rgb+','+(isAct?0.38:0.12*pv)+')'; ctx.lineWidth=0.5; ctx.stroke();
-
-    /* Core fill */
-    ctx.beginPath(); ctx.arc(n.x,n.y,n.radius,0,Math.PI*2);
-    ctx.fillStyle='rgba('+rgb+','+(isAct?0.16:n.isGroup?0.09:0.06)+')'; ctx.fill();
-    ctx.strokeStyle='rgba('+rgb+','+(isAct?0.82:0.32*pv)+')';
-    ctx.lineWidth=isAct?1:0.5; ctx.stroke();
-
-    /* Favicon inside node (repo nodes only, when loaded) */
-    if(hasFavi&&n.radius>10){
-      drawFavicon(faviconMap[n.entity.id], n.x, n.y, n.radius);
-    }
-
-    /* Favicon cluster inside group nodes */
-    var hasGroupFavi = false;
-    if(n.isGroup&&n.radius>10){
-      hasGroupFavi = drawGroupFavicons(n.entity.id, n.x, n.y, n.radius);
-    }
-
-    /* Label — below node if favicon/cluster present, centred otherwise */
+function drawNodeSet(pool,cx,cy,T){
+  var i,j,md=Math.min(W,H);
+  for(i=0;i<pool.length;i++){for(j=i+1;j<pool.length;j++){
+    var na=pool[i],nb=pool[j],ex=na.x-nb.x,ey=na.y-nb.y,ed=Math.sqrt(ex*ex+ey*ey);
+    if(ed<md){ctx.beginPath();ctx.moveTo(na.x,na.y);ctx.lineTo(nb.x,nb.y);ctx.strokeStyle='rgba('+T.pt+','+((1-ed/md)*0.11*(0.6+0.4*Math.sin(t+i)))+')';ctx.lineWidth=0.5;ctx.stroke();}
+  }}
+  if(scene===SCENE_CARD&&activeRepo){pool.forEach(function(n){if(n.entity!==activeRepo)return;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(n.x,n.y);ctx.strokeStyle='rgba('+n.entity.rgb+',0.06)';ctx.lineWidth=0.5;ctx.stroke();var pr=(t*0.5)%1;ctx.beginPath();ctx.arc(cx+(n.x-cx)*pr,cy+(n.y-cy)*pr,2.5,0,Math.PI*2);ctx.fillStyle='rgba('+n.entity.rgb+',0.7)';ctx.fill();});}
+  pool.forEach(function(n,idx){
+    var rgb=n.entity.rgb,isAct=scene===SCENE_CARD&&n.entity===activeRepo,isFoc=focusIdx===idx&&document.activeElement===canvas;
+    var pv=0.65+0.35*Math.sin(t*1.1+n.pulse),hasFavi=!n.isGroup&&faviconMap[n.entity.id];
+    if(isFoc){ctx.beginPath();ctx.arc(n.x,n.y,n.radius+12,0,Math.PI*2);ctx.strokeStyle='rgba('+rgb+',0.5)';ctx.lineWidth=1.5;ctx.stroke();}
+    ctx.beginPath();ctx.arc(n.x,n.y,n.radius+7+5*Math.sin(t*1.3+n.pulse),0,Math.PI*2);ctx.strokeStyle='rgba('+rgb+','+(isAct?0.22*pv:0.06*pv)+')';ctx.lineWidth=isAct?1.5:0.5;ctx.stroke();
+    if(n.isGroup&&scene===SCENE_ROOT){ctx.beginPath();ctx.arc(n.x,n.y,n.radius+3,0,Math.PI*2);ctx.setLineDash([3,4]);ctx.strokeStyle='rgba('+rgb+',0.25)';ctx.lineWidth=0.5;ctx.stroke();ctx.setLineDash([]);}
+    ctx.beginPath();ctx.arc(n.x,n.y,n.radius+2,0,Math.PI*2);ctx.strokeStyle='rgba('+rgb+','+(isAct?0.38:0.12*pv)+')';ctx.lineWidth=0.5;ctx.stroke();
+    ctx.beginPath();ctx.arc(n.x,n.y,n.radius,0,Math.PI*2);ctx.fillStyle='rgba('+rgb+','+(isAct?0.16:n.isGroup?0.09:0.06)+')';ctx.fill();ctx.strokeStyle='rgba('+rgb+','+(isAct?0.82:0.32*pv)+')';ctx.lineWidth=isAct?1:0.5;ctx.stroke();
+    if(hasFavi&&n.radius>10){drawFavicon(faviconMap[n.entity.id],n.x,n.y,n.radius);}
+    var hasGF=false;if(n.isGroup&&n.radius>10){hasGF=drawGroupFavicons(n.entity.id,n.x,n.y,n.radius);}
     var fsize=isAct?12:(n.isGroup?11:10);
-    ctx.font='400 '+fsize+'px \'DM Mono\',monospace';
-    ctx.textAlign='center'; ctx.textBaseline='middle';
-    ctx.fillStyle='rgba('+rgb+','+(isAct?0.9:n.isGroup?0.7:0.55)+')';
-
-    var labelY = (hasFavi||hasGroupFavi) ? n.y + n.radius + 11 : n.y;
-    if(isAct){
-      ctx.textBaseline='middle';
-      var ws=n.entity.name.split(' ');
-      if(ws.length<=2){ ctx.fillText(n.entity.name,n.x,labelY); }
-      else{ ctx.fillText(ws.slice(0,2).join(' '),n.x,labelY-8); ctx.fillText(ws.slice(2).join(' '),n.x,labelY+8); }
-    } else {
-      var label=n.isGroup?n.entity.name:(function(){
-        var ps=n.entity.name.split(' ');
-        return ps.length>2?ps.slice(-2).join(' '):ps[ps.length-1];
-      }());
-      ctx.fillText(label,n.x,labelY);
-    }
-
-    /* Count badge on group nodes (below label) */
-    if(n.isGroup&&scene===SCENE_ROOT){
-      var count=0;
-      for(var ri=0;ri<REPOS.length;ri++){if(REPOS[ri].groupId===n.entity.id){count++;}}
-      ctx.font='300 8px \'DM Mono\',monospace';
-      ctx.fillStyle='rgba('+rgb+',0.4)';
-      var badgeY = (hasGroupFavi) ? n.y + n.radius + 23 : n.y + n.radius + 12;
-      ctx.fillText(count+(count===1?' work':' works'),n.x,badgeY);
-    }
+    ctx.font='400 '+fsize+'px \'DM Mono\',monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba('+rgb+','+(isAct?0.9:n.isGroup?0.7:0.55)+')';
+    var labelY=(hasFavi||hasGF)?n.y+n.radius+11:n.y;
+    if(isAct){var ws=n.entity.name.split(' ');if(ws.length<=2){ctx.fillText(n.entity.name,n.x,labelY);}else{ctx.fillText(ws.slice(0,2).join(' '),n.x,labelY-8);ctx.fillText(ws.slice(2).join(' '),n.x,labelY+8);}}
+    else{var label=n.isGroup?n.entity.name:(function(){var ps=n.entity.name.split(' ');return ps.length>2?ps.slice(-2).join(' '):ps[ps.length-1];}());ctx.fillText(label,n.x,labelY);}
+    if(n.isGroup&&scene===SCENE_ROOT){var count=0;for(var ri=0;ri<REPOS.length;ri++){if(REPOS[ri].groupId===n.entity.id){count++;}}ctx.font='300 8px \'DM Mono\',monospace';ctx.fillStyle='rgba('+rgb+',0.4)';ctx.fillText(count+(count===1?' work':' works'),n.x,hasGF?n.y+n.radius+23:n.y+n.radius+12);}
   });
 }
 
 function draw(){
   requestAnimationFrame(draw);
-  if(!sizeReady||W<10||H<10){
-    var s=measure();
-    if(s.w>10&&s.h>10){W=s.w;H=s.h;canvas.width=W;canvas.height=H;sizeReady=true;spawnPts();applyViewMode(true);}
-    return;
-  }
-  ctx.clearRect(0,0,W,H); t+=0.012;
-  var cx=CX(), cy=CY(), T=th();
-
-  /* Background */
-  ctx.fillStyle='rgb('+T.bg+')'; ctx.fillRect(0,0,W,H);
-
-  /* Ambient blobs */
-  for(var bi=0;bi<3;bi++){
-    ctx.beginPath();
-    ctx.arc(cx+Math.sin(t*0.06+bi*2.1)*W*0.28, cy+Math.cos(t*0.045+bi*1.8)*H*0.22, Math.min(W,H)*(0.32+bi*0.1),0,Math.PI*2);
-    ctx.fillStyle='rgba('+(bi===1?'29,158,117':T.pt)+','+(T.bA+bi*0.004)+')'; ctx.fill();
-  }
-
-  /* Particles */
-  for(var pi=0;pi<pts.length;pi++){
-    var p=pts[pi]; p.x+=p.vx; p.y+=p.vy;
-    if(p.x<0)p.x=W; if(p.x>W)p.x=0; if(p.y<0)p.y=H; if(p.y>H)p.y=0;
-    ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
-    ctx.fillStyle='rgba('+T.pt+','+(p.a*(0.5+0.5*Math.sin(t*0.8+p.ph)))+')'; ctx.fill();
-  }
-
-  /* Particle web */
-  for(var wi=0;wi<pts.length;wi+=2){
-    for(var wj=wi+2;wj<pts.length;wj+=2){
-      var pa=pts[wi],pb=pts[wj],wdx=pa.x-pb.x,wdy=pa.y-pb.y,wd=Math.sqrt(wdx*wdx+wdy*wdy);
-      if(wd<115){
-        ctx.beginPath(); ctx.moveTo(pa.x,pa.y); ctx.lineTo(pb.x,pb.y);
-        ctx.strokeStyle='rgba('+T.pt+','+((1-wd/115)*0.028)+')'; ctx.lineWidth=0.5; ctx.stroke();
-      }
-    }
-  }
-
-  /* Orbit ticks */
+  if(!sizeReady||W<10||H<10){var s=measure();if(s.w>10&&s.h>10){W=s.w;H=s.h;canvas.width=W;canvas.height=H;sizeReady=true;spawnPts();applyViewMode(true);}return;}
+  ctx.clearRect(0,0,W,H);t+=0.012;var cx=CX(),cy=CY(),T=th();
+  ctx.fillStyle='rgb('+T.bg+')';ctx.fillRect(0,0,W,H);
+  for(var bi=0;bi<3;bi++){ctx.beginPath();ctx.arc(cx+Math.sin(t*0.06+bi*2.1)*W*0.28,cy+Math.cos(t*0.045+bi*1.8)*H*0.22,Math.min(W,H)*(0.32+bi*0.1),0,Math.PI*2);ctx.fillStyle='rgba('+(bi===1?'29,158,117':T.pt)+','+(T.bA+bi*0.004)+')';ctx.fill();}
+  for(var pi=0;pi<pts.length;pi++){var p=pts[pi];p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba('+T.pt+','+(p.a*(0.5+0.5*Math.sin(t*0.8+p.ph)))+')';ctx.fill();}
+  for(var wi=0;wi<pts.length;wi+=2){for(var wj=wi+2;wj<pts.length;wj+=2){var pa=pts[wi],pb=pts[wj],wdx=pa.x-pb.x,wdy=pa.y-pb.y,wd=Math.sqrt(wdx*wdx+wdy*wdy);if(wd<115){ctx.beginPath();ctx.moveTo(pa.x,pa.y);ctx.lineTo(pb.x,pb.y);ctx.strokeStyle='rgba('+T.pt+','+((1-wd/115)*0.028)+')';ctx.lineWidth=0.5;ctx.stroke();}}}
   var activePool=(scene===SCENE_GROUP||(scene===SCENE_CARD&&activeGroup))?childNodes:rootNodes;
   var orFn=activeGroup?CR:OR;
   if(scene!==SCENE_CARD){
-    if(Res.active){
-      activePool.forEach(function(n){n.orbitAngle+=n.orbitSpeed*0.4;});
-      Res.tick();
-    } else {
-      var orV=orFn();
-      activePool.forEach(function(n){
-        n.orbitAngle+=n.orbitSpeed;
-        if(scene===SCENE_ROOT||scene===SCENE_GROUP){n.tx=cx+Math.cos(n.orbitAngle)*orV;n.ty=cy+Math.sin(n.orbitAngle)*orV;}
-      });
-      if(scene===SCENE_GROUP){rootNodes.forEach(function(n){n.orbitAngle+=n.orbitSpeed*0.2;});}
-    }
+    if(Res.active){activePool.forEach(function(n){n.orbitAngle+=n.orbitSpeed*0.4;});Res.tick();}
+    else{var orV=orFn();activePool.forEach(function(n){n.orbitAngle+=n.orbitSpeed;if(scene===SCENE_ROOT||scene===SCENE_GROUP){n.tx=cx+Math.cos(n.orbitAngle)*orV;n.ty=cy+Math.sin(n.orbitAngle)*orV;}});if(scene===SCENE_GROUP){rootNodes.forEach(function(n){n.orbitAngle+=n.orbitSpeed*0.2;});}}
   }
-
-  /* Lerp */
   function lerpPool(pool){pool.forEach(function(n){n.x=lerp(n.x,n.tx,EASE);n.y=lerp(n.y,n.ty,EASE);n.radius=lerp(n.radius,n.targetR,EASE);});}
-  lerpPool(rootNodes);
-  if(childNodes.length){lerpPool(childNodes);}
-
-  /* Faded root nodes when inside group */
-  if(scene===SCENE_GROUP||(scene===SCENE_CARD&&activeGroup)){
-    rootNodes.forEach(function(n){
-      ctx.globalAlpha=0.18;
-      ctx.beginPath(); ctx.arc(n.x,n.y,n.radius,0,Math.PI*2);
-      ctx.fillStyle='rgba('+n.entity.rgb+',0.04)'; ctx.fill();
-      ctx.strokeStyle='rgba('+n.entity.rgb+',0.15)'; ctx.lineWidth=0.5; ctx.stroke();
-      ctx.globalAlpha=1;
-    });
-  }
-
-  /* Draw active pool */
-  if(scene===SCENE_ROOT||(scene===SCENE_CARD&&!activeGroup)){drawNodeSet(rootNodes,cx,cy,T);}
-  else{drawNodeSet(childNodes,cx,cy,T);}
-
-  /* Origin pulse */
-  ctx.beginPath(); ctx.arc(cx,cy,2.5,0,Math.PI*2);
-  ctx.fillStyle='rgba('+T.pt+','+(0.14+0.1*Math.sin(t))+')'; ctx.fill();
-
-  /* Resonance badges */
+  lerpPool(rootNodes);if(childNodes.length){lerpPool(childNodes);}
+  if(scene===SCENE_GROUP||(scene===SCENE_CARD&&activeGroup)){rootNodes.forEach(function(n){ctx.globalAlpha=0.18;ctx.beginPath();ctx.arc(n.x,n.y,n.radius,0,Math.PI*2);ctx.fillStyle='rgba('+n.entity.rgb+',0.04)';ctx.fill();ctx.strokeStyle='rgba('+n.entity.rgb+',0.15)';ctx.lineWidth=0.5;ctx.stroke();ctx.globalAlpha=1;});}
+  if(scene===SCENE_ROOT||(scene===SCENE_CARD&&!activeGroup)){drawNodeSet(rootNodes,cx,cy,T);}else{drawNodeSet(childNodes,cx,cy,T);}
+  ctx.beginPath();ctx.arc(cx,cy,2.5,0,Math.PI*2);ctx.fillStyle='rgba('+T.pt+','+(0.14+0.1*Math.sin(t))+')';ctx.fill();
   Res.badges();
 }
 
-/* Start favicons and draw */
 initFavicons();
 draw();
 
