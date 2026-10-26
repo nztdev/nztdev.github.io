@@ -127,8 +127,12 @@ body.light .i-row { background:rgba(83,74,183,0.04); border-color:rgba(83,74,183
 body.light #lbl-name { color:rgba(83,74,183,0.6); }
 #lbl-sub { top:42px; left:32px; font-size:10px; font-weight:300; font-style:italic; color:rgba(127,119,221,0.2); letter-spacing:0.07em; }
 body.light #lbl-sub { color:rgba(83,74,183,0.3); }
-#lbl-live { top:30px; right:32px; display:flex; align-items:center; gap:7px; font-size:10px; font-weight:300; letter-spacing:0.1em; color:rgba(29,158,117,0.45); pointer-events:none; }
-body.light #lbl-live { color:rgba(15,110,86,0.65); }
+#mode-btn { position:absolute; top:22px; right:26px; z-index:30; display:flex; align-items:center; gap:7px; background:transparent; border:0.5px solid rgba(29,158,117,0.3); border-radius:99px; padding:5px 11px 5px 10px; cursor:pointer; font-family:var(--mono); font-size:10px; font-weight:300; letter-spacing:0.1em; color:rgba(29,158,117,0.6); max-width:calc(50% - 30px); transition:background 0.2s, border-color 0.2s; }
+#mode-btn:hover, #mode-btn[aria-expanded="true"] { background:rgba(29,158,117,0.08); border-color:rgba(29,158,117,0.6); }
+#mode-txt { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+#mode-caret { font-size:8px; opacity:0.7; flex-shrink:0; }
+body.light #mode-btn { color:rgba(15,110,86,0.85); border-color:rgba(15,110,86,0.35); }
+#lbl-name, #lbl-sub { max-width:calc(50% - 40px); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 #live-dot { width:5px; height:5px; border-radius:50%; background:#1D9E75; animation:blink 2.4s ease-in-out infinite; }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 #lbl-hint { bottom:56px; left:50%; transform:translateX(-50%); font-size:10px; font-weight:300; letter-spacing:0.2em; text-transform:uppercase; color:var(--hint); white-space:nowrap; }
@@ -238,6 +242,34 @@ body.light .cbtn.pri { background:rgba(83,74,183,0.08); border-color:rgba(83,74,
 #install-btn { width:100%; display:none; align-items:center; justify-content:center; gap:6px; margin-top:8px; font-family:var(--mono); font-size:10px; font-weight:400; letter-spacing:0.1em; text-transform:uppercase; padding:9px; border-radius:10px; border:0.5px solid rgba(127,119,221,0.35); color:var(--text); background:rgba(127,119,221,0.08); cursor:pointer; transition:background 0.15s; }
 #install-btn:hover { background:rgba(127,119,221,0.16); }
 #install-btn.show { display:flex; }
+
+/* ── Mode menu ─────────────────────────────────── */
+#mode-menu { position:absolute; top:58px; right:26px; z-index:60; width:274px; max-width:calc(100% - 40px); background:var(--card-bg); border:0.5px solid rgba(127,119,221,0.3); border-radius:14px; padding:14px 12px 12px; display:none; flex-direction:column; gap:2px; box-shadow:0 8px 32px rgba(0,0,0,0.4); }
+#mode-menu.open { display:flex; }
+.mm-title { font-family:var(--mono); font-size:9px; font-weight:400; letter-spacing:0.18em; text-transform:uppercase; color:rgba(127,119,221,0.5); margin:0 6px 6px; }
+.mm-opt { display:flex; align-items:flex-start; gap:10px; padding:8px 6px; border-radius:9px; cursor:pointer; transition:background 0.15s; }
+.mm-opt:hover { background:rgba(127,119,221,0.07); }
+.mm-opt .res-radio { margin-top:2px; }
+.mm-opt.sel .res-radio { border-color:rgba(127,119,221,0.8); }
+.mm-opt.sel .res-radio-dot { display:block; }
+.mm-opt.dis { opacity:0.38; cursor:default; }
+.mm-opt.dis:hover { background:transparent; }
+.mm-name { font-family:var(--mono); font-size:11px; font-weight:400; letter-spacing:0.06em; color:var(--text); }
+.mm-desc { font-size:11px; font-weight:300; color:var(--text2); line-height:1.45; margin-top:2px; }
+#mm-auto { display:none; padding:2px 6px 8px 32px; }
+.mm-row { display:flex; gap:7px; }
+#mm-user { flex:1; min-width:0; background:transparent; border:0.5px solid rgba(127,119,221,0.3); border-radius:8px; padding:7px 10px; font-family:var(--mono); font-size:11px; color:var(--text); outline:none; }
+#mm-user:focus { border-color:rgba(127,119,221,0.7); }
+#mm-user::placeholder { color:var(--hint); }
+#mm-load { background:rgba(127,119,221,0.12); border:0.5px solid rgba(127,119,221,0.4); border-radius:8px; padding:7px 12px; font-family:var(--mono); font-size:10px; letter-spacing:0.12em; text-transform:uppercase; color:var(--text); cursor:pointer; }
+#mm-load:hover { background:rgba(127,119,221,0.22); }
+#mm-load:disabled { opacity:0.4; cursor:default; }
+.mm-chk-row { display:flex; gap:14px; margin-top:9px; }
+.mm-chk { display:flex; align-items:center; gap:6px; font-family:var(--mono); font-size:10px; font-weight:300; letter-spacing:0.06em; color:var(--text2); cursor:pointer; }
+.mm-chk input { accent-color:#7F77DD; margin:0; }
+#mm-status { font-family:var(--mono); font-size:9px; letter-spacing:0.08em; color:rgba(127,119,221,0.65); margin-top:8px; line-height:1.5; }
+#mm-status.err { color:rgba(239,100,100,0.9); }
+@media (pointer:coarse) { #mm-user { font-size:16px; } }
 </style>
 </head>
 <body>
@@ -308,9 +340,9 @@ body.light .cbtn.pri { background:rgba(83,74,183,0.08); border-color:rgba(83,74,
 
   <div class="chrome" id="lbl-name">nztdev</div>
   <div class="chrome" id="lbl-sub">field of works</div>
-  <div class="chrome" id="lbl-live" style="position:absolute">
-    <div id="live-dot"></div><span>github.com/nztdev</span>
-  </div>
+  <button id="mode-btn" aria-haspopup="dialog" aria-expanded="false" aria-label="choose which field to view">
+    <div id="live-dot"></div><span id="mode-txt">github.com/nztdev</span><span id="mode-caret">&#9662;</span>
+  </button>
   <div class="chrome" id="lbl-hint">select a node</div>
   <div class="chrome" id="lbl-count"></div>
 
@@ -361,12 +393,41 @@ body.light .cbtn.pri { background:rgba(83,74,183,0.08); border-color:rgba(83,74,
     </button>
   </div>
 
+  <div id="mode-menu" role="dialog" aria-label="choose a field">
+    <div class="mm-title">Choose a field</div>
+    <div class="mm-opt sel" data-mode="founder" role="button" tabindex="0">
+      <div class="res-radio"><div class="res-radio-dot"></div></div>
+      <div><div class="mm-name">Founder</div><div class="mm-desc">nztdev&#8217;s curated field of works.</div></div>
+    </div>
+    <div class="mm-opt" data-mode="auto" role="button" tabindex="0">
+      <div class="res-radio"><div class="res-radio-dot"></div></div>
+      <div><div class="mm-name">Auto</div><div class="mm-desc">Any GitHub username. Their public repos fill the field automatically.</div></div>
+    </div>
+    <div id="mm-auto">
+      <div class="mm-row">
+        <input id="mm-user" type="text" placeholder="github username" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="GitHub username">
+        <button id="mm-load">Load</button>
+      </div>
+      <div class="mm-chk-row">
+        <label class="mm-chk"><input type="checkbox" id="mm-forks"> forks</label>
+        <label class="mm-chk"><input type="checkbox" id="mm-archived"> archived</label>
+      </div>
+      <div id="mm-status"></div>
+    </div>
+    <div class="mm-opt dis" data-mode="manual" aria-disabled="true">
+      <div class="res-radio"><div class="res-radio-dot"></div></div>
+      <div><div class="mm-name">Manual</div><div class="mm-desc">Build your own field by hand. Coming next.</div></div>
+    </div>
+  </div>
+
   <div id="res-menu">
     <div id="res-menu-title">Resonance metric</div>
     <div class="res-opt sel" data-m="commits"><div class="res-radio"><div class="res-radio-dot"></div></div><span class="res-opt-lbl">Commits</span></div>
     <div class="res-opt" data-m="stars"><div class="res-radio"><div class="res-radio-dot"></div></div><span class="res-opt-lbl">Stars</span></div>
     <div class="res-opt" data-m="forks"><div class="res-radio"><div class="res-radio-dot"></div></div><span class="res-opt-lbl">Forks</span></div>
     <div class="res-opt" data-m="watchers"><div class="res-radio"><div class="res-radio-dot"></div></div><span class="res-opt-lbl">Watchers</span></div>
+    <div class="res-opt" data-m="activity"><div class="res-radio"><div class="res-radio-dot"></div></div><span class="res-opt-lbl">Activity</span></div>
+    <div class="res-opt" data-m="size"><div class="res-radio"><div class="res-radio-dot"></div></div><span class="res-opt-lbl">Size</span></div>
     <div id="res-status">fetching&#8230;</div>
     <button id="res-menu-ok">OK &#8594;</button>
   </div>
@@ -411,6 +472,9 @@ body.light .cbtn.pri { background:rgba(83,74,183,0.08); border-color:rgba(83,74,
 <script>
 (function(){
 'use strict';
+function validUser(u){return /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$/.test(u);}
+var startUser=(function(){try{var m=location.search.match(/[?&]u=([^&#]+)/);var u=m?decodeURIComponent(m[1]).trim():'';return validUser(u)?u:'';}catch(e){return '';}})();
+var epoch=0;
 
 /* ════════════════════════════════════════════════
    DATA
@@ -447,6 +511,10 @@ var REPOS=[
   {id:11,groupId:null,    installable:false, name:'Paint the Chain',   rgb:'255,165,0',  eye:'crypto community \u00b7 HTML',                        desc:'A community-driven experiment at the intersection of meme culture, gamification, and decentralized coordination in crypto.',                                                              tags:['crypto','colors','community','proof of culture'],                           gh:'https://github.com/coinofcolors/coinofcolors.github.io',io:'https://coinofcolors.github.io/',               ghOwner:'nztdev',    ghRepo:'coinofcolors'},
 ];
 
+/* Founder dataset is kept intact so any mode can switch back to it */
+var FOUNDER={groups:GROUPS,repos:REPOS};
+if(startUser){GROUPS=[];REPOS=[];}
+
 /* ════════════════════════════════════════════════
    INTRO — always shown, two slides
 ════════════════════════════════════════════════ */
@@ -457,9 +525,10 @@ var slide0   = document.getElementById('i-s0');
 var slide1   = document.getElementById('i-s1');
 var dots     = document.querySelectorAll('.i-dot');
 var curSlide = 0;
+if(startUser){introEl.style.display='none';}
 
 /* Set repo count in slide 2 */
-document.getElementById('intro-repo-count').textContent = REPOS.length;
+document.getElementById('intro-repo-count').textContent = FOUNDER.repos.length;
 
 /* Mini animated preview canvas on slide 1 */
 var pc   = document.getElementById('preview-canvas');
@@ -662,11 +731,18 @@ function loadImageSilently(url,cb){
   img.onerror=function(){cb(null);};img.src=url;
 }
 function loadFavicon(repo){
-  var pageUrl=repo.io,base=domainFromUrl(pageUrl);if(!base)return;
+  var ep=epoch,pageUrl=repo.io,base=domainFromUrl(pageUrl);if(!base)return;
+  /* only *.github.io pages send the CORS headers needed to read the page and its icon */
+  if(!/\.github\.io$/i.test(base))return;
+  function keep(img){if(img&&ep===epoch){faviconMap[repo.id]=img;}}
   fetch(pageUrl,{mode:'cors'})
     .then(function(res){if(!res.ok){throw new Error('fail');}return res.text();})
-    .then(function(html){var url=extractFaviconHref(html,pageUrl)||(base+'/favicon.ico');loadImageSilently(url,function(img){if(img){faviconMap[repo.id]=img;}});})
-    ['catch'](function(){loadImageSilently(base+'/favicon.ico',function(img){if(img){faviconMap[repo.id]=img;}});});
+    .then(function(html){
+      if(repo.autoDetect&&ep===epoch){repo.installable=/<link[^>]+rel=["']manifest["']/i.test(html);}
+      var url=extractFaviconHref(html,pageUrl)||(base+'/favicon.ico');
+      loadImageSilently(url,keep);
+    })
+    ['catch'](function(){loadImageSilently(base+'/favicon.ico',keep);});
 }
 function initFavicons(){for(var i=0;i<REPOS.length;i++){loadFavicon(REPOS[i]);}}
 
@@ -727,23 +803,45 @@ function makeNode(entity,index,total,baseR){
     orbitSpeed:(0.00020+Math.random()*0.00014)*(index%2===0?1:-1),
     pulse:Math.random()*Math.PI*2};
 }
+function ringCount(n,kind){
+  if(kind==='root'){return n<=8?1:(n<=14?2:3);}
+  return n<7?1:(n<=14?2:(n<=26?3:4));
+}
+function baseRadiusFor(n,kind,isGroup){
+  if(kind==='root'){var big=n<=8;return isGroup?(big?30:25):(big?24:20);}
+  return n<=14?22:(n<=26?18:15);
+}
+function assignRings(pool,kind){
+  var rn=ringCount(pool.length,kind);
+  pool.forEach(function(nd,i){nd.rn=rn;nd.rk=i%rn;});
+}
+/* radius at which node n orbits: dense fields spread across several rings, kept on-screen */
+function orbitAt(n,base){
+  if(!n.rn||n.rn<2){return base;}
+  var maxOut=Math.min(W,H)/2-46;
+  var cap=n.rn===2?1.6:(n.rn===3?1.9:2.2);
+  var maxF=Math.max(1.15,Math.min(cap,maxOut/base));
+  return base*(1+(n.rk/(n.rn-1))*(maxF-1));
+}
 function buildRootNodes(){
   var items=[],i;
   for(i=0;i<GROUPS.length;i++){items.push({entity:GROUPS[i],isGroup:true});}
   for(i=0;i<REPOS.length;i++){if(REPOS[i].groupId===null){items.push({entity:REPOS[i],isGroup:false});}}
   rootNodes=[];
-  for(i=0;i<items.length;i++){var n=makeNode(items[i].entity,i,items.length,items[i].isGroup?30:24);n.isGroup=items[i].isGroup;rootNodes.push(n);}
+  for(i=0;i<items.length;i++){var g=items[i].isGroup;var n=makeNode(items[i].entity,i,items.length,baseRadiusFor(items.length,'root',g));n.isGroup=g;rootNodes.push(n);}
+  assignRings(rootNodes,'root');
 }
-function ringFor(i,total){return(total>=7&&i%2===1)?1.55:1;}
 function buildFlatNodes(){
   rootNodes=[];
-  for(var i=0;i<REPOS.length;i++){var n=makeNode(REPOS[i],i,REPOS.length,22);n.isGroup=false;n.ring=ringFor(i,REPOS.length);rootNodes.push(n);}
+  for(var i=0;i<REPOS.length;i++){var n=makeNode(REPOS[i],i,REPOS.length,baseRadiusFor(REPOS.length,'pool',false));n.isGroup=false;rootNodes.push(n);}
+  assignRings(rootNodes,'pool');
 }
 function buildChildNodes(group){
   var members=[],i;
   for(i=0;i<REPOS.length;i++){if(REPOS[i].groupId===group.id){members.push(REPOS[i]);}}
   childNodes=[];
-  for(i=0;i<members.length;i++){var cn=makeNode(members[i],i,members.length,22);cn.ring=ringFor(i,members.length);childNodes.push(cn);}
+  for(i=0;i<members.length;i++){childNodes.push(makeNode(members[i],i,members.length,baseRadiusFor(members.length,'pool',false)));}
+  assignRings(childNodes,'pool');
 }
 function applyViewMode(snap){if(flatMode){buildFlatNodes();}else{buildRootNodes();}resetNodes(rootNodes,CX(),CY(),OR,snap);}
 buildRootNodes();
@@ -795,7 +893,7 @@ function OR(){return Math.min(W,H)*0.27;}
 function CR(){return Math.min(W,H)*0.20;}
 function resetNodes(pool,cx,cy,rFn,snap){
   var or=rFn();
-  pool.forEach(function(n){var rr=or*(n.ring||1);n.tx=cx+Math.cos(n.orbitAngle)*rr;n.ty=cy+Math.sin(n.orbitAngle)*rr;n.targetR=n.baseR;if(snap){n.x=n.tx;n.y=n.ty;n.radius=n.baseR;}});
+  pool.forEach(function(n){var rr=orbitAt(n,or);n.tx=cx+Math.cos(n.orbitAngle)*rr;n.ty=cy+Math.sin(n.orbitAngle)*rr;n.targetR=n.baseR;if(snap){n.x=n.tx;n.y=n.ty;n.radius=n.baseR;}});
 }
 function resize(){var s=measure();W=s.w;H=s.h;canvas.width=W;canvas.height=H;spawnPts();if(scene===SCENE_ROOT){applyViewMode(true);}else{resetNodes(childNodes,CX(),CY(),CR,true);}}
 function initSize(){
@@ -847,7 +945,7 @@ canvas.addEventListener('touchend',function(){clearTimeout(lpTimer);lpNode=null;
    RESONANCE MODULE
 ════════════════════════════════════════════════ */
 /* GitHub data: 15-min localStorage cache, stale fallback on failure, rate-limit aware */
-var GH_TTL=15*60*1000, GH_KEY='nztdev_gh_cache_v2';
+var GH_TTL=15*60*1000, GH_KEY='nztdev_gh_cache_v3';
 var ghStore={}, ghLimited=false, ghResetAt=0;
 try{ghStore=JSON.parse(localStorage.getItem(GH_KEY)||'{}')||{};}catch(e){ghStore={};}
 function ghSave(){try{localStorage.setItem(GH_KEY,JSON.stringify(ghStore));}catch(e){}}
@@ -872,7 +970,7 @@ function apiRepo(repo){
     if(!res||!res.ok){var st=ghGet(key,true);return st===undefined?null:st;}
     return res.json().then(function(d){
       /* watchers_count is just an alias of stars; subscribers_count is the real watcher number */
-      var v={stars:d.stargazers_count||0,forks:d.forks_count||0,watchers:d.subscribers_count||0};
+      var v={stars:d.stargazers_count||0,forks:d.forks_count||0,watchers:d.subscribers_count||0,pushed:Date.parse(d.pushed_at)||0,size:d.size||0};
       ghPut(key,v);return v;
     });
   });
@@ -888,11 +986,21 @@ function apiCommits(repo){
     return res.json().then(function(d){var n=Array.isArray(d)?d.length:0;ghPut(key,n);return n;});
   });
 }
+function fmtNum(v){return v>=1000?(v/1000).toFixed(1)+'k':String(v);}
+function daysSince(ts){return Math.max(0,(Date.now()-ts)/86400000);}
+function localStat(r,k){return(r.stats&&r.stats[k]!==undefined)?r.stats[k]:undefined;}
+/* Metrics: fetch(repo) -> Promise<number|null>. Auto-mode repos carry their own stats, so most cost no API calls.
+   invert: smaller value = bigger node. agg: how a group's members combine ('sum' default, or 'min'). fmt: badge text. */
 var METRICS={
   commits:{fetch:apiCommits},
-  stars:{fetch:function(r){return apiRepo(r).then(function(d){return d?d.stars:null;});}},
-  forks:{fetch:function(r){return apiRepo(r).then(function(d){return d?d.forks:null;});}},
+  stars:{fetch:function(r){var v=localStat(r,'stars');return v!==undefined?Promise.resolve(v):apiRepo(r).then(function(d){return d?d.stars:null;});}},
+  forks:{fetch:function(r){var v=localStat(r,'forks');return v!==undefined?Promise.resolve(v):apiRepo(r).then(function(d){return d?d.forks:null;});}},
   watchers:{fetch:function(r){return apiRepo(r).then(function(d){return d?d.watchers:null;});}},
+  activity:{invert:true,agg:'min',
+    fmt:function(v){return v<1?'today':(v<45?Math.round(v)+'d':(v<540?Math.round(v/30)+'mo':(v/365).toFixed(1)+'y'));},
+    fetch:function(r){var v=localStat(r,'pushed');if(v!==undefined){return Promise.resolve(v?daysSince(v):null);}return apiRepo(r).then(function(d){return d&&d.pushed?daysSince(d.pushed):null;});}},
+  size:{fmt:function(v){return v>=1024?(v/1024).toFixed(1)+'MB':v+'KB';},
+    fetch:function(r){var v=localStat(r,'size');if(v!==undefined){return Promise.resolve(v);}return apiRepo(r).then(function(d){return d?d.size:null;});}},
 };
 function ghNote(failed){
   if(ghLimited){var mins=ghResetAt?Math.max(1,Math.ceil((ghResetAt-Date.now())/60000)):0;return 'rate limit \u00b7 retry'+(mins?' in ~'+mins+'m':' later');}
@@ -918,37 +1026,42 @@ var Res={
     self.scores={};self.norms={};self.groupScores={};self.groupNorms={};ghLimited=false;
     resStatus.style.display='block';resStatus.textContent='fetching\u2026';resOK.disabled=true;
     var def=METRICS[self.metric];if(!def){self.loading=false;return;}
-    var pool=self._pool(),pending=pool.length,results=[];
+    var ep=epoch,pool=self._pool(),pending=pool.length,results=[];
     if(!pending){self.loading=false;return;}
-    function done(id,val){results.push({id:id,val:(val===undefined?null:val)});pending--;if(!pending){self._finish(results);}}
+    function done(id,val){results.push({id:id,val:(val===undefined?null:val)});pending--;if(!pending){self._finish(results,ep);}}
     pool.forEach(function(r){def.fetch(r).then(function(v){done(r.id,v);})['catch'](function(){done(r.id,null);});});
   },
-  _finish:function(results){
+  _finish:function(results,ep){
     var self=this,i,j;
+    if(ep!==epoch){return;}   /* the field was switched while this was loading */
+    var def=METRICS[self.metric]||{},inv=!!def.invert,agg=def.agg||'sum';
     var known=results.filter(function(r){return r.val!==null;});
     var failed=results.length-known.length;
     if(!known.length){
-      /* nothing came back: keep the menu open and say why, rather than faking zeros */
       self.loading=false;self.active=false;
       resStatus.style.display='block';resStatus.textContent=ghNote(failed)||'GitHub unavailable \u00b7 try again';
       resOK.disabled=false;
       return;
     }
+    function nrm(v,lo,hi){if(v===null||hi===lo){return 0;}var q=(v-lo)/(hi-lo);return inv?1-q:q;}
     results.forEach(function(item){self.scores[item.id]=item.val;});
     var vals=known.map(function(r){return r.val;});
-    var mn=Math.min.apply(null,vals),mx=Math.max.apply(null,vals),sp=mx-mn||1;
-    results.forEach(function(item){self.norms[item.id]=item.val===null?0:(item.val-mn)/sp;});
+    var mn=Math.min.apply(null,vals),mx=Math.max.apply(null,vals);
+    results.forEach(function(item){self.norms[item.id]=nrm(item.val,mn,mx);});
     self.groupScores={};
     for(i=0;i<GROUPS.length;i++){
-      var g=GROUPS[i],tot=0,cnt=0;
-      for(j=0;j<REPOS.length;j++){var sv=self.scores[REPOS[j].id];if(REPOS[j].groupId===g.id&&sv!==undefined&&sv!==null){tot+=sv;cnt++;}}
-      self.groupScores[g.id]=cnt>0?tot:null;
+      var g=GROUPS[i],tot=null;
+      for(j=0;j<REPOS.length;j++){
+        var sv=self.scores[REPOS[j].id];
+        if(REPOS[j].groupId===g.id&&sv!==undefined&&sv!==null){tot=(tot===null)?sv:(agg==='min'?Math.min(tot,sv):tot+sv);}
+      }
+      self.groupScores[g.id]=tot;
     }
     var gv=[];
     for(i=0;i<GROUPS.length;i++){if(self.groupScores[GROUPS[i].id]!==null){gv.push(self.groupScores[GROUPS[i].id]);}}
-    var gmn=gv.length?Math.min.apply(null,gv):0,gmx=gv.length?Math.max.apply(null,gv):0,gsp=gmx-gmn||1;
+    var gmn=gv.length?Math.min.apply(null,gv):0,gmx=gv.length?Math.max.apply(null,gv):0;
     self.groupNorms={};
-    for(i=0;i<GROUPS.length;i++){var gs=self.groupScores[GROUPS[i].id];self.groupNorms[GROUPS[i].id]=gs===null?0:(gs-gmn)/gsp;}
+    for(i=0;i<GROUPS.length;i++){self.groupNorms[GROUPS[i].id]=nrm(self.groupScores[GROUPS[i].id],gmn,gmx);}
     self.loading=false;self.active=true;
     resStatus.style.display='none';resOK.disabled=false;
     resBtn.classList.add('on');document.getElementById('res-lbl').textContent='resonating';
@@ -976,11 +1089,11 @@ var Res={
   tick:function(){if(this.active){this._apply();}},
   badges:function(){
     if(!this.active)return;
-    var self=this,pool=scene===SCENE_GROUP?childNodes:rootNodes;
+    var self=this,pool=scene===SCENE_GROUP?childNodes:rootNodes,def=METRICS[self.metric]||{};
     pool.forEach(function(n){
       var raw=n.isGroup?self.groupScores[n.entity.id]:self.scores[n.entity.id];
       if(raw===undefined)return;
-      var lbl=raw===null?'\u2013':(raw>=1000?(raw/1000).toFixed(1)+'k':String(raw));
+      var lbl=raw===null?'\u2013':(def.fmt?def.fmt(raw):fmtNum(raw));
       ctx.font='300 9px \'DM Mono\',monospace';ctx.textAlign='center';ctx.textBaseline='middle';
       ctx.fillStyle='rgba('+n.entity.rgb+',0.6)';ctx.fillText(lbl,n.x,n.y-n.radius-8);
     });
@@ -989,13 +1102,221 @@ var Res={
 
 /* ── Resonance menu ─────────────────────────────── */
 var selectedMetric='commits';
-function openMenu(){menuOpen=true;resMenu.classList.add('open');}
+function openMenu(){closeModeMenu();menuOpen=true;resMenu.classList.add('open');}
 function closeMenu(){menuOpen=false;resMenu.classList.remove('open');}
 resBtn.addEventListener('click',function(){if(Res.loading)return;if(Res.active){Res.stop();closeMenu();return;}if(menuOpen){closeMenu();}else{openMenu();}});
 var opts=resMenu.querySelectorAll('.res-opt');
 for(var oi=0;oi<opts.length;oi++){(function(opt){opt.addEventListener('click',function(){for(var j=0;j<opts.length;j++){opts[j].classList.remove('sel');}opt.classList.add('sel');selectedMetric=opt.getAttribute('data-m');});}(opts[oi]));}
 resOK.addEventListener('click',function(){if(!Res.loading){Res.start(selectedMetric);}});
 document.addEventListener('click',function(e){if(!menuOpen)return;if(!resMenu.contains(e.target)&&e.target!==resBtn&&!resBtn.contains(e.target)){closeMenu();}});
+
+/* ════════════════════════════════════════════════
+   MODES — founder (curated) and auto (any GitHub user). Manual is the next step.
+   Every mode produces the same two lists (groups + repos), so the field never
+   needs to know where its data came from.
+════════════════════════════════════════════════ */
+var mode='founder',pickedMode='founder',autoUser='',autoSub='',autoRaw=null,autoBusy=false,modeMenuOpen=false;
+var AUTO_CAP=40,AUTO_MAXG=7;
+var PALETTE=['127,119,221','29,158,117','239,159,39','0,200,255','254,1,154','200,160,255','255,165,0','120,200,80','220,38,38'];
+
+var modeBtn=document.getElementById('mode-btn');
+var modeMenu=document.getElementById('mode-menu');
+var mmAuto=document.getElementById('mm-auto');
+var mmInput=document.getElementById('mm-user');
+var mmLoad=document.getElementById('mm-load');
+var mmStatus=document.getElementById('mm-status');
+var mmForks=document.getElementById('mm-forks');
+var mmArch=document.getElementById('mm-archived');
+
+function clip(str,max){str=String(str);return str.length>max?str.slice(0,max-1)+'\u2026':str;}
+function esc(x){return String(x).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function ago(ts){if(!ts)return 'a while ago';var d=(Date.now()-ts)/86400000;if(d<1)return 'today';if(d<30)return Math.round(d)+'d ago';if(d<365)return Math.round(d/30)+'mo ago';return Math.round(d/365)+'y ago';}
+function titleCase(x){return x.replace(/[-_]+/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();});}
+function ioFor(r){
+  var h=(r.home||'').trim();
+  if(h){if(!/^https?:\/\//i.test(h)){h='https://'+h;}return h;}
+  if(r.pages&&r.owner){return /\.github\.io$/i.test(r.name)?'https://'+r.name.toLowerCase()+'/':'https://'+r.owner+'.github.io/'+r.name+'/';}
+  return '';
+}
+/* keep only what the field needs, so a 100-repo list stays small in localStorage */
+function slimRepo(d){
+  return{name:d.name,url:d.html_url,desc:d.description||'',lang:d.language||'',topics:d.topics||[],
+    stars:d.stargazers_count||0,forks:d.forks_count||0,home:d.homepage||'',pages:!!d.has_pages,
+    pushed:Date.parse(d.pushed_at)||0,fork:!!d.fork,archived:!!d.archived,size:d.size||0,owner:d.owner&&d.owner.login};
+}
+function fetchUserRepos(user){
+  var key='list:'+user.toLowerCase(),hit=ghGet(key);
+  if(hit!==undefined){return Promise.resolve({ok:true,repos:hit});}
+  var all=[],page=1;
+  function fail(reason){var st=ghGet(key,true);return st!==undefined?{ok:true,repos:st,stale:true}:{ok:false,reason:reason};}
+  function next(){
+    return ghFetch('https://api.github.com/users/'+encodeURIComponent(user)+'/repos?per_page=100&sort=pushed&page='+page).then(function(res){
+      if(!res){return fail('error');}
+      if(res.status===404){return{ok:false,reason:'notfound'};}
+      if(!res.ok){return fail(ghLimited?'limit':'error');}
+      return res.json().then(function(d){
+        if(!Array.isArray(d)){return fail('error');}
+        all=all.concat(d.map(slimRepo));
+        if(d.length===100&&page<3){page++;return next();}
+        ghPut(key,all);return{ok:true,repos:all};
+      });
+    });
+  }
+  return next()['catch'](function(){return fail('error');});
+}
+
+/* Turn a raw repo list into {groups, repos}. Grouping is heuristic (no AI needed):
+   most-shared topic first, then language; small leftovers stay standalone, big ones become "Other". */
+function buildAutoDataset(user,raw,opts){
+  var list=raw.filter(function(r){return(opts.forks||!r.fork)&&(opts.archived||!r.archived);});
+  list.sort(function(a,b){return b.pushed-a.pushed;});
+  var total=list.length;
+  if(list.length>AUTO_CAP){list=list.slice(0,AUTO_CAP);}
+  var tf={},lf={};
+  list.forEach(function(r){(r.topics||[]).forEach(function(t){tf[t]=(tf[t]||0)+1;});if(r.lang){lf[r.lang]=(lf[r.lang]||0)+1;}});
+  function keyOf(r){
+    var best=null;
+    (r.topics||[]).forEach(function(t){if(tf[t]<2)return;if(best===null||tf[t]>tf[best]||(tf[t]===tf[best]&&t<best)){best=t;}});
+    if(best!==null)return 't:'+best;
+    if(r.lang&&lf[r.lang]>=2)return 'l:'+r.lang;
+    return null;
+  }
+  var keys=list.map(function(r){return list.length>8?keyOf(r):null;});
+  var counts={};
+  keys.forEach(function(k){if(k!==null){counts[k]=(counts[k]||0)+1;}});
+  var ranked=Object.keys(counts).filter(function(k){return counts[k]>=2;})
+    .sort(function(a,b){return counts[b]-counts[a]||(a<b?-1:1);}).slice(0,AUTO_MAXG);
+  var groups=[],byKey={};
+  ranked.forEach(function(k,idx){
+    var isT=k.charAt(0)==='t',label=k.slice(2);
+    var g={id:'g'+idx,name:isT?titleCase(label):label,rgb:PALETTE[idx%PALETTE.length],eye:(isT?'topic':'language')+' \u00b7 '+label,desc:''};
+    groups.push(g);byKey[k]=g;
+  });
+  var leftover=0;
+  list.forEach(function(r,i){if(keys[i]===null||!byKey[keys[i]]){leftover++;}});
+  var other=null;
+  if(groups.length&&leftover>3){other={id:'gx',name:'Other',rgb:'160,160,175',eye:'everything else',desc:''};groups.push(other);}
+  var repos=list.map(function(r,i){
+    var g=(keys[i]!==null&&byKey[keys[i]])?byKey[keys[i]]:other;
+    var tags=(r.topics||[]).slice(0,5);
+    if(r.lang&&tags.indexOf(r.lang.toLowerCase())<0){tags.push(r.lang);}
+    return{id:i,groupId:g?g.id:null,autoDetect:true,name:r.name,rgb:g?g.rgb:PALETTE[i%PALETTE.length],
+      eye:(r.lang?r.lang+' \u00b7 ':'')+'pushed '+ago(r.pushed),
+      desc:r.desc||'No description yet.',tags:tags,gh:r.url,io:ioFor(r),
+      ghOwner:r.owner||user,ghRepo:r.name,
+      stats:{stars:r.stars,forks:r.forks,pushed:r.pushed,size:r.size}};
+  });
+  return{groups:groups,repos:repos,total:total,shown:list.length};
+}
+
+function setDataset(ds){
+  epoch++;
+  if(Res.active||Res.loading){Res.stop();}
+  GROUPS=ds.groups;REPOS=ds.repos;
+  faviconMap={};
+  scene=SCENE_ROOT;activeGroup=null;activeRepo=null;childNodes=[];focusIdx=-1;
+  card.classList.remove('show');backBtn.classList.remove('show');groupLbl.classList.remove('show');
+  hideTooltip();hintEl.style.opacity='1';
+  applyViewMode(true);
+  applyLabels();
+  initFavicons();
+}
+function applyLabels(){
+  var a=(mode==='auto');
+  document.getElementById('lbl-name').textContent=a?autoUser:'nztdev';
+  document.getElementById('lbl-sub').textContent=a?autoSub:'field of works';
+  document.getElementById('mode-txt').textContent='github.com/'+(a?autoUser:'nztdev');
+  document.getElementById('lbl-count').textContent=REPOS.length+' works';
+  document.title=(a?autoUser:'nztdev')+' \u00b7 field of works';
+  syncModeUI();
+}
+function subFor(ds){return 'auto \u00b7 '+(ds.total>ds.shown?ds.shown+' of '+ds.total:ds.shown)+' repos';}
+function autoOpts(){return{forks:mmForks.checked,archived:mmArch.checked};}
+function setStatus(msg,isErr){mmStatus.textContent=msg||'';mmStatus.className=isErr?'err':'';}
+function setUrl(q){try{history.replaceState(null,'',q?('?u='+encodeURIComponent(q)):location.pathname);}catch(e){}}
+
+function loadFounder(){
+  mode='founder';pickedMode='founder';
+  setDataset(FOUNDER);
+  setUrl('');
+  setStatus('');
+}
+function loadAuto(user,fromUrl){
+  if(autoBusy){return;}
+  autoBusy=true;ghLimited=false;mmLoad.disabled=true;
+  setStatus('fetching @'+user+'\u2026');
+  if(fromUrl){hintEl.textContent='loading @'+user+'\u2026';}
+  fetchUserRepos(user).then(function(r){
+    autoBusy=false;mmLoad.disabled=false;
+    function fail(msg){
+      setStatus(msg,true);
+      if(fromUrl){hintEl.textContent='select a node';loadFounder();flashHint(msg);}
+    }
+    if(!r.ok){
+      fail(r.reason==='notfound'?'No GitHub user \u201c'+user+'\u201d':(r.reason==='limit'?ghNote(0):'Couldn\u2019t reach GitHub'));
+      return;
+    }
+    var ds=buildAutoDataset(user,r.repos,autoOpts());
+    if(!ds.repos.length){
+      fail('No public repos to show \u2014 try including forks or archived');
+      return;
+    }
+    mode='auto';pickedMode='auto';autoUser=user;autoRaw=r.repos;autoSub=subFor(ds);
+    try{localStorage.setItem('nztdev_auto_user',user);}catch(e){}
+    setDataset(ds);
+    hintEl.textContent='select a node';
+    setUrl(user);
+    setStatus(r.stale?'cached data \u00b7 GitHub unreachable':'');
+    closeModeMenu();
+    if(r.stale){flashHint('showing cached data');}
+  });
+}
+function applyAuto(){
+  if(mode!=='auto'||!autoRaw){return;}
+  var ds=buildAutoDataset(autoUser,autoRaw,autoOpts());
+  if(!ds.repos.length){setStatus('Nothing to show with these filters',true);return;}
+  autoSub=subFor(ds);setDataset(ds);setStatus('');
+}
+
+function syncModeUI(){
+  var list=modeMenu.querySelectorAll('.mm-opt');
+  for(var i=0;i<list.length;i++){list[i].classList.toggle('sel',list[i].getAttribute('data-mode')===pickedMode);}
+  mmAuto.style.display=(pickedMode==='auto')?'block':'none';
+}
+function openModeMenu(){closeMenu();modeMenuOpen=true;modeMenu.classList.add('open');modeBtn.setAttribute('aria-expanded','true');syncModeUI();}
+function closeModeMenu(){modeMenuOpen=false;modeMenu.classList.remove('open');modeBtn.setAttribute('aria-expanded','false');}
+modeBtn.addEventListener('click',function(){if(modeMenuOpen){closeModeMenu();}else{openModeMenu();}});
+
+var mmOpts=modeMenu.querySelectorAll('.mm-opt');
+for(var mi=0;mi<mmOpts.length;mi++){
+  (function(opt){
+    function act(){
+      var m=opt.getAttribute('data-mode');
+      if(m==='manual'){return;}
+      if(m==='founder'){pickedMode='founder';if(mode!=='founder'){loadFounder();}syncModeUI();closeModeMenu();return;}
+      pickedMode='auto';syncModeUI();
+      if(!mmInput.value){try{mmInput.value=localStorage.getItem('nztdev_auto_user')||'';}catch(e){}}
+      mmInput.focus();
+    }
+    opt.addEventListener('click',act);
+    opt.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();act();}});
+  }(mmOpts[mi]));
+}
+function parseUser(v){return(v||'').trim().replace(/^https?:\/\/(www\.)?github\.com\//i,'').replace(/^@/,'').split(/[\/?#]/)[0];}
+function doLoad(){
+  var u=parseUser(mmInput.value);
+  if(!validUser(u)){setStatus('Enter a valid GitHub username',true);return;}
+  loadAuto(u,false);
+}
+mmLoad.addEventListener('click',doLoad);
+mmInput.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();doLoad();}});
+mmForks.addEventListener('change',applyAuto);
+mmArch.addEventListener('change',applyAuto);
+document.addEventListener('click',function(e){
+  if(!modeMenuOpen)return;
+  if(!modeMenu.contains(e.target)&&!modeBtn.contains(e.target)){closeModeMenu();}
+});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&modeMenuOpen){closeModeMenu();}});
 
 /* ════════════════════════════════════════════════
    SCENE TRANSITIONS
@@ -1024,13 +1345,13 @@ function openRepoCard(repo){
   var cx=CX(),cy=CY();
   var pool=activeGroup?childNodes:rootNodes;
   pool.forEach(function(n){if(n.entity===repo){n.tx=cx;n.ty=cy;n.targetR=88;}else{var push=(activeGroup?CR():OR())*1.85;n.tx=cx+Math.cos(n.orbitAngle)*push;n.ty=cy+Math.sin(n.orbitAngle)*push;n.targetR=n.baseR*0.5;}});
-  setTimeout(function(){showCard(repo);locked=false;},480);
+  setTimeout(function(){if(activeRepo===repo){showCard(repo);}locked=false;},480);
 }
 function closeRepoCard(){
   if(locked)return;locked=true;card.classList.remove('show');
   activeRepo=null;scene=activeGroup?SCENE_GROUP:SCENE_ROOT;
   var cx=CX(),cy=CY(),pool=activeGroup?childNodes:rootNodes,orFn=activeGroup?CR:OR;
-  if(!Res.active){pool.forEach(function(n){var rc=orFn()*(n.ring||1);n.tx=cx+Math.cos(n.orbitAngle)*rc;n.ty=cy+Math.sin(n.orbitAngle)*rc;n.targetR=n.baseR;});}
+  if(!Res.active){pool.forEach(function(n){var rc=orbitAt(n,orFn());n.tx=cx+Math.cos(n.orbitAngle)*rc;n.ty=cy+Math.sin(n.orbitAngle)*rc;n.targetR=n.baseR;});}
   hintEl.style.opacity='1';setTimeout(function(){locked=false;},400);
 }
 function showCard(repo){
@@ -1038,7 +1359,7 @@ function showCard(repo){
   document.getElementById('c-eye').style.color='rgba('+repo.rgb+',0.65)';
   document.getElementById('c-name').textContent=repo.name;
   document.getElementById('c-desc').textContent=repo.desc;
-  var h='';for(var i=0;i<repo.tags.length;i++){h+='<span class="ctag">'+repo.tags[i]+'</span>';}
+  var h='';for(var i=0;i<repo.tags.length;i++){h+='<span class="ctag">'+esc(repo.tags[i])+'</span>';}
   document.getElementById('c-tags').innerHTML=h;
   document.getElementById('btn-gh').href=repo.gh;
   var ioBtn=document.getElementById('btn-io');
@@ -1138,8 +1459,8 @@ function drawNodeSet(pool,cx,cy,T){
     var fsize=isAct?12:(n.isGroup?11:10);
     ctx.font='400 '+fsize+'px \'DM Mono\',monospace';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='rgba('+rgb+','+(isAct?0.9:n.isGroup?0.7:0.55)+')';
     var labelY=(hasFavi||hasGF)?n.y+n.radius+11:n.y;
-    if(isAct){var ws=n.entity.name.split(' ');if(ws.length<=2){ctx.fillText(n.entity.name,n.x,labelY);}else{ctx.fillText(ws.slice(0,2).join(' '),n.x,labelY-8);ctx.fillText(ws.slice(2).join(' '),n.x,labelY+8);}}
-    else{var label=n.isGroup?n.entity.name:(function(){var ps=n.entity.name.split(' ');return ps.length>2?ps.slice(-2).join(' '):ps[ps.length-1];}());ctx.fillText(label,n.x,labelY);}
+    if(isAct){var ws=n.entity.name.split(' ');if(ws.length<=2){ctx.fillText(clip(n.entity.name,22),n.x,labelY);}else{ctx.fillText(clip(ws.slice(0,2).join(' '),22),n.x,labelY-8);ctx.fillText(clip(ws.slice(2).join(' '),22),n.x,labelY+8);}}
+    else{var label=n.isGroup?n.entity.name:(function(){var ps=n.entity.name.split(' ');return ps.length>2?ps.slice(-2).join(' '):ps[ps.length-1];}());ctx.fillText(clip(label,12),n.x,labelY);}
     if(n.isGroup&&scene===SCENE_ROOT){var count=0;for(var ri=0;ri<REPOS.length;ri++){if(REPOS[ri].groupId===n.entity.id){count++;}}ctx.font='300 8px \'DM Mono\',monospace';ctx.fillStyle='rgba('+rgb+',0.4)';ctx.fillText(count+(count===1?' work':' works'),n.x,hasGF?n.y+n.radius+23:n.y+n.radius+12);}
   });
 }
@@ -1156,7 +1477,7 @@ function draw(){
   var orFn=activeGroup?CR:OR;
   if(scene!==SCENE_CARD){
     if(Res.active){activePool.forEach(function(n){n.orbitAngle+=n.orbitSpeed*0.4;});Res.tick();}
-    else{var orV=orFn();activePool.forEach(function(n){n.orbitAngle+=n.orbitSpeed;if(scene===SCENE_ROOT||scene===SCENE_GROUP){var ro=orV*(n.ring||1);n.tx=cx+Math.cos(n.orbitAngle)*ro;n.ty=cy+Math.sin(n.orbitAngle)*ro;}});if(scene===SCENE_GROUP){rootNodes.forEach(function(n){n.orbitAngle+=n.orbitSpeed*0.2;});}}
+    else{var orV=orFn();activePool.forEach(function(n){n.orbitAngle+=n.orbitSpeed;if(scene===SCENE_ROOT||scene===SCENE_GROUP){var ro=orbitAt(n,orV);n.tx=cx+Math.cos(n.orbitAngle)*ro;n.ty=cy+Math.sin(n.orbitAngle)*ro;}});if(scene===SCENE_GROUP){rootNodes.forEach(function(n){n.orbitAngle+=n.orbitSpeed*0.2;});}}
   }
   function lerpPool(pool){pool.forEach(function(n){n.x=lerp(n.x,n.tx,EASE);n.y=lerp(n.y,n.ty,EASE);n.radius=lerp(n.radius,n.targetR,EASE);});}
   lerpPool(rootNodes);if(childNodes.length){lerpPool(childNodes);}
@@ -1168,6 +1489,8 @@ function draw(){
 
 initFavicons();
 draw();
+applyLabels();
+if(startUser){loadAuto(startUser,true);}
 
 }());
 </script>
