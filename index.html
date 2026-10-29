@@ -324,6 +324,15 @@ select.ed-in option { background:var(--bg); color:var(--text); }
 .mm-link { background:none; border:none; padding:8px 0 0; font-family:var(--mono); font-size:9px; letter-spacing:0.1em; text-transform:uppercase; color:rgba(127,119,221,0.8); cursor:pointer; text-align:left; }
 .mm-link:hover { color:var(--text); }
 @media (pointer:coarse) { .ed-in, #pf-desc, #xf-text { font-size:16px; } }
+
+/* ── Version tracker ───────────────────────────── */
+#c-ver { display:none; align-items:center; gap:10px; margin:-2px 0 12px; }
+#c-vbar { flex:1; height:3px; border-radius:99px; background:rgba(127,119,221,0.16); overflow:hidden; }
+#c-vfill { height:100%; width:0; border-radius:99px; transition:width 0.5s ease; }
+#c-vtxt { font-family:var(--mono); font-size:9px; letter-spacing:0.08em; color:var(--text2); white-space:nowrap; }
+.ed-vbar { height:3px; border-radius:99px; background:rgba(127,119,221,0.16); overflow:hidden; margin-top:8px; }
+#pf-vfill { height:100%; width:0; background:rgba(127,119,221,0.85); border-radius:99px; transition:width 0.25s ease; }
+#pf-ver { text-align:center; font-family:var(--mono); }
 </style>
 </head>
 <body>
@@ -488,6 +497,7 @@ select.ed-in option { background:var(--bg); color:var(--text); }
     <div class="res-opt" data-m="watchers"><div class="res-radio"><div class="res-radio-dot"></div></div><span class="res-opt-lbl">Watchers</span></div>
     <div class="res-opt" data-m="activity"><div class="res-radio"><div class="res-radio-dot"></div></div><span class="res-opt-lbl">Activity</span></div>
     <div class="res-opt" data-m="size"><div class="res-radio"><div class="res-radio-dot"></div></div><span class="res-opt-lbl">Size</span></div>
+    <div class="res-opt" data-m="version"><div class="res-radio"><div class="res-radio-dot"></div></div><span class="res-opt-lbl">Version</span></div>
     <div id="res-status">fetching&#8230;</div>
     <button id="res-menu-ok">OK &#8594;</button>
   </div>
@@ -501,6 +511,7 @@ select.ed-in option { background:var(--bg); color:var(--text); }
         <img id="c-favicon" alt="" aria-hidden="true"/>
         <div id="c-name"></div>
       </div>
+      <div id="c-ver"><div id="c-vbar"><div id="c-vfill"></div></div><span id="c-vtxt"></span></div>
       <div id="c-desc"></div>
       <div id="c-tags"></div>
       <div class="divider"></div>
@@ -570,6 +581,10 @@ select.ed-in option { background:var(--bg); color:var(--text); }
         <input class="ed-in" id="pf-tags" placeholder="game, three.js, PWA" autocomplete="off">
         <label class="ed-lbl" for="pf-label">One-line label <i>optional</i></label>
         <input class="ed-in" id="pf-label" maxlength="40" placeholder="card game &#183; HTML" autocomplete="off">
+        <label class="ed-lbl" for="pf-ver">Version <i>optional &middot; 0.1 to 1.0 and beyond</i></label>
+        <div class="ed-row"><button class="ed-btn sm" id="pf-vminus" type="button" aria-label="lower version">&#8722;</button><input class="ed-in" id="pf-ver" maxlength="12" placeholder="e.g. 0.4" inputmode="decimal" autocomplete="off" autocapitalize="off" spellcheck="false"><button class="ed-btn sm" id="pf-vplus" type="button" aria-label="raise version">+</button></div>
+        <div class="ed-vbar"><div id="pf-vfill"></div></div>
+        <div class="ed-status" id="pf-vtxt"></div>
         <label class="ed-lbl" for="pf-group">Group</label>
         <select class="ed-in" id="pf-group"></select>
         <div id="pf-colwrap"><label class="ed-lbl">Colour <i>used when not in a group</i></label><div class="ed-sw" id="pf-sw"></div></div>
@@ -1055,12 +1070,16 @@ function countMembers(gid){var c=0;for(var i=0;i<REPOS.length;i++){if(REPOS[i].g
 function showTooltip(n,mx,my){
   clearTimeout(ttTimer);
   ttTimer=setTimeout(function(){
-    var txt=n.isGroup?(n.entity.eye+' \u2014 '+countMembers(n.entity.id)+' works'):n.entity.eye;
+    var txt=tipText(n);
     tooltip.textContent=txt;
     tooltip.style.left=Math.min(mx+14,W-220)+'px';
     tooltip.style.top=Math.max(my-36,8)+'px';
     tooltip.classList.add('show');
   },550);
+}
+function tipText(n){
+  if(n.isGroup){return n.entity.eye+' \u2014 '+countMembers(n.entity.id)+' works';}
+  return n.entity.eye+(n.entity.version?' \u00b7 v'+n.entity.version:'');
 }
 function hideTooltip(){clearTimeout(ttTimer);tooltip.classList.remove('show');}
 
@@ -1071,7 +1090,7 @@ canvas.addEventListener('touchstart',function(e){
   if(!n)return;lpNode=n;
   lpTimer=setTimeout(function(){
     if(!lpNode)return;
-    var txt=lpNode.isGroup?(lpNode.entity.eye+' \u2014 '+countMembers(lpNode.entity.id)+' works'):lpNode.entity.eye;
+    var txt=tipText(lpNode);
     tooltip.textContent=txt;
     tooltip.style.left=(touch.clientX-r.left+14)+'px';
     tooltip.style.top=Math.max(touch.clientY-r.top-36,8)+'px';
@@ -1141,6 +1160,9 @@ var METRICS={
   activity:{invert:true,agg:'min',
     fmt:function(v){return v<1?'today':(v<45?Math.round(v)+'d':(v<540?Math.round(v/30)+'mo':(v/365).toFixed(1)+'y'));},
     fetch:function(r){var v=localStat(r,'pushed');if(v!==undefined){return Promise.resolve(v?daysSince(v):null);}return apiRepo(r).then(function(d){return d&&d.pushed?daysSince(d.pushed):null;});}},
+  version:{agg:'max',emptyMsg:'set a version on a project first',missMsg:'without a version \u00b7 shown as \u2013',
+    fmt:function(v){return 'v'+v.toFixed(1);},
+    fetch:function(r){return Promise.resolve(r.version?(parseFloat(r.version)||0):null);}},
   size:{fmt:function(v){return v>=1024?(v/1024).toFixed(1)+'MB':v+'KB';},
     fetch:function(r){var v=localStat(r,'size');if(v!==undefined){return Promise.resolve(v);}return apiRepo(r).then(function(d){return d?d.size:null;});}},
 };
@@ -1181,7 +1203,7 @@ var Res={
     var failed=results.length-known.length;
     if(!known.length){
       self.loading=false;self.active=false;
-      resStatus.style.display='block';resStatus.textContent=ghNote(failed)||'GitHub unavailable \u00b7 try again';
+      resStatus.style.display='block';resStatus.textContent=def.emptyMsg||ghNote(failed)||'GitHub unavailable \u00b7 try again';
       resOK.disabled=false;
       return;
     }
@@ -1195,7 +1217,7 @@ var Res={
       var g=GROUPS[i],tot=null;
       for(j=0;j<REPOS.length;j++){
         var sv=self.scores[REPOS[j].id];
-        if(REPOS[j].groupId===g.id&&sv!==undefined&&sv!==null){tot=(tot===null)?sv:(agg==='min'?Math.min(tot,sv):tot+sv);}
+        if(REPOS[j].groupId===g.id&&sv!==undefined&&sv!==null){tot=(tot===null)?sv:(agg==='min'?Math.min(tot,sv):(agg==='max'?Math.max(tot,sv):tot+sv));}
       }
       self.groupScores[g.id]=tot;
     }
@@ -1207,7 +1229,7 @@ var Res={
     self.loading=false;self.active=true;
     resStatus.style.display='none';resOK.disabled=false;
     resBtn.classList.add('on');document.getElementById('res-lbl').textContent='resonating';
-    if(failed){flashHint(ghNote(failed));}
+    if(failed){flashHint(def.missMsg?failed+' '+def.missMsg:ghNote(failed));}
     closeMenu();self._apply();
   },
   stop:function(){
@@ -1482,6 +1504,10 @@ function cleanUrl(v){
   if(!/^[a-z][a-z0-9+.-]*:/i.test(v)){v='https://'+v;}
   try{var u=new URL(v);return(u.protocol==='http:'||u.protocol==='https:')?u.href:'';}catch(e){return '';}
 }
+var VER_RE=/^\d{1,3}(\.\d{1,3}){0,2}$/;
+function cleanVersion(v){v=cleanStr(v,12);return VER_RE.test(v)?v:'';}
+/* 0.1 .. 0.9 -> 10%..90%; 1.0 and above -> complete (shown as "released") */
+function versionProgress(v){var n=parseFloat(v);return(isFinite(n)&&n>0)?Math.min(1,n):0;}
 function cleanRgb(v){
   v=cleanStr(v,16).replace(/\s/g,'');
   if(!/^\d{1,3},\d{1,3},\d{1,3}$/.test(v)){return '';}
@@ -1504,7 +1530,7 @@ function sanitizeManual(o){
     var gid=cleanStr(p.group,20).replace(/[^\w-]/g,'');
     projects.push({name:name,group:gids[gid]?gid:'',desc:cleanStr(p.desc,400),
       tags:(Array.isArray(p.tags)?p.tags:[]).map(function(t){return cleanStr(t,24);}).filter(Boolean).slice(0,8),
-      github:cleanUrl(p.github),live:cleanUrl(p.live),label:cleanStr(p.label,40),rgb:cleanRgb(p.rgb)});
+      github:cleanUrl(p.github),live:cleanUrl(p.live),label:cleanStr(p.label,40),rgb:cleanRgb(p.rgb),version:cleanVersion(p.version)});
   });
   return{title:cleanStr(o.title,40)||'My field',groups:groups,projects:projects};
 }
@@ -1523,7 +1549,7 @@ function manualToDataset(m){
   var repos=m.projects.map(function(p,i){
     var g=p.group?byId[p.group]:null;
     return{id:i,groupId:g?g.id:null,autoDetect:true,name:p.name,rgb:g?g.rgb:(p.rgb||PALETTE[i%PALETTE.length]),
-      eye:p.label||'project',desc:p.desc||'No description yet.',tags:p.tags.slice(),gh:p.github,io:p.live,ghOwner:'',ghRepo:''};
+      eye:p.label||'project',desc:p.desc||'No description yet.',tags:p.tags.slice(),gh:p.github,io:p.live,ghOwner:'',ghRepo:'',version:p.version||''};
   });
   return{groups:groups,repos:repos};
 }
@@ -1572,7 +1598,7 @@ function renderList(){
     var row=el('div','ed-row-item');row.tabIndex=0;row.setAttribute('role','button');
     var dot=el('span','ed-dot');dot.style.background='rgb('+colorOf(p,i)+')';
     row.appendChild(dot);row.appendChild(el('span','ed-nm',p.name));
-    var g=p.group?groupById(p.group):null;row.appendChild(el('span','ed-sub',g?g.name:'standalone'));
+    var g=p.group?groupById(p.group):null;row.appendChild(el('span','ed-sub',(p.version?'v'+p.version+' \u00b7 ':'')+(g?g.name:'standalone')));
     row.addEventListener('click',function(){editProject(i);});
     row.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();editProject(i);}});
     pl.appendChild(row);
@@ -1615,6 +1641,19 @@ function parseSlug(v){
   m=v.match(/^([\w.-]+)\/([\w.-]+)$/);
   return m?m[1]+'/'+m[2]:'';
 }
+function updateVerPreview(){
+  var v=cleanStr($('pf-ver').value,12),fill=$('pf-vfill'),txt=$('pf-vtxt');
+  if(!v){fill.style.width='0%';setSt(txt,'');return;}
+  if(!VER_RE.test(v)){fill.style.width='0%';setSt(txt,'Use a number like 0.4 or 1.2.0',true);return;}
+  var p=versionProgress(v);fill.style.width=Math.round(p*100)+'%';
+  setSt(txt,p>=1?'Released \u2014 1.0 or beyond':Math.round(p*100)+'% of the way to 1.0');
+}
+function stepVersion(dir){
+  var v=cleanStr($('pf-ver').value,12),n=VER_RE.test(v)?parseFloat(v):0;
+  var next=Math.round((n+dir*0.1)*10)/10;
+  $('pf-ver').value=next>0?next.toFixed(1):'';
+  updateVerPreview();
+}
 function fillGroupSelect(cur){
   var s=$('pf-group');s.textContent='';
   var o=el('option','','None (standalone)');o.value='';s.appendChild(o);
@@ -1624,9 +1663,9 @@ function fillGroupSelect(cur){
 function toggleColWrap(){$('pf-colwrap').style.display=$('pf-group').value===''?'block':'none';}
 function editProject(i){
   edIdx=i;
-  var p=i>=0?manual.projects[i]:{name:'',group:'',desc:'',tags:[],github:'',live:'',label:'',rgb:''};
+  var p=i>=0?manual.projects[i]:{name:'',group:'',desc:'',tags:[],github:'',live:'',label:'',rgb:'',version:''};
   $('pf-gh').value=p.github;$('pf-name').value=p.name;$('pf-desc').value=p.desc;
-  $('pf-live').value=p.live;$('pf-tags').value=p.tags.join(', ');$('pf-label').value=p.label;
+  $('pf-live').value=p.live;$('pf-tags').value=p.tags.join(', ');$('pf-label').value=p.label;$('pf-ver').value=p.version||'';updateVerPreview();
   fillGroupSelect(p.group);edColor=p.rgb||'';
   renderSwatches('pf-sw',edColor,function(c){edColor=c;});toggleColWrap();
   $('pf-del').style.display=i>=0?'':'none';
@@ -1637,8 +1676,10 @@ function saveProject(){
   var name=cleanStr($('pf-name').value,60),st=$('pf-status2');
   if(!name){setSt(st,'Give the project a name',true);$('pf-name').focus();return;}
   if(edIdx<0&&manual.projects.length>=MANUAL_CAP){setSt(st,'Limit of '+MANUAL_CAP+' projects reached',true);return;}
+  var ver=cleanStr($('pf-ver').value,12);
+  if(ver&&!VER_RE.test(ver)){setSt(st,'Version should look like 0.4 or 1.2.0',true);$('pf-ver').focus();return;}
   var p={name:name,group:$('pf-group').value,desc:cleanStr($('pf-desc').value,400),tags:parseTags($('pf-tags').value),
-    github:cleanUrl(normGh($('pf-gh').value)),live:cleanUrl($('pf-live').value),label:cleanStr($('pf-label').value,40),rgb:edColor};
+    github:cleanUrl(normGh($('pf-gh').value)),live:cleanUrl($('pf-live').value),label:cleanStr($('pf-label').value,40),rgb:edColor,version:ver};
   if(edIdx>=0){manual.projects[edIdx]=p;}else{manual.projects.push(p);}
   saveManualStore();renderList();showScreen('list','Your field');
 }
@@ -1716,6 +1757,9 @@ $('pf-group').addEventListener('change',toggleColWrap);
 $('pf-fill').addEventListener('click',fillFromGitHub);
 $('pf-gh').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();fillFromGitHub();}});
 $('pf-save').addEventListener('click',saveProject);
+$('pf-ver').addEventListener('input',updateVerPreview);
+$('pf-vplus').addEventListener('click',function(){stepVersion(1);});
+$('pf-vminus').addEventListener('click',function(){stepVersion(-1);});
 $('pf-del').addEventListener('click',function(){
   confirmTap($('pf-del'),'Tap again to delete',function(){manual.projects.splice(edIdx,1);saveManualStore();renderList();showScreen('list','Your field');});
 });
@@ -1804,6 +1848,13 @@ function showCard(repo){
   document.getElementById('c-eye').style.color='rgba('+repo.rgb+',0.65)';
   document.getElementById('c-name').textContent=repo.name;
   document.getElementById('c-desc').textContent=repo.desc;
+  var cv=document.getElementById('c-ver');
+  if(repo.version){
+    var vp=versionProgress(repo.version),vf=document.getElementById('c-vfill');
+    vf.style.width=Math.round(vp*100)+'%';vf.style.background='rgb('+repo.rgb+')';
+    document.getElementById('c-vtxt').textContent='v'+repo.version+' \u00b7 '+(vp>=1?'released':Math.round(vp*100)+'% to 1.0');
+    cv.style.display='flex';
+  }else{cv.style.display='none';}
   var h='';for(var i=0;i<repo.tags.length;i++){h+='<span class="ctag">'+esc(repo.tags[i])+'</span>';}
   document.getElementById('c-tags').innerHTML=h;
   var ghBtn=document.getElementById('btn-gh');
@@ -1899,6 +1950,14 @@ function drawNodeSet(pool,cx,cy,T){
     ctx.beginPath();ctx.arc(n.x,n.y,n.radius+7+5*Math.sin(t*1.3+n.pulse),0,Math.PI*2);ctx.strokeStyle='rgba('+rgb+','+(isAct?0.22*pv:0.06*pv)+')';ctx.lineWidth=isAct?1.5:0.5;ctx.stroke();
     if(n.isGroup&&scene===SCENE_ROOT){ctx.beginPath();ctx.arc(n.x,n.y,n.radius+3,0,Math.PI*2);ctx.setLineDash([3,4]);ctx.strokeStyle='rgba('+rgb+',0.25)';ctx.lineWidth=0.5;ctx.stroke();ctx.setLineDash([]);}
     ctx.beginPath();ctx.arc(n.x,n.y,n.radius+2,0,Math.PI*2);ctx.strokeStyle='rgba('+rgb+','+(isAct?0.38:0.12*pv)+')';ctx.lineWidth=0.5;ctx.stroke();
+    if(!n.isGroup&&n.entity.version&&n.radius>8){
+      var vp=versionProgress(n.entity.version),vr=n.radius+4.5,a0=-Math.PI/2;
+      ctx.beginPath();ctx.arc(n.x,n.y,vr,0,Math.PI*2);ctx.strokeStyle='rgba('+rgb+',0.14)';ctx.lineWidth=1;ctx.stroke();
+      if(vp>0){
+        if(vp>=1){ctx.beginPath();ctx.arc(n.x,n.y,vr,0,Math.PI*2);ctx.strokeStyle='rgba('+rgb+',0.2)';ctx.lineWidth=5;ctx.stroke();}
+        ctx.beginPath();ctx.arc(n.x,n.y,vr,a0,a0+vp*Math.PI*2);ctx.strokeStyle='rgba('+rgb+',0.9)';ctx.lineWidth=2.2;ctx.lineCap='round';ctx.stroke();ctx.lineCap='butt';
+      }
+    }
     ctx.beginPath();ctx.arc(n.x,n.y,n.radius,0,Math.PI*2);ctx.fillStyle='rgba('+rgb+','+(isAct?0.16:n.isGroup?0.09:0.06)+')';ctx.fill();ctx.strokeStyle='rgba('+rgb+','+(isAct?0.82:0.32*pv)+')';ctx.lineWidth=isAct?1:0.5;ctx.stroke();
     if(hasFavi&&n.radius>10){drawFavicon(faviconMap[n.entity.id],n.x,n.y,n.radius);}
     var hasGF=false;if(n.isGroup&&n.radius>10){hasGF=drawGroupFavicons(n.entity.id,n.x,n.y,n.radius);}
